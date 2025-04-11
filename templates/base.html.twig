@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ma page{% endblock %}</title>
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+
+    <!-- ✅ Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- ✅ Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- ✅ Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- ✅ DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- ✅ Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100 bg-image" style="background-image: url('{{ asset('images/logo Adrie.png') }}'); background-size: cover; background-position: center;">
+
+<div id="loader">
+    <div class="spinner"></div>
+</div>
+
+    <!-- ✅ NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light py-3 fixed-top shadow-sm">
+        <div class="container-fluid">
+                {% if app.user %}
+            <a class="navbar-brand fw-bold " href="{{ path('app_profil') }}">
+                <i class="bi bi-house-door"></i> ADRIEDATA<img src="{{ asset('images/favicon-32x32.png') }}" alt="Logo">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_profil') }}">
+                                <i class="bi bi-person-badge"></i> Mon Profil
+                            </a>
+                        </li>
+                        <!--
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('intervention_nouvelle') }}">
+                                <i class="bi bi-pencil-square"></i> Nouvelle Intervention
+                            </a>
+                        </li> -->
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_produit') }}">
+                                <i class="bi bi-list-ul"></i> Liste des Produits
+                            </a>
+                        </li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('admin_user_list') }}">
+                                    <i class="bi bi-people"></i> Utilisateurs
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item me-2">
+                            {% if app.user.photo %}
+                                <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" alt="photo" class="rounded-circle" width="50" height="50">
+                            {% endif %}
+                        </li>
+                        <li class="nav-item me-3">
+                            <span class="navbar-text fw-bold" style="font-size:10px ; color: #61a444">
+                                <i class=""></i> {{ app.user.prenom }}
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-danger btn-sm" href="{{ path('app_logout') }}">
+                                <i class="bi bi-power" title="Déconnexion"></i>
+                            </a>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    {% for label, messages in app.flashes %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                    {{ message|raw }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+
+    <!-- ✅ CONTENU -->
+    <main class="flex-grow-1 mt-1 pt-4 container">
+        {% block body %}{% endblock %}
+    </main>
+
+    <!-- ✅ FOOTER -->
+    <footer class="footer py-2 mt-5 bg-success">
+        <div class="container">
+            <div class="row align-items-center text-white text-center text-md-start">
+                <div class="col-md-4 mb-2 ms-1 mb-md-0 text-start">
+                    <p class="mb-0">🌱 La planète en a besoin, l'ADRIE lélà</p>
+                </div>
+                <div class="col-md-3">
+                    <p class="mb-0">&copy; {{ "now"|date("Y") }} AdrieData</p>
+                </div>
+                <div class="col-md-2 text-md-end d-flex justify-content-center justify-content-md-end align-items-center">
+                    <img src="{{ asset('images/logo Adrie.png') }}" alt="Logo" class="footer-logo me-2" height="40">
+                </div>
+                   <div class="col-md-2 text-end">
+                    {% if app.user %}
+                        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger border  btn-sm">
+                            <i class="bi bi-power"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ✅ SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="
+https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js
+"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/scan.js') }}"></script>
+    
+    {% block javascripts %}{% endblock %}
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(() => {
+            document.getElementById("loader").style.display = "none";
+        }, 500); // Cache le loader après 500ms
+    });
+</script>
+
+</body>
+</html>

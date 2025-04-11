@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Intervention{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+
+    <div class="card shadow mb-4">
+        <div class="card-body card-body-custom">
+        <h2 class="text-center mb-4"><i class="bi bi-tools"></i>FICHE D'INTERVENTION</h2>
+           
+            {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        {{ form_label(form.codeBarre) }}
+                        <div class="input-group">
+                            {{ form_widget(form.codeBarre, {'attr': {'class': 'form-control', 'id': 'search-input'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        {% if produit and produit.codeBarre %}
+                            <svg id="barcode"></svg>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.intervenant) }}
+                        {{ form_widget(form.intervenant, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.dateIntervention) }}
+                        {{ form_widget(form.dateIntervention, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.categorie) }}
+                        {{ form_widget(form.categorie, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.marque) }}
+                        {{ form_widget(form.marque, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.modele) }}
+                        {{ form_widget(form.modele, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.numeroSerie) }}
+                        {{ form_widget(form.numeroSerie, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.cpu) }}
+                        {{ form_widget(form.cpu, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.frequenceCpu) }}
+                        {{ form_widget(form.frequenceCpu, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.ram) }}
+                        {{ form_widget(form.ram, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.typeRam) }}
+                        {{ form_widget(form.typeRam, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.stockage) }}
+                        {{ form_widget(form.stockage, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.typeStockage) }}
+                        {{ form_widget(form.typeStockage, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.carteGraphique) }}
+                        {{ form_widget(form.carteGraphique, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.memoireVideo) }}
+                        {{ form_widget(form.memoireVideo, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.systemeExploitation) }}
+                        {{ form_widget(form.systemeExploitation, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        {{ form_label(form.versionSe) }}
+                        {{ form_widget(form.versionSe, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <div class="form-check">
+                            {{ form_widget(form.miseAJourWindows, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(form.miseAJourWindows, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                        <div class="form-check">
+                            {{ form_widget(form.miseAJourPilotes, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(form.miseAJourPilotes, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                        <div class="form-check">
+                            {{ form_widget(form.autresLogiciels, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(form.autresLogiciels, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-8 mb-2">
+                        {{ form_label(form.commentaire) }}
+                        {{ form_widget(form.commentaire, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                
+
+            {{ form_end(form) }}
+            
+            {% if intervention is defined and intervention.pdfFilePath is not empty %}
+                <div class="text-center mt-4">
+                    <a href="{{ asset(intervention.pdfFilePath) }}" target="_blank" class="btn btn-success">
+                        📄 Télécharger le PDF de l'intervention
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+                <div class="row justify-content-center">
+                    <div class="text-center col-md-3 ">
+                        <button type="button" id="save-button" class="btn btn-primary mt-3 no-print">Enregistrer</button>
+                    </div>
+                    <div class="text-center col-md-4">
+                        <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print">Annuler</a>
+                    </div>
+                </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% if produit and produit.codeBarre %}
+            JsBarcode("#barcode", "{{ produit.codeBarre }}", {
+                format: "code39",
+                displayValue: true,
+                fontSize: 12
+            });
+        {% endif %}
+
+        document.getElementById('save-button').addEventListener('click', function() {
+            const form = document.querySelector('form'); // Sélectionne le formulaire
+
+            html2canvas(document.querySelector('.card-body')).then(canvas => {
+                // Récupération des valeurs pour générer le nom de fichier dynamique
+                let codeBarre = "{{ produit.codeBarre|default('unknown') }}";
+                let dateIntervention = "{{ dateIntervention ? dateIntervention|date('Ymd') : 'nodate' }}";
+                let intervenantId = "{{ intervent.id|default('noid') }}";
+
+
+                // Génération du nom de fichier
+                let fileName = `${codeBarre}_${dateIntervention}_${intervenantId}.jpg`;
+
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/jpeg');
+                link.download = fileName; // Applique le nom de fichier dynamique
+                link.click();
+
+                console.log("✅ Image enregistrée sous :", fileName);
+                
+                // Une fois l'image téléchargée, on soumet le formulaire
+                setTimeout(() => {
+                    form.submit();
+                }, 1000); // Attente de 1 seconde avant soumission
+            });
+        });
+    });
+</script>
+
+<script src="{{ asset('js/scan.js') }}"></script>
+<audio id="scan-beep" src="{{ asset('sounds/beep.mp3') }}" preload="auto"></audio>
+{% endblock %}

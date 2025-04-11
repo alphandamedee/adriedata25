@@ -1,0 +1,47 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+            algorithm: auto
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+        ROLE_TECHNICIEN: ROLE_USER
+        ROLE_BENEVOLE: ROLE_USER
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: mailUser
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            provider: app_user_provider
+            entry_point: form_login
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                username_parameter: mailUser
+                password_parameter: password
+                default_target_path: /redirect-after-login # Redirect to a custom route after login
+            logout:
+                path: app_logout
+                target: app_login
+                invalidate_session: true
+              
+
+    access_control:
+        - { path: ^/mot-de-passe-oublie, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/tech, roles: ROLE_TECHNICIEN }
+        - { path: ^/produit, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/profil, roles: ROLE_USER } # Permet aux utilisateurs connectés d'accéder au profil

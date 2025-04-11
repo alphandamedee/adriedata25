@@ -1,0 +1,331 @@
+.login-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 5px solid #61a444;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.logo-container img {
+    width: 150px;
+    height: auto;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.alert {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+.login-form .btn {
+    font-size: 16px;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    /* background-color: #f8f9fa; */
+    background-image: url("./public/images/ressourcerie.jpg");
+    padding-top: 40px; /* Ajustez cette valeur selon la hauteur de votre navbar */
+}
+
+.login-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.forgot-password {
+    font-size: 0.9em;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+a {
+    font-size: 0.7em;
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Styles pour le footer */
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0; /* Réduire le padding pour diminuer la hauteur du footer */
+    position: relative;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.footer a {
+    color: #f8f9fa;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Réduire la taille du logo dans le footer */
+.footer-logo {
+    width: 40px; /* Ajuste cette valeur selon la taille souhaitée */
+    height: auto;
+    margin-bottom: 5px; /* Réduire la marge pour diminuer l'espace sous le logo */
+    border-radius: 50px;
+}
+
+/* Styles pour les colonnes du footer */
+.footer .col {
+    margin-bottom: 5px; /* Réduire la marge pour diminuer l'espace entre les colonnes */
+}
+
+.footer .col-md-4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Ajouté pour centrer verticalement */
+}
+
+.footer .col-md-4.text-md-start {
+    align-items: flex-start;
+}
+
+.footer .col-md-4.text-md-end {
+    align-items: flex-end;
+}
+
+/* Styles pour le bouton de déconnexion */
+.footer .btn {
+    margin-top: 5px; /* Réduire la marge pour diminuer l'espace au-dessus du bouton */
+}
+
+/* Styles pour le conteneur principal */
+.main-content {
+    padding-bottom: 100px; /* Ajustez cette valeur selon la hauteur du footer */
+}
+
+/* Styles pour la navbar */
+.navbar {
+    font-size: 1.1rem; /* Augmenter la taille de la police */
+    padding: 1rem 1.5rem; /* Augmenter le padding */
+}
+
+.navbar-brand {
+    font-size: 1.5rem; /* Augmenter la taille de la police pour la marque */
+}
+
+.nav-link {
+    margin-right: 1rem; /* Ajouter de l'espace entre les liens */
+    font-size: 1.1rem; /* Augmenter la taille de la police des liens */
+    color: #007bff; /* Changer la couleur des liens */
+    transition: color 0.3s ease; /* Ajouter une transition pour la couleur */
+}
+
+.nav-link:hover {
+    color: #0056b3; /* Changer la couleur des liens au survol */
+}
+
+.navbar-toggler {
+    border: none; /* Supprimer la bordure du bouton toggle */
+}
+
+.navbar-toggler-icon {
+    font-size: 1.5rem; /* Augmenter la taille de l'icône toggle */
+}
+
+/* Autres styles existants */
+.table-responsive {
+    max-height: 800px; /* Ajustez la hauteur maximale selon vos besoins */
+    overflow-y: auto;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #343a40; /* Couleur de fond de l'entête */
+    color: white; /* Couleur du texte de l'entête */
+    z-index: 1;
+}
+
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn i {
+    font-size: 1.2rem;
+}
+
+#scanner-container {
+    display: none;
+    background-color: #61a444;
+    padding: 20px;
+}
+
+#scanner {
+    width: 100%;
+    height: 300px;
+    background: black; /* ✅ Ajout d'un fond noir pour un meilleur contraste */
+}
+
+
+.col-etagere {
+    width: 10%; 
+}
+.col-actions {
+    width: 20%; 
+}
+
+.col-ram {
+    white-space: nowrap; /* Empêche le retour à la ligne */
+}
+/* Ajoutez ce CSS dans votre fichier CSS ou dans une balise <style> dans index.html.twig */
+.no-wrap {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-body-custom {
+    max-width: 800px; /* Définissez la largeur maximale souhaitée */
+    margin: 0 auto; /* Centre la carte horizontalement */
+}
+
+#barcode {
+    max-width: 100%;  /* Assure que le SVG ne dépasse pas la largeur */
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Centre le code-barres */
+}
+
+.barcode-container {
+    text-align: center; /* Centre horizontalement */
+    padding: 10px;
+    overflow: hidden; /* Empêche le dépassement */
+}
+.btn-primary.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn-primary.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spinner 0.6s linear infinite;
+    transform: translate(-50%, -50%);
+}
+.label-bold {
+    font-weight: bold;
+} 
+
+
+/* Styles pour le loader */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    /* background-image: url("./public/images/logo Adrie.png"); */
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #61a444;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.interventions-section {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.filter-card {
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.view-switcher .btn-group {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.view-indicator .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+.export-buttons .btn {
+    min-width: 150px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}

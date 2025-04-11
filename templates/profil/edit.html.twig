@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="mb-4 text-center">Modifier mon profil</h2>
+
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{ label }}">
+                    {% for message in messages %}
+                        {{ message|raw }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+                        <div class="mb-3">
+                            {{ form_label(form.prenom) }}
+                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.nomUser) }}
+                            {{ form_widget(form.nomUser, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.mailUser) }}
+                            {{ form_widget(form.mailUser, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.password) }}
+                            {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-muted">Laisse vide si tu ne veux pas changer ton mot de passe.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.photo) }}
+                            {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+                            <small class="text-muted">Formats acceptés : JPEG, PNG (2 Mo max)</small>
+                        </div>
+                        {% if app.user.photo %}
+                            <div class="mb-3 text-center">
+                                <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" alt="Photo de profil"
+                                    class="rounded-circle shadow-sm" width="140">
+                                <p class="text-muted mt-2">Photo actuelle</p>
+                            </div>
+                        {% endif %}
+
+                        {% if app.user.photo %}
+                            <div class="text-center mt-2">
+                                <a href="{{ path('admin_user_delete_photo', {'id': app.user.id}) }}"
+                                class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('Supprimer la photo de profil ?');">
+                                🗑️ Supprimer la photo
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

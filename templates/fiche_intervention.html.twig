@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fiche d'Intervention{% endblock %}
+
+{% block body %}
+<div class="container mt-4" style="max-width: 148mm; margin: auto;">
+    <h2 class="text-center mb-4">Fiche d'Intervention</h2>
+    {{ form_start(form) }}
+
+    <div class="mb-3 row">
+        <div class="col">
+            {{ form_label(form.codeBarre) }}
+            {{ form_widget(form.codeBarre, {'attr': {'class': 'form-control', 'id': 'codeBarreInput'}}) }}
+        </div>
+        <div class="col-auto align-self-end">
+            <button type="button" id="scan-barcode-btn" class="btn btn-secondary mb-3">Scanner le Code-Barres</button>
+        </div>
+    </div>      
+
+    <!-- Conteneur pour la vidéo de la caméra -->
+    <div id="scanner-container" style="display: none; padding: 20px;">
+        <video id="scanner" style="width: 50%;"></video>
+    </div>
+
+    <div id="product-info" >
+        <h3 class="mt-4">Caractéristiques du Produit</h3>
+        {% set fields = [
+            {'label': form.categorie, 'widget': form.categorie, 'id': 'form_categorie'},
+            {'label': form.marque, 'widget': form.marque, 'id': 'form_marque'},
+            {'label': form.modele, 'widget': form.modele, 'id': 'form_modele'},
+            {'label': form.numeroSerie, 'widget': form.numeroSerie, 'id': 'form_numeroSerie'},
+            {'label': form.cpu, 'widget': form.cpu, 'id': 'form_cpu'},
+            {'label': form.frequenceCpu, 'widget': form.frequenceCpu, 'id': 'form_frequenceCpu'},
+            {'label': form.ram, 'widget': form.ram, 'id': 'form_ram'},
+            {'label': form.typeRam, 'widget': form.typeRam, 'id': 'form_typeRam'},
+            {'label': form.stockage, 'widget': form.stockage, 'id': 'form_stockage'},
+            {'label': form.typeStockage, 'widget': form.typeStockage, 'id': 'form_typeStockage'},
+            {'label': form.carteGraphique, 'widget': form.carteGraphique, 'id': 'form_carteGraphique'},
+            {'label': form.memoireVideo, 'widget': form.memoireVideo, 'id': 'form_memoireVideo'},
+            {'label': form.systemeExploitation, 'widget': form.systemeExploitation, 'id': 'form_systemeExploitation'},
+            {'label': form.versionSe, 'widget': form.versionSe, 'id': 'form_versionSe'}
+        ] %}
+
+        {% for field in fields %}
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        {{ form_label(field.label) }}
+                        {{ form_widget(field.widget, {'attr': {'class': 'form-control', 'id': field.id, 'readonly': 'readonly'}}) }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <h3 class="mt-2">Interventions effectuées</h3>
+        <div class="row">
+            <div class="col mb-1">
+                {{ form_widget(form.miseAJourWindows) }} {{ form_label(form.miseAJourWindows) }}
+            </div> 
+            <div class="col mb-1">
+                {{ form_widget(form.miseAJourPilotes) }} {{ form_label(form.miseAJourPilotes) }}
+            </div>
+        </div>        
+
+        <div class="row mb-1">
+            <div class="col">
+                {{ form_widget(form.autresLogiciels) }} {{ form_label(form.autresLogiciels) }}
+            </div>
+            <div class="col-12">
+                <input type="text" class="form-control" placeholder="lister" />
+            </div>
+        </div>
+
+        <div class="mb-1">
+            {{ form_label(form.commentaire) }}
+            {{ form_widget(form.commentaire, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    {{ form_end(form) }}
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script src="{{ asset('js/app.js') }}"></script>
+
+{% endblock %}

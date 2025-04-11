@@ -1,0 +1,20 @@
+{
+  "name": "adriedata",
+  "version": "1.0.0",
+  "description": "Projet Symfony avec une page de connexion.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "datatables.net": "^2.2.2",
+    "jquery": "^3.7.1",
+    "quagga": "^0.12.1"
+  }
+}

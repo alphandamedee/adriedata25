@@ -1,0 +1,22 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+profile:
+    path: /profile
+    controller: App\Controller\ProfileController::index
+
+home:
+    path: /
+    controller: App\Controller\HomeController::index    
+
+fiche_intervention:
+    path: /fiche-intervention
+    controller: App\Controller\InterventionController::fiche
+
+intervention_show:
+    path: /intervention/{id}
+    controller: App\Controller\InterventionController::show
+    methods: GET

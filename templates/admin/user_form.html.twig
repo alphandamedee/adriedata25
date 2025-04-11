@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ is_edit ? 'Modifier un utilisateur' : 'Ajouter un utilisateur' }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="mb-4 text-center">{{ is_edit ? 'Modifier un utilisateur' : 'Ajouter un utilisateur' }}</h2>
+
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{ label }}">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+                        <div class="mb-3">
+                            {{ form_label(form.prenom) }}
+                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.nomUser) }}
+                            {{ form_widget(form.nomUser, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.mailUser) }}
+                            {{ form_widget(form.mailUser, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.password) }}
+                            {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.role) }}
+                            {{ form_widget(form.role, {'attr': {'class': 'form-select'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.photo) }}
+                            {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+                            {% if form.photo.vars.errors|length %}
+                                <div class="text-danger mt-1 small">
+                                    {{ form_errors(form.photo) }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+
+                        <button type="submit" class="btn btn-success">{{ is_edit ? 'Mettre à jour' : 'Ajouter' }}</button>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

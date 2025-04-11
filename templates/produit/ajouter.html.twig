@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Produit{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Ajouter un Produit</h2>
+  <div class="card shadow border-0 mb-4">
+    <div class="card-body">
+      {{ form_start(form) }}
+
+      <!-- Champ Code-barre sans scan -->
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-2">
+          {{ form_label(form.codeBarre, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
+        </div>
+        <div class="col-md-10">
+          {{ form_widget(form.codeBarre, {
+            'attr': {
+              'class': 'form-control',
+              'id': 'codeBarreInput',
+              'value': app.request.query.get('scanned')
+            }
+          }) }}
+          <div class="invalid-feedback">Le code-barres doit contenir exactement 21 chiffres.</div>
+        </div>
+      </div>
+
+      <!-- Affichage utilisateur -->
+      <div class="row mb-4">
+        <div class="col-md-2">
+          <label class="form-label fw-semibold">Ajouté par</label>
+        </div>
+        <div class="col-md-10">
+          <input type="text" class="form-control bg-light border-0" value="{{ app.user.prenom ~ ' ' ~ app.user.nomUser }}" readonly>
+        </div>
+      </div>
+
+      <!-- Champs alignés 2 colonnes ligne par ligne -->
+      {% set champs = [
+        ['categorie', 'marque'],
+        ['modele', 'numeroSerie'],
+        ['cpu', 'frequenceCpu'],
+        ['ram', 'typeRam'],
+        ['stockage', 'typeStockage'],
+        ['carteGraphique', 'memoireVideo'],
+        ['codeEtagere', 'statut']
+      ] %}
+
+      {% for pair in champs %}
+        <div class="row mb-3 align-items-center">
+          <div class="col-md-2 text-end">{{ form_label(attribute(form, pair[0]), null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}</div>
+          <div class="col-md-4">
+            {{ form_widget(attribute(form, pair[0]), {'attr': {'class': 'form-control shadow-sm required-field'}}) }}
+          </div>
+          <div class="col-md-2 text-end">{{ form_label(attribute(form, pair[1]), null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}</div>
+          <div class="col-md-4">
+            {{ form_widget(attribute(form, pair[1]), {'attr': {'class': 'form-control shadow-sm'}}) }}
+          </div>
+        </div>
+      {% endfor %}
+
+      <!-- Bouton de soumission -->
+      <div class="text-center">
+        <button type="submit" class="btn btn-success mt-4 px-5">
+          <i class="bi bi-plus-circle"></i> Enregistrer
+        </button>
+      </div>
+
+      {{ form_end(form) }}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const codeInput = document.getElementById('codeBarreInput');
+    const form = document.querySelector('form');
+
+    const requiredFields = document.querySelectorAll('.required-field');
+
+    // ✅ Coller la valeur scannée si présente dans l'URL
+    const scanned = new URLSearchParams(window.location.search).get('scanned');
+    if (scanned && codeInput && !codeInput.value) {
+      codeInput.value = scanned;
+    }
+
+    // ✅ Validation côté client
+    form.addEventListener('submit', function (e) {
+      let isValid = true;
+
+      const code = codeInput.value.trim();
+      if (!/^\d{21}$/.test(code)) {
+        e.preventDefault();
+        codeInput.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        codeInput.classList.remove('is-invalid');
+      }
+
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          field.classList.remove('is-invalid');
+        }
+      });
+
+      if (!isValid) {
+        e.preventDefault();
+        alert("Veuillez remplir tous les champs obligatoires correctement.");
+      }
+    });
+  });
+</script>
+{% endblock %}

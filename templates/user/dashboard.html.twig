@@ -1,0 +1,174 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Utilisateur{% endblock %}
+
+{% block body %}
+<div class="container bg-white shadow rounded p-4 my-4">
+    <h2 class="text-center text-primary mb-4">📊 Tableau de bord</h2>
+
+    <!-- Filtres -->
+    <div class="row g-3 mb-4 align-items-end">
+        <div class="col-md-2">
+            <label for="start-date" class="form-label">Date de début</label>
+            <input type="date" id="start-date" class="form-control" value="{{ "now"|date("Y-m-d") }}">
+        </div>
+        <div class="col-md-2">
+            <label for="end-date" class="form-label">Date de fin</label>
+            <input type="date" id="end-date" class="form-control" value="{{ "now"|date("Y-m-d") }}">
+        </div>
+        <div class="col-md-3">
+            <label for="realization-filter" class="form-label">Filtrer</label>
+            <select id="realization-filter" class="form-select">
+                <option value="my">Mes réalisations</option>
+                <option value="all">Toutes les réalisations</option>
+            </select>
+        </div>
+        
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="col-md-3">
+                <label for="user-filter" class="form-label">Intervenant</label>
+                <select id="user-filter" class="form-select">
+                    <option value="">-- Tous les intervenants --</option>
+                    {% for u in users %}
+                        <option value="{{ u.id }}">{{ u.prenom }} {{ u.nomUser }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        <div class="col-md-2">
+            <button id="filter-button" class="btn btn-primary w-100">🔎 Filtrer</button>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+   <!-- Statistiques -->
+        <div class="row text-center mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-center gap-5 align-items-center border rounded p-3 bg-light shadow-sm">
+                    <div>
+                        <h5 class="text-info mb-1">Interventions</h5>
+                        <p class="display-6 fw-bold mb-0" id="intervention-count">0</p>
+                    </div>
+                    <div>
+                        <h5 class="text-success mb-1">Produits intervenus</h5>
+                        <p class="display-6 fw-bold mb-0" id="product-count">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+    <!-- Graphiques -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h6 class="text-center mb-3">📈 Interventions par jour</h6>
+                <canvas id="interventionsChart" height="150"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card p-3 shadow-sm">
+                <h6 class="text-center mb-3">📦 Produits par jour</h6>
+                <canvas id="productsChart" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const startDateInput = document.getElementById('start-date');
+    const endDateInput = document.getElementById('end-date');
+    const realizationFilter = document.getElementById('realization-filter');
+    const filterButton = document.getElementById('filter-button');
+    const interventionCount = document.getElementById('intervention-count');
+    const productCount = document.getElementById('product-count');
+
+    const interventionsChartCtx = document.getElementById('interventionsChart').getContext('2d');
+    const productsChartCtx = document.getElementById('productsChart').getContext('2d');
+
+    let interventionsChart = new Chart(interventionsChartCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Interventions',
+                data: [],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    let productsChart = new Chart(productsChartCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Produits Intervenus',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    function updateDashboard() {
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+        const filter = realizationFilter.value;
+
+        fetch(`/api/dashboard-data?start=${startDate}&end=${endDate}&filter=${filter}`)
+            .then(response => {
+                console.log("HTTP Response:", response); // Log the full response
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("📊 Données reçues de l'API :", data);
+                interventionCount.textContent = data.interventionsCount || 0;
+                productCount.textContent = data.uniqueProductsCount || 0;
+
+                interventionsChart.data.labels = data.labels || [];
+                interventionsChart.data.datasets[0].data = data.interventionsData || [];
+                interventionsChart.update();
+
+                productsChart.data.labels = data.labels || [];
+                productsChart.data.datasets[0].data = data.productsData || [];
+                productsChart.update();
+            })
+            .catch(error => {
+                console.error('❌ Erreur lors de la récupération des données du tableau de bord :', error);
+                alert('Erreur lors du chargement des données du dashboard.');
+            });
+    }
+
+    filterButton.addEventListener('click', updateDashboard);
+    updateDashboard();
+});
+</script>
+{% endblock %}

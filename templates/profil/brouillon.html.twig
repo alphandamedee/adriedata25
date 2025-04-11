@@ -1,0 +1,211 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ app.user.prenom }} {{ app.user.nomUser }}{% endblock %}
+
+{% block body %}
+<div class="container bg-light mt-4">
+    <h2 class="text-center mb-4">Profil de {{ app.user.prenom }} {{ app.user.nomUser }}</h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">Informations personnelles</div>
+        <div class="card-body">
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                <p class="text-success mt-3">Bienvenue administrateur ! Vous avez accès à toutes les fonctionnalités.</p>
+            {% elseif 'ROLE_TECHNICIEN' in app.user.roles %}
+                <p class="text-primary mt-3">Bienvenue technicien ! Vous pouvez gérer les interventions.</p>
+            {% elseif 'ROLE_BENEVOLE' in app.user.roles %}
+                <p class="text-info mt-3">Bienvenue bénévole ! Merci pour votre engagement.</p>
+            {% else %}
+                <p class="text-muted mt-3">Rôle non reconnu.</p>
+            {% endif %}
+
+            <div class="row">
+                <p class="col"><strong>Nom :</strong> {{ app.user.nomUser }}</p>
+                <p class="col"><strong>Prénom :</strong> {{ app.user.prenom }}</p>
+                <p class="col"><strong>Email :</strong> {{ app.user.email }}</p>
+                <p class="col"><strong>Rôle :</strong> {{ app.user.role.roleName }}</p>
+            </div>
+
+            <div class="d-flex justify-content-evenly text-center">
+                <a href="{{ path('profil_edit_photo') }}" class="btn btn-warning mt-2"><i class="bi bi-pencil"></i> Modifier la photo</a>
+                {% if 'ROLE_ADMIN' in app.user.roles %}
+                    <a href="{{ path('admin_dashboard') }}" class="btn btn-danger mt-2">Accès à l’administration</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5 text-center"><i class="bi bi-clipboard-data"></i> Interventions effectuées</h3>
+        
+{% if interventions is empty %}
+    <p class="text-muted text-center">Aucune intervention enregistrée.</p>
+{% else %}
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <div class="d-flex justify-content-center my-3 gap-2">
+            <a href="{{ path('app_profil', {'view': 'mine'}) }}" class="btn btn-outline-primary {{ view == 'mine' ? 'active' : '' }}">
+                🙋‍♂️ Mes interventions
+            </a>
+            <a href="{{ path('app_profil', {'view': 'all'}) }}" class="btn btn-outline-success {{ view == 'all' ? 'active' : '' }}">
+                👥 Toutes les interventions
+            </a>
+        </div>
+    {% endif %}
+
+    <p class="text-center mb-4">
+        {% if view == 'all' %}
+            <span class="text-success fw-bold">👥 Affichage de toutes les interventions (admin)</span>
+        {% else %}
+            <span class="text-info fw-bold">🙋‍♂️ Affichage de vos interventions uniquement</span>
+        {% endif %}
+    </p>
+<div>
+    <form method="get" action="{{ path('app_profil') }}" class="row g-2 mb-4 align-items-end">
+        <input type="hidden" name="view" value="{{ view }}">
+
+        <div class="col-md-3">
+            <label for="search" class="form-label">🔍 Rechercher</label>
+            <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Modèle, Catégorie...">
+        </div>
+
+        <div class="col-md-3">
+            <label for="intervenant" class="form-label">👤 Intervenant</label>
+            <select name="intervenant" class="form-select">
+                <option value="">Tous les intervenants</option>
+                {% for u in allIntervenants %}
+                    {% set nomComplet = u.prenom ~ ' ' ~ u.nomUser %}
+                    <option value="{{ nomComplet }}" {{ intervenant == nomComplet ? 'selected' : '' }}>
+                        {{ nomComplet }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">📅 Début</label>
+            <input type="date" name="start" value="{{ start }}" class="form-control">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">📅 Fin</label>
+            <input type="date" name="end" value="{{ end }}" class="form-control">
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button class="btn btn-primary" type="submit">🔎 Filtrer</button>
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <a href="{{ path('app_profil', {'view': view}) }}" class="btn btn-outline-secondary">
+                ♻️ Réinitialiser
+            </a>
+        </div>
+    </form>
+
+    <div class="d-flex justify-content-end mb-3 gap-2">
+        <a href="{{ path('export_interventions_pdf', {'view': view, 'search': search, 'start': start, 'end': end}) }}" class="btn btn-outline-danger" title="Exporter en PDF">
+            📄 Export PDF
+        </a>
+        <a href="{{ path('export_interventions_excel', {'view': view, 'search': search, 'start': start, 'end': end}) }}" class="btn btn-outline-success" title="Exporter en Excel">
+            📊 Export Excel
+        </a>
+    </div>
+
+        {# ✅ Résumé statistique global #}
+            <div class="alert alert-light border shadow-sm p-3 mb-4">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <h5 class="text-primary">
+                            <i class="bi bi-eye-fill"></i> 
+                            {{ interventions|length }} affichée{{ interventions|length > 1 ? 's' : '' }}
+                        </h5>
+                        {% if start or end %}
+                            <p class="mb-0 small text-muted">
+                                🔍 Filtrées 
+                                {% if start %} depuis le <strong>{{ start|date('d/m/Y') }}</strong>{% endif %}
+                                {% if end %} jusqu’au <strong>{{ end|date('d/m/Y') }}</strong>{% endif %}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="text-success">
+                            <i class="bi bi-database-check"></i> 
+                            {{ totalInterventions }} intervention{{ totalInterventions > 1 ? 's' : '' }} au total
+                        </h5>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="text-info">
+                            <i class="bi bi-people-fill"></i> 
+                            {{ allIntervenants|length }} intervenant{{ allIntervenants|length > 1 ? 's' : '' }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <div>
+        <table class="table table-striped" id="interventions-table">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Intervenant</th>
+                    <th>Produit</th>
+                    <th>Code Barre</th>
+                    <th>Date</th>
+                    <th>Commentaire</th>
+                    <th>PDF</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for intervention in interventions %}
+                    <tr>
+                        <td>{{ intervention.id }}</td>
+                        <td>{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td>
+                        <td>
+                            {% if intervention.produit is defined %}
+                                {{ intervention.produit.categorie }} - {{ intervention.produit.marque }} - {{ intervention.produit.modele }}
+                            {% else %}
+                                <span class="text-muted">Produit non trouvé</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ intervention.codeBarre }}</td>
+                        <td>{{ intervention.dateIntervention|date('d/m/Y') }}</td>
+                        <td>{{ intervention.commentaire }}</td>
+                        <td>
+                            {% if intervention.pdfFilePath %}
+                                <a href="{{ asset(intervention.pdfFilePath) }}" class="btn btn-sm btn-success" target="_blank">
+                                    📄 Voir PDF
+                                </a>
+                            {% else %}
+                                <span class="text-muted">Aucun PDF</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>    
+    {% endif %}
+</div>
+
+<script src="{{ asset('js/sort.js') }}"></script>
+
+<div class="row text-center mt-4">
+        <div class="col-md-2">
+            <a href="{{ path('app_profil', {'view': view}) }}" class="btn btn-outline-warning" title="Réinitialiser Filtre">
+                ♻️
+            </a>
+        </div>
+        <div class="col-md-6">
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                <a href="{{ path('admin_dashboard') }}" class="btn btn-primary">
+                    <i class="bi bi-speedometer2"></i> Accéder au Dashboard Admin
+                </a>
+            {% else %}
+                <a href="{{ path('user_dashboard') }}" class="btn btn-primary">
+                    <i class="bi bi-speedometer2"></i> Accéder au Dashboard Utilisateur
+                </a>
+            {% endif %}
+        </div>    
+</div>
+{% endblock %}

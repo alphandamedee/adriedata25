@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Aperçu de l'intervention{% endblock %}
+
+{% block body %}
+
+
+    <div class="container my-1">
+        <h3 class="text-center mb-4">Aperçu de l'intervention</h3>
+
+        <div class="card shadow p-4 mb-4">
+            {% include 'intervention/pdf_template.html.twig' %}
+        </div>
+
+        <div class="text-center no-print">
+            <a href="{{ path('intervention_confirm_pdf', { id: intervention.id }) }}" class="btn btn-success">
+                ✅ Générer le PDF maintenant
+            </a>
+           
+            <a href="{{ path('app_produit') }}" class="btn btn-secondary ms-2">
+                ❌ Retour à la liste
+            </a>
+        </div>
+    </div>
+
+{% endblock %}

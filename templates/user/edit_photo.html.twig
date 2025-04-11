@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la photo de profil{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="text-center">Changer ma photo de profil</h2>
+
+    <div class="text-center">
+        {% if app.user.photo %}
+            <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" class="rounded-circle" width="150" alt="Photo de profil">
+        {% else %}
+            <img src="{{ asset('images/default-profile.png') }}" class="img-thumbnail rounded-circle" width="150" alt="Photo par défaut">
+        {% endif %}
+    </div>
+
+    <div class="card shadow mt-3 p-4">
+        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+            <div class="mb-3">
+                {{ form_label(form.photo) }}
+                {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-upload"></i> Mettre à jour</button>
+        {{ form_end(form) }}
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="{{ path('app_profil') }}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Retour</a>
+    </div>
+</div>
+{% endblock %}

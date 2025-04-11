@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Export PDF - Interventions</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center;">Liste des interventions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Intervenant</th>
+                <th>Code Barre</th>
+                <th>Modèle</th>
+                <th>Date</th>
+                <th>Commentaire</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for intervention in interventions %}
+                <tr>
+                    <td>{{ intervention.id }}</td>
+                    <td>{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td>
+                    <td>{{ intervention.codeBarre }}</td>
+                    <td>{{ intervention.modele }}</td>
+                    <td>{{ intervention.dateIntervention|date('d/m/Y') }}</td>
+                    <td>{{ intervention.commentaire }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6" style="text-align: center;">Aucune intervention trouvée</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

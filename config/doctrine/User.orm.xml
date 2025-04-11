@@ -1,0 +1,5 @@
+<entity name="App\Entity\User" table="user">
+    <!-- ...existing code... -->
+    <field name="role" type="string" length="255" />
+    <!-- ...existing code... -->
+</entity>

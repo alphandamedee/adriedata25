@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fiche d'Intervention</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            line-height: 1.5;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: #007bff;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .label {
+            font-weight: 500;
+            width: 180px;
+            display: inline-block;
+            vertical-align: top;
+            color: #555;
+        }
+        .value {
+            display: inline-block;
+            width: 400px;
+            color: #000;
+        }
+        .block {
+            margin-bottom: 5px;
+        }
+        hr {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container" style="max-width: 800px; margin: auto;">
+        <h2>FICHE D'INTERVENTION</h2>
+
+        <div class="section">
+            <div class="block"><span class="label">Intervenant :</span><span class="value">{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</span></div>
+            <div class="block"><span class="label">Date :</span><span class="value">{{ intervention.dateIntervention|date('d/m/Y') }}</span></div>
+        </div>
+
+        <hr>
+
+        <div class="section">
+            <div class="block"><span class="label">Code barre :</span><span class="value">{{ intervention.codeBarre }}</span></div>
+
+            <div class="block"><span class="label">Catégorie :</span><span class="value">{{ intervention.categorie }}</span></div>
+            <div class="block"><span class="label">Marque :</span><span class="value">{{ intervention.marque }}</span></div>
+            <div class="block"><span class="label">Modèle :</span><span class="value">{{ intervention.modele }}</span></div>
+            <div class="block"><span class="label">Numéro de série :</span><span class="value">{{ intervention.numeroSerie }}</span></div>
+        </div>
+
+        <hr>
+
+        <div class="section">
+            <div class="block"><span class="label">CPU :</span><span class="value">{{ intervention.cpu }}</span></div>
+            <div class="block"><span class="label">Fréquence CPU :</span><span class="value">{{ intervention.frequenceCpu }}</span></div>
+            <div class="block"><span class="label">RAM :</span><span class="value">{{ intervention.ram }} ({{ intervention.typeRam }})</span></div>
+            <div class="block"><span class="label">Stockage :</span><span class="value">{{ intervention.stockage }} ({{ intervention.typeStockage }})</span></div>
+            <div class="block"><span class="label">Carte Graphique :</span><span class="value">{{ intervention.carteGraphique }}</span></div>
+            <div class="block"><span class="label">Mémoire Vidéo :</span><span class="value">{{ intervention.memoireVideo }}</span></div>
+        </div>
+
+        <hr>
+
+        <div class="section">
+            <div class="block"><span class="label">Système d'exploitation :</span><span class="value">{{ intervention.systemeExploitation }} ({{ intervention.versionSe }})</span></div>
+            <div class="block"><span class="label">MAJ Windows :</span><span class="value">{{ intervention.miseAJourWindows ? 'Oui' : 'Non' }}</span></div>
+            <div class="block"><span class="label">MAJ Pilotes :</span><span class="value">{{ intervention.miseAJourPilotes ? 'Oui' : 'Non' }}</span></div>
+            <div class="block"><span class="label">Autres logiciels :</span><span class="value">{{ intervention.autresLogiciels ? 'Oui' : 'Non' }}</span></div>
+            <div class="block"><span class="label">Commentaire :</span><span class="value">{{ intervention.commentaire }}</span></div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% if intervention.codeBarre %}
+            JsBarcode("#barcode", "{{ intervention.codeBarre }}", {
+                format: "CODE39",
+                displayValue: true,
+                fontSize: 12
+            });
+        {% endif %}
+    });
+    </script>
+</body>
+</html>

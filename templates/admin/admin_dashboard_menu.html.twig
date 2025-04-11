@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord administrateur{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Tableau de bord - Administration</h2>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-10">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">📊 Statistiques</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Total Utilisateurs</th>
+                                    <th>Admins</th>
+                                    <th>Techniciens</th>
+                                    <th>Bénévoles</th>
+                                    <th>Produits</th>
+                                    <th>Interventions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ nbUsers }}</td>
+                                    <td>{{ nbAdmins }}</td>
+                                    <td>{{ nbTechniciens }}</td>
+                                    <td>{{ nbBenevoles }}</td>
+                                    <td>{{ nbProduits }}</td>
+                                    <td>{{ nbInterventions }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- Bloc Utilisateurs -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">👥 Utilisateurs</h5>
+                    <p class="card-text">Ajouter ou consulter les utilisateurs</p>
+                    <a href="{{ path('admin_user_add') }}" class="btn btn-success m-1">➕ Ajouter</a>
+                    <a href="{{ path('admin_user_list') }}" class="btn btn-outline-primary m-1">📋 Liste</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc Produits -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📦 Produits</h5>
+                    <p class="card-text">Voir et gérer les produits informatiques</p>
+                    <a href="{{ path('app_produit') }}" class="btn btn-outline-secondary m-1">🔍 Consulter</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc Interventions -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🛠️ Interventions</h5>
+                    <p class="card-text">Remplir une fiche ou consulter les PDF</p>
+                    <!-- <a href="{{ path('intervention_nouvelle') }}" class="btn btn-outline-warning m-1">📝 Nouvelle fiche</a> -->
+                    <a href="{{ path('app_profil') }}" class="btn btn-outline-dark m-1">👤 interventions</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc Retour -->
+        <div class="col-md-8">
+            <div class="text-center mt-4">
+                <a href="{{ path('app_profil') }}" class="btn btn-outline-secondary">
+                    ⬅️ Retour au profil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
