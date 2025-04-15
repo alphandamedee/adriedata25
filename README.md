@@ -1,18 +1,21 @@
-# DatAdrie
+# ADRIEDATA
 
-Projet Symfony avec une page de connexion.
+Application de gestion d'inventaire et suivi d'interventions sur matériel informatique développée avec Symfony.
 
 ## Prérequis
-- PHP 8.x
+
+- PHP 8.1 ou supérieur
 - Composer
 - Symfony CLI
-- MySQL (phpMyAdmin)
+- MySQL ou MariaDB
+- Navigateur web moderne
 
 ## Installation
-1. Clonez le dépôt :
+
+1. **Clonez le dépôt :**
    ```bash
-   git clone https://github.com/alphandamedee/DatAdrie.git
-   cd DatAdrie
+   git clone https://github.com/alphandamedee/adriedata25.git
+   cd adriedata25
 
 2. Installez les dépendances :
 bash
@@ -53,3 +56,28 @@ Wrap
 
 Copy
 symfony server:start
+
+# Fonctionnalités
+Gestion des utilisateurs : Authentification et gestion des profils
+Gestion d'inventaire : Ajout, modification et suppression de matériel
+Suivi d'interventions : Suivi des opérations de maintenance
+Tableau de bord : Statistiques sur les interventions
+
+# Structure du projet
+* src/Controller/ : Contrôleurs de l'application
+* src/Entity/ : Entités Doctrine (modèles)
+* src/Repository/ : Repositories pour les requêtes à la base de données
+* templates/ : Vues Twig de l'application
+* public/ : Ressources accessibles publiquement (CSS, JavaScript, images)
+
+# Branches Git
+°main : Version stable
+°dev : Branche de développement
+
+# Licence
+Ce projet est développé par Adrie et est sous licence privée.
+
+# Contact
+Pour toute question ou suggestion, veuillez contacter :
+
+Email : djouneid.adrie@gmail.com 

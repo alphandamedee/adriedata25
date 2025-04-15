@@ -6,59 +6,77 @@
 <div class="container bg-light">
     <h2 class="text-center mt-3 mb-4">Liste des Produits</h2>
 
- 
     <!-- Résultat recherche -->
     <p class="text-center">
-        Nombre de produits trouvés : <strong>{{ produits|length }}</strong>
+        Nombre de produits trouvés : <strong>{{ pagination.getTotalItemCount }}</strong>
         {% if app.request.query.get('search') %}
             pour le mot clé "<strong>{{ app.request.query.get('search') }}</strong>"
         {% endif %}
     </p>
-    
 
-       <!-- Formulaire de recherche -->
+    <!-- Formulaire de recherche produit -->
     <form method="get" action="{{ path('app_produit') }}" class="mb-4">
-        <div class="row align-items-center">
-            <div class="col-1">
+        <div class="row g-2">
+
+            <!-- Scanner -->
+            <div class="col-3 col-sm-2 col-md-1">
                 <button type="button" class="btn btn-secondary w-100" id="scan-barcode-btn" data-bs-toggle="modal" data-bs-target="#barcodeModal" title="Scanner">
                     <i class="bi bi-upc-scan"></i>
                 </button>
             </div>
-            <div class="col-4">
+
+            <!-- Champ de recherche -->
+            <div class="col-9 col-sm-6 col-md-4">
                 <input type="text" name="search" id="search-input" class="form-control" placeholder="Rechercher un produit" value="{{ app.request.query.get('search') }}">
             </div>
-            <div class="col-1">
-                <button class="btn btn-primary w-100 d-none d-md-block" type="submit" title="Rechercher">🔍</button>
-                <button class="btn btn-primary w-100 d-md-none" type="submit">
-                    <i class="bi bi-search"></i>
+
+            <!-- Rechercher -->
+            <div class="col-6 col-sm-2 col-md-1">
+                <button class="btn btn-primary w-100" type="submit" title="Rechercher">
+                    <span class="d-none d-md-inline">🔍</span>
+                    <i class="bi bi-search d-md-none"></i>
                 </button>
             </div>
-            
-        <div class="col-md-1">
-            <a href="{{ path('app_produit') }}" class="btn btn-outline-secondary" title=" Réinitialiser">
-                ♻️
-            </a>
-        </div>
 
-            <div class="col-3">
-                <a href="{{ path('produit_ajouter') }}" id="add-product-link" class="btn btn-success w-100">
-                    <i class="bi bi-plus-circle"></i> Ajouter un Produit
+            <!-- Réinitialiser -->
+            <div class="col-6 col-sm-2 col-md-1">
+                <a href="{{ path('app_produit') }}" class="btn btn-outline-secondary w-100" title="Réinitialiser">
+                    ♻️
                 </a>
             </div>
 
-            
-            <!-- Bouton d'export -->
-            <div class="col-2 text-end">
-                <a href="{{ path('produit_export', { format: 'csv' }) }}" class="btn btn-outline-primary me-2" title="Exporter CSV">
+            <!-- Ajouter un produit -->
+            <div class="col-12 col-sm-6 col-md-2">
+                <a href="{{ path('produit_ajouter') }}" id="add-product-link" class="btn btn-success w-100" title="Ajouter un Produit">
+                    <i class="bi bi-plus-circle"></i> <span class="d-none d-sm-inline">Ajouter</span>
+                </a>
+            </div>
+
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                <!-- Admin : Gérer catégories / types de RAM -->
+                <div class="col-6 col-sm-3 col-md-2 d-flex gap-2">
+                    <a href="{{ path('categorie_produit_index') }}" class="btn btn-outline-dark w-25 h-75" title="Catégories">
+                        <i class="bi bi-tags"></i>
+                    </a>
+                    <a href="{{ path('type_ram_index') }}" class="btn btn-outline-dark w-25 h-75" title="Types de RAM">
+                        <i class="bi bi-memory"></i>
+                    </a>
+                </div>
+            {% endif %}
+
+            <!-- Export -->
+            <div class="col-6 col-sm-3 col-md-2 d-flex gap-2 justify-content-end">
+                <a href="{{ path('produit_export', { format: 'csv' }) }}" class="btn btn-outline-primary w-25 h-100" title="Exporter CSV">
                     <i class="bi bi-file-earmark-spreadsheet"></i>
                 </a>
-                <a href="{{ path('produit_export', { format: 'excel' }) }}" class="btn btn-outline-success" title="Exporter Excel">
+                <a href="{{ path('produit_export', { format: 'excel' }) }}" class="btn btn-outline-success w-25 h-100" title="Exporter Excel">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>
             </div>
 
         </div>
     </form>
+
 
     <!-- Tableau -->
     <div class="table-responsive">
@@ -72,22 +90,34 @@
                     <th>Modèle</th>
                     <th>Stockage</th>
                     <th>RAM</th>
+                    <th>CPU</th>
                     <th>Statut</th>
                     <th>Code Étagère</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for produit in produits %}
+                {% for produit in pagination %}
                     <tr>
-                        <td class="no-wrap">{{ produit.idProduit | default('N/A')}}</td>
+                        <td class="no-wrap">{{ produit.idProduit | default('N/A') }}</td>
                         <td class="no-wrap">{{ produit.codeBarre | default('N/A') }}</td>
-                        <td class="no-wrap">{{ produit.categorie | default('N/A')}}</td>
-                        <td class="">{{ produit.marque | default('N/A')}}</td>
-                        <td class="">{{ produit.modele | default('N/A')}}</td>
-                        <td class="no-wrap">{{ produit.stockage | default('N/A')}} {{ produit.typeStockage | default('N/A')}}</td>
-                        <td class="no-wrap">{{ produit.ram | default('N/A')}} {{ produit.typeRam | default('N/A') }}</td>
-                        <td class="no-wrap"><span class="badge bg-{{ produit.statut == 'Disponible' ? 'success' : produit.statut == 'Réparé' ? 'info' : produit.statut == 'HS' ? 'danger' : produit.statut == 'Vendu' ? 'secondary' : 'warning' }}">{{ produit.statut | default('N/A')}}</span></td>
+                        <td class="no-wrap">
+                            {% if produit.categorie is not null %}
+                                {{ produit.categorie.nom | default('N/A') }}
+
+
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td class="">{{ produit.marque | default('N/A') }}</td>
+                        <td class="">{{ produit.modele | default('N/A') }}</td>
+                        <td class="no-wrap">{{ produit.stockage | default('N/A') }} {{ produit.typeStockage | default('N/A') }}</td>
+                        <td class="no-wrap">{{ produit.ram | default('N/A') }} {{ produit.typeRam | default('N/A') }}</td>
+                        <td class="no-wrap">{{ produit.cpu | default('N/A') }}</td>
+                        <td class="no-wrap">
+                            <span class="badge bg-{{ produit.statut == 'Disponible' ? 'success' : produit.statut == 'Réparé' ? 'info' : produit.statut == 'HS' ? 'danger' : produit.statut == 'Vendu' ? 'secondary' : 'warning' }}">{{ produit.statut | default('N/A') }}</span>
+                        </td>
                         <td class="no-wrap text-center">{{ produit.codeEtagere | default('N/A') }}</td>
                         <td class="d-flex flex-nowrap">
                             <a href="{{ path('produit_modifier', { id: produit.idProduit }) }}" class="btn btn-warning btn-sm me-1" title="Modifier"><i class="bi bi-pencil"></i></a>
@@ -100,10 +130,14 @@
                             <a href="{{ path('intervention_new', { id: produit.idProduit }) }}" class="btn btn-info btn-sm" title="Intervenir"><i class="bi bi-tools"></i></a>
                         </td>
                     </tr>
-                
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <div class="pagination justify-content-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
     </div>
 </div>
 
@@ -134,26 +168,9 @@
 <!-- Élément audio pour le son de scan -->
 <audio id="scan-beep" src="{{ asset('sounds/beep.mp3') }}" preload="auto"></audio>
 
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/scan.js') }}"></script>
-<script>
-$(document).ready(function() {
-    if ($("#produit-table tbody tr").length > 0 &&
-        !$("#produit-table tbody tr td").first().attr("colspan")) {
-        $('#produit-table').DataTable({
-            responsive: true
-            pageLength: 100, // Nombre d'éléments par défaut
-            lengthMenu: [5, 10, 25, 50, 100], // Options de choix d'affichage par page
-            language: {
-                url: "https://cdn.datatables.net/plug-ins/1.13.4/i18n/fr-FR.json" // Traduction en français
-            }
-        });
-    }
-});
-</script>
-
 {% endblock %}

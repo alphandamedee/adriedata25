@@ -1,26 +1,394 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Aperçu de l'intervention{% endblock %}
+{% block title %}Consultation Intervention{% endblock %}
 
 {% block body %}
 
+    <style>
+    /* Styles d'impression pour les fiches d'intervention */
+        @media print {
+            /* Configuration d'impression */
+            @page {
+                size: A4 portrait;
+                margin: 0.7cm;  /* Marges réduites mais suffisantes */
+            }
+            
+            /* Règles de base */
+            body * {
+                visibility: hidden;
+            }
+            
+            /* Afficher uniquement la zone d'intérêt */
+            #printable-area, #printable-area * {
+                visibility: visible;
+            }
+            
+            /* Positionner la zone et maximiser sa taille */
+            #printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0.5cm !important;
+                max-width: none !important;
+            }
+            
+            /* Masquer les éléments hors zone */
+            .container > .row, .no-print, #printable-image-area, .btn, button {
+                display: none !important;
+            }
+            
+            /* Garantir que les accordéons sont ouverts */
+            .accordion-collapse {
+                display: block !important;
+            }
+            
+            .accordion-button::after {
+                display: none !important;
+            }
+            
+            .accordion-button {
+                border: none !important;
+                background-color: white !important;
+                color: black !important;
+                font-weight: bold !important;
+                font-size: 12px !important;
+                padding: 2px 0 !important;
+                margin-bottom: 5px !important;
+            }
+            
+            /* Préserver la structure à deux colonnes avec plus d'espace */
+            .row {
+                display: flex !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            
+            .col-md-6, .col-md-4, .col-md-8 {
+                float: left !important;
+                padding: 0 4px !important;
+            }
+            
+            .col-md-6 {
+                width: 50% !important;
+            }
+            
+            .col-md-4 {
+                width: 33.33% !important;
+            }
+            
+            .col-md-8 {
+                width: 66.67% !important;
+            }
+            
+            /* Augmenter la taille des polices */
+            body, input, textarea, select, .form-control {
+                font-size: 12px !important;
+            }
+            
+            label, .form-check-label, .label-bold {
+                font-size: 11px !important;
+                font-weight: bold !important;
+            }
+            
+            h2 {
+                font-size: 18px !important;
+                margin-bottom: 12px !important;
+                margin-top: 5px !important;
+            }
+            
+            /* Optimiser la hauteur des champs pour plus de lisibilité */
+            input, select {
+                height: 24px !important;
+                min-height: 24px !important;
+                padding: 2px 4px !important;
+            }
+            
+            textarea {
+                height: 60px !important;
+                min-height: 60px !important;
+            }
+            
+            /* Espacement vertical optimisé */
+            .mb-2, .mb-3, .mb-4 {
+                margin-bottom: 5px !important;
+            }
+            
+            .mt-3, .mt-4 {
+                margin-top: 5px !important;
+            }
+            
+            /* Optimiser les cases à cocher */
+            .form-check {
+                padding-left: 20px !important;
+                margin-bottom: 4px !important;
+                min-height: 15px !important;
+            }
+            
+            .form-check-input {
+                margin-top: 3px !important;
+                width: 14px !important;
+                height: 14px !important;
+            }
+            
+            /* Contrôler la taille du code-barre */
+            svg#barcode {
+                max-height: 45px !important;
+                width: auto !important;
+                margin: 5px 0 !important;
+            }
+            
+            /* Éviter les sauts de page indésirables */
+            .card, .card-body, #printable-area {
+                page-break-inside: avoid;
+            }
+            
+            /* Optimiser le conteneur */
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .card {
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            
+            .card-body {
+                padding: 0 !important;
+            }
+            
+            /* Amélioration de l'apparence des contrôles */
+            .form-control {
+                border: 1px solid #999 !important;
+                background-color: #fff !important;
+            }
+            
+            /* Améliorer l'affichage de l'accordéon */
+            .accordion {
+                margin-top: 10px !important;
+            }
+            
+            .accordion-item {
+                border: none !important;
+            }
+            
+            .accordion-body {
+                padding: 5px 0 !important;
+            }
+        }
 
-    <div class="container my-1">
-        <h3 class="text-center mb-4">Aperçu de l'intervention</h3>
+        /* Style pour les labels en gras */
+        .label-bold {
+            font-weight: bold;
+        }
+</style>
 
-        <div class="card shadow p-4 mb-4">
-            {% include 'intervention/pdf_template.html.twig' %}
+
+<body class="readonly">
+<div class="container mt-4">
+    <div class="card shadow mb-4">
+        <div class="card-body card-body-custom" id="printable-area">
+            <h2 class="text-center mb-4"><i class="bi bi-eye"></i> FICHE D'INTERVENTION</h2>
+            {{ form_start(form, {'attr': {'id': 'intervention-form', 'novalidate': true}}) }}
+
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    {{ form_label(form.codeBarre, null, {'label_attr': {'class': 'label-bold'}}) }}
+                    {{ form_widget(form.codeBarre, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-md-8 mb-2 text-end">
+                    {% if intervention.codeBarre %}<svg id="barcode"></svg>{% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    {{ form_label(form.intervenant) }}
+                    {{ form_widget(form.intervenant, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-md-6 mb-2">
+                    {{ form_label(form.dateIntervention) }}
+                    {{ form_widget(form.dateIntervention, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="accordion" id="productAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true">
+                            Informations du Produit
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.categorie, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.categorie, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.marque, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.marque, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.modele, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.modele, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.numeroSerie, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.numeroSerie, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.cpu, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.cpu, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.frequenceCpu, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.frequenceCpu, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.ram, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.ram, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.typeRam, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.typeRam, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.stockage, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.stockage, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.typeStockage, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.typeStockage, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.carteGraphique, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.carteGraphique, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.memoireVideo, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.memoireVideo, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.systemeExploitation, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.systemeExploitation, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.versionSe, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.versionSe, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.codeEtagere, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.codeEtagere, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ form_label(form.statut, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4 mb-2">
+                    <div class="form-check">{{ form_widget(form.miseAJourWindows) }} {{ form_label(form.miseAJourWindows) }}</div>
+                    <div class="form-check">{{ form_widget(form.miseAJourPilotes) }} {{ form_label(form.miseAJourPilotes) }}</div>
+                    <div class="form-check">{{ form_widget(form.autresLogiciels) }} {{ form_label(form.autresLogiciels) }}</div>
+                </div>
+                <div class="col-md-8 mb-2">
+                    {{ form_label(form.commentaire) }}
+                    {{ form_widget(form.commentaire, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            {{ form_end(form) }}
         </div>
 
-        <div class="text-center no-print">
-            <a href="{{ path('intervention_confirm_pdf', { id: intervention.id }) }}" class="btn btn-success">
-                ✅ Générer le PDF maintenant
-            </a>
-           
-            <a href="{{ path('app_produit') }}" class="btn btn-secondary ms-2">
-                ❌ Retour à la liste
-            </a>
-        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="text-center col-md-3">
+                <a href="{{ path('app_profil') }}" class="btn btn-secondary no-print">
+                    <i class="bi bi-arrow-left-circle"></i> Retour
+                </a>
+            </div>
+            <div class="text-center col-md-3">
+                <button type="button" id="print-button" class="btn btn-info no-print">
+                    <i class="bi bi-printer"></i> Imprimer
+                </button>
+            </div>
     </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% if intervention.codeBarre %}
+        JsBarcode("#barcode", "{{ intervention.codeBarre }}", {
+            format: "CODE39",
+            displayValue: true,
+            fontSize: 14,
+            height: 50,
+            margin: 10,
+            background: "#ffffff",
+            lineColor: "#000000",
+            textMargin: 8,
+            font: "monospace",
+            textAlign: "center"
+        });
+        {% endif %}
+
+        document.getElementById('print-button').addEventListener('click', function () {
+            document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
+
+            const form = document.querySelector('#intervention-form');
+            const formData = new FormData(form);
+
+            fetch(form.getAttribute('action'), {
+                method: 'POST',
+                body: formData,
+            })
+            .then(() => {
+                let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+                let codeProduit = "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
+                let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
+
+                codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
+                let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
+
+                const originalTitle = document.title;
+                document.title = fileName;
+
+                setTimeout(() => {
+                    window.print();
+                    document.title = originalTitle;
+                }, 300);
+            })
+            .catch(() => {
+                alert("Erreur : l'enregistrement a échoué, impression annulée.");
+            });
+        });
+    });
+</script>
 {% endblock %}

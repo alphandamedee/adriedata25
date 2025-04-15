@@ -180,7 +180,7 @@
                     <th>Code Barre</th>
                     <th>Date</th>
                     <th>Commentaire</th>
-                    <th>PDF</th>
+                    <th>Fiche</th>
                 </tr>
             </thead>
             <tbody>
@@ -189,8 +189,16 @@
                         <td>{{ intervention.id }}</td>
                         <td>{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td>
                         <td>
-                            {% if intervention.produit is defined %}
-                                {{ intervention.produit.categorie }} - {{ intervention.produit.marque }} - {{ intervention.produit.modele }} - {{ intervention.produit.stockage }}{{ intervention.produit.typeStockage }} - {{intervention.produit.ram}}{{intervention.produit.typeRam}}
+                            {% if intervention.produit is defined and intervention.produit is not null %}
+                                {% if intervention.produit.categorie is defined and intervention.produit.categorie is not null %}
+                                    {{ intervention.produit.categorie.nom ?? 'N/A' }} - 
+                                {% else %}
+                                    N/A - 
+                                {% endif %}
+                                {{ intervention.produit.marque ?? 'N/A' }} - 
+                                {{ intervention.produit.modele ?? 'N/A' }} - 
+                                {{ intervention.produit.stockage ?? '' }}{{ intervention.produit.typeStockage is not null ? intervention.produit.typeStockage.nom ?? '' : '' }} - 
+                                {{ intervention.produit.ram ?? '' }}{{ intervention.produit.typeRam is not null ? intervention.produit.typeRam.nom ?? '' : '' }}
                             {% else %}
                                 <span class="text-muted">Produit non trouvé</span>
                             {% endif %}
@@ -200,13 +208,14 @@
                         <td>{{ intervention.commentaire }}</td>
                         <td>
                             {% if intervention.pdfFilePath %}
-                                <a href="{{ asset(intervention.pdfFilePath) }}" class="btn btn-sm btn-success" target="_blank" title="Voir PDF">
-                                    📄
+                                <a href="{{ path('intervention_show', { id: intervention.id }) }}" class="btn btn-sm btn-info" title="Afficher la fiche intervention">
+                                    👁
                                 </a>
                             {% else %}
                                 <span class="text-muted">Aucun PDF</span>
                             {% endif %}
                         </td>
+
                     </tr>
                 {% endfor %}
             </tbody>

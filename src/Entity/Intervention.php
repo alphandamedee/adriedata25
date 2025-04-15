@@ -16,8 +16,8 @@ class Intervention
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Produit::class)]
-    #[ORM\JoinColumn(name: "produit_id", referencedColumnName: "id_produit", nullable: false)]
-    private Produit $produit;
+    #[ORM\JoinColumn(name: "produit_id", referencedColumnName: "id_produit", nullable: true)]
+    private ?Produit $produit = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: "intervenant_id", referencedColumnName: "id_User", nullable: false)]
@@ -98,6 +98,9 @@ class Intervention
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $pdfFilePath = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $imageFilePath = null;
+
     public function __construct()
     {
         $this->dateIntervention = new \DateTime();
@@ -105,7 +108,7 @@ class Intervention
 
     public function getId(): ?int { return $this->id; }
 
-    public function getProduit(): Produit { return $this->produit; }
+    public function getProduit(): ?Produit { return $this->produit; }
     public function setProduit(Produit $produit): self { $this->produit = $produit; return $this; }
 
     public function getIntervenant(): ?User { return $this->intervenant; }
@@ -160,6 +163,7 @@ class Intervention
     public function setRam(?string $ram): self { $this->ram = $ram; return $this; }
 
     public function getTypeRam(): ?string { return $this->typeRam; }
+    
     public function setTypeRam(?string $typeRam): self { $this->typeRam = $typeRam; return $this; }
 
     public function getStockage(): ?string { return $this->stockage; }
@@ -186,4 +190,6 @@ class Intervention
     public function getStatut(): ?string { return $this->statut;}
     public function setStatut(?string $statut): self { $this->statut = $statut; return $this;}
 
+    public function getImageFilePath(): ?string { return $this->imageFilePath; }
+    public function setImageFilePath(?string $imageFilePath): self { $this->imageFilePath = $imageFilePath; return $this;}
 }

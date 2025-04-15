@@ -17,11 +17,11 @@
 
     <!-- ✅ DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-
+    
+    {% block stylesheets %}
     <!-- ✅ Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-
-    {% block stylesheets %}{% endblock %}
+    {% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100 bg-image" style="background-image: url('{{ asset('images/logo Adrie.png') }}'); background-size: cover; background-position: center;">
 

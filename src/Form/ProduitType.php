@@ -1,8 +1,13 @@
 <?php
-// filepath: f:\ALPHAND\DatAdrie\ADRIEDATA\src\Form\ProduitType.php
+
 namespace App\Form;
 
 use App\Entity\Produit;
+use App\Entity\CategorieProduit;
+use App\Repository\CategorieProduitRepository;
+use App\Entity\TypeRam;
+use App\Repository\TypeRamRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,48 +23,19 @@ class ProduitType extends AbstractType
             ->add('codeBarre', TextType::class, [
                 'label' => 'Code Barre',
             ])
-            ->add('categorie', ChoiceType::class, [
-                'choices' => [
-                    'Ordinateur' => 'Ordinateur',
-                    'Portable' => 'Portable',
-                    'Ecran' => 'Ecran',
-                    'Unité Centrale' => 'Unité Centrale',
-                    'ADAPTATEUR' => 'ADAPTATEUR',
-                    'Alarme' => 'Alarme',
-                    'ALL IN ONE' => 'ALL IN ONE',
-                    'AMPLI' => 'AMPLI',
-                    'APPLE' => 'APPLE',
-                    'Clé USB' => 'Clé USB',
-                    'Disque Dur' => 'Disque Dur',
-                    'Enceinte' => 'Enceinte',
-                    'GPS' => 'GPS',
-                    'Imprimante' => 'Imprimante',
-                    'iphone' => 'iphone',
-                    'MAC' => 'MAC',
-                    'Machine à Coudre' => 'Machine à Coudre',
-                    'MINI PC' => 'MINI PC',
-                    'NAS' => 'NAS',
-                    'Onduleur' => 'Onduleur',
-                    'Photocopieur' => 'Photocopieur',
-                    'Projecteur' => 'Projecteur',
-                    'PS' => 'PS',
-                    'PS2' => 'PS2',
-                    'Routeur' => 'Routeur',
-                    'Scanner' => 'Scanner',
-                    'Serveur' => 'Serveur',
-                    'Station d1accueil' => 'Station d1accueil',
-                    'Switch' => 'Switch',
-                    'Table' => 'Table',
-                    'Tablette' => 'Tablette',
-                    'Téléphone' => 'Téléphone',
-                    'Téléphone Portable' => 'Téléphone Portable',
-                    'TV' => 'TV',
-                ],
+            ->add('categorie', EntityType::class, [
+                'class' => CategorieProduit::class,
+                'choice_label' => 'nom',
                 'placeholder' => '-- Sélectionnez une catégorie --',
+                'query_builder' => function (CategorieProduitRepository $er) {
+                    return $er->createQueryBuilder('c')
+                            ->where('c.visible = true')
+                            ->orderBy('c.nom', 'ASC');},
                 'label' => 'Catégorie',
                 'attr' => [
-                    'class' => 'form-select shadow-sm',
+                    'class' => 'form-select',
                 ],
+                'required' => true,
             ])
             ->add('marque', TextType::class, [
                 'label' => 'Marque',
@@ -68,7 +44,7 @@ class ProduitType extends AbstractType
                 'label' => 'Modèle',
             ])
             ->add('stockage', TextType::class, [
-                'label' => 'Stockage',
+                'label' => 'Stockage (en Go)',
             ])
             ->add('typeStockage', ChoiceType::class, [
                 'choices' => [
@@ -117,12 +93,19 @@ class ProduitType extends AbstractType
                 'label' => 'Capacité RAM',
                 'required' => false,
             ])
-            ->add('typeRam', TextType::class, [
+            ->add('typeRam', EntityType::class, [
+                'class' => TypeRam::class,
+                'choice_label' => 'nom',
+                'placeholder' => '-- Sélectionnez un type de RAM --',
+                'query_builder' => function (TypeRamRepository $er) {
+                    return $er->createQueryBuilder('t')
+                            ->where('t.visible = true')
+                            ->orderBy('t.nom', 'ASC');},
                 'label' => 'Type de RAM',
                 'required' => false,
-            // ])
-            // ->add('save', SubmitType::class, [
-            //     'label' => 'Ajouter le Produit',
+                'attr' => [
+                    'class' => 'form-select',
+                ],
             ]);
     }
 

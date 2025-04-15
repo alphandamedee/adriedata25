@@ -329,3 +329,18 @@ a:hover {
         transform: rotate(360deg);
     }
 }
+@media (max-width: 768px) {
+    .login-container {
+        width: 90%;
+        margin: 20px auto;
+    }
+    .footer-logo {
+        width: 30px; /* Ajuste cette valeur selon la taille souhaitée */
+    }
+    .footer .col-md-4 {
+        margin-bottom: 10px; /* Réduire la marge pour diminuer l'espace entre les colonnes */
+    }
+    .footer .btn {
+        margin-top: 0; /* Réduire la marge pour diminuer l'espace au-dessus du bouton */
+    }
+}

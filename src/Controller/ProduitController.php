@@ -14,54 +14,58 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 class ProduitController extends AbstractController
 {
     #[Route('/produit', name: 'app_produit')]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
         $search = $request->query->get('search', '');
-        $produits = [];
-        
 
-        $queryBuilder = $entityManager->getRepository(Produit::class)->createQueryBuilder('p');
+        $queryBuilder = $entityManager->getRepository(Produit::class)->createQueryBuilder('p')
+            ->leftJoin('p.categorie', 'c')         // 🔗 JOINTURE pour charger les catégories
+            ->addSelect('c');                      // 🔍 Assure le SELECT complet de la relation
 
         if ($search) {
             $queryBuilder->where('p.codeBarre LIKE :search')
-                ->orWhere('p.categorie LIKE :search')
+                ->orWhere('c.nom LIKE :search')    // 👈 on recherche aussi dans le nom de la catégorie
                 ->orWhere('p.marque LIKE :search')
                 ->orWhere('p.modele LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        $produits = $queryBuilder->getQuery()->getResult();
-
-        // Check if the product exists
-        // if (empty($produits)) {
-        //     throw $this->createNotFoundException('Produit non trouvé');
-        // }
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            25
+        );
 
         return $this->render('produit/index.html.twig', [
-            'produits' => $produits,
+            'pagination' => $pagination,
             'search' => $search,
         ]);
     }
 
+
     #[Route('/produit/ajouter', name: 'produit_ajouter')]
-    public function ajouter(Request $request, EntityManagerInterface $em): Response
+    public function ajouter(Request $request, EntityManagerInterface $em, ProduitRepository $produitRepo): Response
     {
         $produit = new Produit();
-
-        // 🧲 Récupérer le code scanné depuis l'URL (paramètre ?scanned=...)
-        // $scanned = $request->query->get('scanned');
-        // if ($scanned) {
-        //     $produit->setCodeBarre($scanned); // Remplit automatiquement le champ
-        // }
-
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $codeBarre = $produit->getCodeBarre();
+
+            // 🔒 Vérifie si le code-barre existe déjà
+            if ($produitRepo->findOneBy(['codeBarre' => $codeBarre])) {
+                $this->addFlash('danger', 'Ce code-barre est déjà utilisé pour un autre produit.');
+                return $this->render('produit/ajouter.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+
             $em->persist($produit);
             $em->flush();
 
@@ -73,6 +77,7 @@ class ProduitController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/produit/modifier/{id}', name: 'produit_modifier')]
     public function modifier(Request $request, EntityManagerInterface $entityManager, int $id): Response
@@ -132,7 +137,7 @@ class ProduitController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'produit' => [
-                'categorie' => $produit->getCategorie(),
+                'categorie' => $produit->getCategorie() ? $produit->getCategorie()->getNom() : null,
                 'marque' => $produit->getMarque(),
                 'modele' => $produit->getModele(),
                 'numeroSerie' => $produit->getNumeroSerie(),
@@ -172,7 +177,7 @@ class ProduitController extends AbstractController
                 fputcsv($handle, [
                     $produit->getIdProduit(),
                     $produit->getCodeBarre(),
-                    $produit->getCategorie(),
+                    $produit->getCategorie() ? $produit->getCategorie()->getNom() : 'N/A',
                     $produit->getMarque(),
                     $produit->getModele(),
                     $produit->getStockage() . ' ' . $produit->getTypeStockage(),
@@ -212,7 +217,7 @@ class ProduitController extends AbstractController
         foreach ($produits as $produit) {
             $sheet->setCellValue('A' . $row, $produit->getIdProduit());
             $sheet->setCellValue('B' . $row, $produit->getCodeBarre());
-            $sheet->setCellValue('C' . $row, $produit->getCategorie());
+            $sheet->setCellValue('C' . $row, $produit->getCategorie() ? $produit->getCategorie()->getNom() : 'N/A');
             $sheet->setCellValue('D' . $row, $produit->getMarque());
             $sheet->setCellValue('E' . $row, $produit->getModele());
             $sheet->setCellValue('F' . $row, $produit->getStockage() . ' ' . $produit->getTypeStockage());

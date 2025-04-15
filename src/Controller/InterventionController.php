@@ -56,7 +56,9 @@ class InterventionController extends AbstractController
         $intervention->setNumeroSerie($produit->getNumeroSerie());
         $intervention->setCpu($produit->getCpu());
         $intervention->setFrequenceCpu($produit->getFrequenceCpu());
+        $intervention->setStatut($produit->getStatut());
         $intervention->setRam($produit->getRam());
+
         $intervention->setTypeRam($produit->getTypeRam());
         $intervention->setStockage($produit->getStockage());
         $intervention->setTypeStockage($produit->getTypeStockage());
@@ -98,7 +100,12 @@ class InterventionController extends AbstractController
             $produit->setStatut($intervention->getStatut());
             $produit->setCodeEtagere($intervention->getCodeEtagere());
             $produit->setRam($intervention->getRam());
-            $produit->setTypeRam($intervention->getTypeRam());
+            // Ajoute avant setTypeRam pour éviter l'erreur de type
+            $typeRamEntity = $entityManager->getRepository(\App\Entity\TypeRam::class)->findOneBy([
+                'nom' => $intervention->getTypeRam()
+            ]);
+            $produit->setTypeRam($typeRamEntity);
+            // $produit->setTypeRam($intervention->getTypeRam());
             $produit->setModele($intervention->getModele());
             $produit->setStockage($intervention->getStockage());
             $produit->setTypeStockage($intervention->getTypeStockage());
@@ -248,9 +255,14 @@ class InterventionController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function show(Intervention $intervention): Response
     {
+        $form = $this->createForm(InterventionType::class, $intervention);
+
         return $this->render('intervention/show.html.twig', [
             'intervention' => $intervention,
+            'form' => $form->createView(),
+            'produit' => $intervention->getProduit(),
         ]);
+        
     }
 
     #[Route('/list', name: 'intervention_list')]

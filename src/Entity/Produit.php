@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use App\Entity\CategorieProduit;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 
@@ -19,8 +20,9 @@ class Produit
     #[ORM\Column(name: "code_barre", type: "string", length: 100, nullable: true)]
     private ?string $codeBarre = null;
 
-    #[ORM\Column(name: "categorie", type: "string", length: 100, nullable: true)]
-    private ?string $categorie = null;
+    #[ORM\ManyToOne(targetEntity: CategorieProduit::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?CategorieProduit $categorie = null;
 
     #[ORM\Column(name: "marque", type: "string", length: 100, nullable: true)]
     private ?string $marque = null;
@@ -37,8 +39,9 @@ class Produit
     #[ORM\Column(name: "ram", type: "string", length: 50, nullable: true)]
     private ?string $ram = null;
 
-    #[ORM\Column(name: "type_ram", type: "string", length: 50, nullable: true)]
-    private ?string $typeRam = null;
+    #[ORM\ManyToOne(targetEntity: TypeRam::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?TypeRam $typeRam = null;
 
     #[ORM\Column(name: "num_serie", type: "string", length: 50, nullable: true)]
     private ?string $numeroSerie = null;
@@ -72,6 +75,8 @@ class Produit
 
     #[ORM\Column(name: "autres_logiciels", type: "datetime", nullable: true)]
     private ?\DateTimeInterface $autresLogiciels = null;
+    
+    
 
     // Getters et setters
 
@@ -103,12 +108,12 @@ class Produit
         return $this;
     }
 
-    public function getCategorie(): ?string
+    public function getCategorie(): ?CategorieProduit
     {
         return $this->categorie;
     }
 
-    public function setCategorie(?string $categorie): self
+    public function setCategorie(?CategorieProduit $categorie): self
     {
         $this->categorie = $categorie;
         return $this;
@@ -169,12 +174,12 @@ class Produit
         return $this;
     }
 
-    public function getTypeRam(): ?string
+    public function getTypeRam(): ?TypeRam
     {
         return $this->typeRam;
     }
 
-    public function setTypeRam(?string $typeRam): self
+    public function setTypeRam(?TypeRam $typeRam): self
     {
         $this->typeRam = $typeRam;
         return $this;

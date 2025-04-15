@@ -3,13 +3,197 @@
 {% block title %}Nouvelle Intervention{% endblock %}
 
 {% block body %}
+<style>
+    /* Styles d'impression pour les fiches d'intervention */
+        @media print {
+            /* Configuration d'impression */
+            @page {
+                size: A4 portrait;
+                margin: 0.7cm;  /* Marges réduites mais suffisantes */
+            }
+            
+            /* Règles de base */
+            body * {
+                visibility: hidden;
+            }
+            
+            /* Afficher uniquement la zone d'intérêt */
+            #printable-area, #printable-area * {
+                visibility: visible;
+            }
+            
+            /* Positionner la zone et maximiser sa taille */
+            #printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0.5cm !important;
+                max-width: none !important;
+            }
+            
+            /* Masquer les éléments hors zone */
+            .container > .row, .no-print, #printable-image-area, .btn, button {
+                display: none !important;
+            }
+            
+            /* Garantir que les accordéons sont ouverts */
+            .accordion-collapse {
+                display: block !important;
+            }
+            
+            .accordion-button::after {
+                display: none !important;
+            }
+            
+            .accordion-button {
+                border: none !important;
+                background-color: white !important;
+                color: black !important;
+                font-weight: bold !important;
+                font-size: 12px !important;
+                padding: 2px 0 !important;
+                margin-bottom: 5px !important;
+            }
+            
+            /* Préserver la structure à deux colonnes avec plus d'espace */
+            .row {
+                display: flex !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            
+            .col-md-6, .col-md-4, .col-md-8 {
+                float: left !important;
+                padding: 0 4px !important;
+            }
+            
+            .col-md-6 {
+                width: 50% !important;
+            }
+            
+            .col-md-4 {
+                width: 33.33% !important;
+            }
+            
+            .col-md-8 {
+                width: 66.67% !important;
+            }
+            
+            /* Augmenter la taille des polices */
+            body, input, textarea, select, .form-control {
+                font-size: 12px !important;
+            }
+            
+            label, .form-check-label, .label-bold {
+                font-size: 11px !important;
+                font-weight: bold !important;
+            }
+            
+            h2 {
+                font-size: 18px !important;
+                margin-bottom: 12px !important;
+                margin-top: 5px !important;
+            }
+            
+            /* Optimiser la hauteur des champs pour plus de lisibilité */
+            input, select {
+                height: 24px !important;
+                min-height: 24px !important;
+                padding: 2px 4px !important;
+            }
+            
+            textarea {
+                height: 60px !important;
+                min-height: 60px !important;
+            }
+            
+            /* Espacement vertical optimisé */
+            .mb-2, .mb-3, .mb-4 {
+                margin-bottom: 5px !important;
+            }
+            
+            .mt-3, .mt-4 {
+                margin-top: 5px !important;
+            }
+            
+            /* Optimiser les cases à cocher */
+            .form-check {
+                padding-left: 20px !important;
+                margin-bottom: 4px !important;
+                min-height: 15px !important;
+            }
+            
+            .form-check-input {
+                margin-top: 3px !important;
+                width: 14px !important;
+                height: 14px !important;
+            }
+            
+            /* Contrôler la taille du code-barre */
+            svg#barcode {
+                max-height: 45px !important;
+                width: auto !important;
+                margin: 5px 0 !important;
+            }
+            
+            /* Éviter les sauts de page indésirables */
+            .card, .card-body, #printable-area {
+                page-break-inside: avoid;
+            }
+            
+            /* Optimiser le conteneur */
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .card {
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            
+            .card-body {
+                padding: 0 !important;
+            }
+            
+            /* Amélioration de l'apparence des contrôles */
+            .form-control {
+                border: 1px solid #999 !important;
+                background-color: #fff !important;
+            }
+            
+            /* Améliorer l'affichage de l'accordéon */
+            .accordion {
+                margin-top: 10px !important;
+            }
+            
+            .accordion-item {
+                border: none !important;
+            }
+            
+            .accordion-body {
+                padding: 5px 0 !important;
+            }
+        }
 
+        /* Style pour les labels en gras */
+        .label-bold {
+            font-weight: bold;
+        }
+</style>
 <div class="container mt-4">
     <div class="card shadow mb-4">
-        <div class="card-body card-body-custom">
+        <div class="card-body card-body-custom" id="printable-area">
             <h2 class="text-center mb-4"><i class="bi bi-tools"></i> FICHE D'INTERVENTION</h2>
            
-            {{ form_start(form, {'attr': {'id': 'intervention-form', 'class': 'needs-validation', 'novalidate': true}}) }}
+            {{ form_start(form, {
+                'action' : path('intervention_new', {id: produit.idProduit }), 'attr': {'id': 'intervention-form', 'class': 'needs-validation', 'novalidate': true}}) }}
                 <div class="row">
                     <div class="col-md-4 mb-2">
                         {{ form_label(form.codeBarre, null, {'label_attr': {'class': 'label-bold'}}) }}
@@ -155,90 +339,174 @@
 
             {{ form_end(form) }}
             
-            {% if intervention is defined and intervention.pdfFilePath is not empty %}
-                <div class="text-center mt-4">
-                    <a href="{{ asset(intervention.pdfFilePath) }}" target="_blank" class="btn btn-success">
-                        📄 Télécharger le PDF de l'intervention
-                    </a>
-                </div>
-            {% endif %}
+            <div id="printable-image-area" class="text-center mt-4 d-none">
+                <canvas id="capture-canvas" style="max-width: 100%;"></canvas>
+            </div>
         </div>
-                <div class="row justify-content-center">
-                    <div class="text-center col-md-3">
-                        <button type="button" id="save-button" class="btn btn-primary mt-3">
-                        <span class="spinner-border spinner-border-sm d-none" id="loading-spinner"></span>
-                    <i class="bi bi-save"></i>Enregistrer</button>
-                    </div>
-                    <div class="text-center col-md-3">
-                        <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print"><i class="bi bi-x-circle"></i>Annuler</a>
-                    </div>
-                </div>
+
+        <div class="row justify-content-center">
+            <div class="text-center col-md-3">
+                <button type="button" id="save-button" class="btn btn-primary mt-3">
+                    <span class="spinner-border spinner-border-sm d-none" id="loading-spinner"></span>
+                    <i class="bi bi-save"></i> Enregistrer
+                </button>
+            </div>
+            <div class="text-center col-md-3">
+                <button type="button" id="print-button" class="btn btn-info mt-3 no-print">
+                    <i class="bi bi-printer"></i> Imprimer
+                </button>
+            </div>
+            <div class="text-center col-md-3">
+                <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print">
+                    <i class="bi bi-x-circle"></i> Annuler
+                </a>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const CATEGORIES_OBLIGATOIRES = [
+        'ordinateur', 'pc', 'mini pc', 'portable', 'all in one', 'unité centrale', 'mac'
+    ];
+
+    function updateRequiredFields() {
+        const categorie = document.querySelector('#intervention_categorie');
+        const required = categorie && CATEGORIES_OBLIGATOIRES.includes(categorie.value.trim().toLowerCase());
+
+        const fields = [
+            '#intervention_modele', '#intervention_numeroSerie', '#intervention_cpu', '#intervention_frequenceCpu',
+            '#intervention_ram', '#intervention_typeRam', '#intervention_stockage', '#intervention_typeStockage',
+            '#intervention_carteGraphique', '#intervention_memoireVideo', '#intervention_systemeExploitation',
+            '#intervention_versionSe', '#intervention_codeEtagere', '#intervention_statut'
+        ];
+
+        fields.forEach(selector => {
+            const el = document.querySelector(selector);
+            if (el) {
+                if (required) {
+                    el.setAttribute('required', 'required');
+                } else {
+                    el.removeAttribute('required');
+                }
+            }
+        });
+    }
+
+    const categorieField = document.querySelector('#intervention_categorie');
+    if (categorieField) {
+        categorieField.addEventListener('change', updateRequiredFields);
+        updateRequiredFields();
+    }
+
         {% if produit and produit.codeBarre %}
+            // Configuration améliorée du code-barres pour meilleure impression
             JsBarcode("#barcode", "{{ produit.codeBarre }}", {
-                format: "code39",
+                format: "CODE39",
                 displayValue: true,
-                fontSize: 12
+                fontSize: 14,          // Texte plus grand
+                height: 50,            // Barres plus hautes
+                width: 2,              // Barres plus larges
+                margin: 10,            // Marge autour du code
+                background: "#ffffff", // Fond blanc
+                lineColor: "#000000",  // Barres noires
+                textMargin: 8,         // Espace entre code et texte
+                font: "monospace",     // Police plus adaptée à l'impression
+                textAlign: "center"    // Centrage du texte
             });
         {% endif %}
 
         document.getElementById('save-button').addEventListener('click', function () {
-            const form = document.querySelector('form'); // Sélectionne le formulaire
-            const saveButton = document.getElementById('save-button');
-            saveButton.classList.add('loading'); // Ajoute l'effet de chargement
+            const form = document.querySelector('#intervention-form');
+            const spinner = document.getElementById('loading-spinner');
+            const saveBtn = document.getElementById('save-button');
 
-            html2canvas(document.querySelector('.card-body')).then(canvas => {
-                // Récupération des valeurs pour générer le nom de fichier dynamique
-                let codeBarre = "{{ produit.codeBarre|default('unknown') }}";
-                let dateIntervention = "{{ dateIntervention ? dateIntervention|date('Ymd') : 'nodate' }}";
-                let intervenantId = "{{ intervent.id|default('noid') }}";
+            spinner.classList.remove('d-none');
+            saveBtn.disabled = true;
 
-                // Génération du nom de fichier
-                let fileName = `${codeBarre}_${dateIntervention}_${intervenantId}.jpg`;
+            const formData = new FormData(form);
 
-                // Convertir le canvas en base64
-                const imageData = canvas.toDataURL('image/jpeg');
-
-                // Envoyer l'image au serveur via fetch
-                fetch('{{ path("upload_image") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                    body: JSON.stringify({
-                        fileName: fileName,
-                        imageData: imageData,
-                    }),
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erreur lors de l\'enregistrement de l\'image.');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('✅ Image enregistrée avec succès :', data);
-                        // Soumettre le formulaire après l'enregistrement
-                        form.submit();
-                    })
-                    .catch(error => {
-                        console.error('❌ Erreur lors de l\'enregistrement de l\'image :', error);
-                        alert('Erreur lors de l\'enregistrement de l\'image.');
-                    });
-                console.log("✅ Image enregistrée sous :", fileName);
+            fetch(form.getAttribute('action'), {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Erreur lors de l'enregistrement");
+                return response.text();
+            })
+            .then(() => {
+                spinner.classList.add('d-none');
+                saveBtn.innerHTML = "<i class='bi bi-save'></i> Enregistrer";
+                saveBtn.classList.replace('btn-primary', 'btn-success');
                 
-                // Une fois l'image téléchargée, on soumet le formulaire
+                // SweetAlert pour succès
+                Swal.fire({
+                    title: 'Enregistrement réussi !',
+                    text: 'L\'intervention a été enregistrée avec succès',
+                    icon: 'success',
+                    confirmButtonText: 'Parfait',
+                    confirmButtonColor: '#61a444',
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                
                 setTimeout(() => {
-                    form.submit();
-                }, 1000); // Attente de 1 seconde avant soumission
+                    saveBtn.classList.replace('btn-success', 'btn-primary');
+                }, 3000);
+            })
+            .catch(error => {
+                console.error(error);
+                spinner.classList.add('d-none');
+                saveBtn.disabled = false;
+                
+                // SweetAlert pour erreur
+                Swal.fire({
+                    title: 'Erreur !',
+                    text: 'Une erreur est survenue lors de l\'enregistrement',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#dc3545'
+                });
+            });
+        });
+
+
+        document.getElementById('print-button').addEventListener('click', function () {
+            document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
+
+            const form = document.querySelector('#intervention-form');
+            const formData = new FormData(form);
+
+            fetch(form.getAttribute('action'), {
+                method: 'POST',
+                body: formData,
+            })
+            .then(() => {
+                let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+                let codeProduit = "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
+                let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
+
+                codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
+                let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
+
+                const originalTitle = document.title;
+                document.title = fileName;
+
+                setTimeout(() => {
+                    window.print();
+                    document.title = originalTitle;
+                }, 300);
+            })
+            .catch(() => {
+                alert("Erreur : l'enregistrement a échoué, impression annulée.");
             });
         });
     });

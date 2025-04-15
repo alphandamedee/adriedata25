@@ -65,7 +65,7 @@ class InterventionType extends AbstractType
                 'required' => false
             ])
             ->add('stockage', TextType::class, [
-                'label' => 'Stockage',
+                'label' => 'Stockage (en Go)',
                 'required' => false
             ])
             ->add('typeStockage', TextType::class, [
