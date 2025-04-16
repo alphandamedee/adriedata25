@@ -78,6 +78,8 @@ class Produit
 
     #[ORM\Column(name: "taille", type: "string", length: 50, nullable: true)]
     private ?string $taille = null;
+
+    
     
     
 

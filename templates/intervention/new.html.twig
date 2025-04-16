@@ -195,34 +195,103 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const CATEGORIES_OBLIGATOIRES = [
-        'Ordinateur', 'pc', 'mini pc', 'portable', 'all in one', 'unité centrale', 'mac'
-    ];
-
-    function isFormValid() {
-        const categorie = document.querySelector('#intervention_categorie');
-        const catValue = categorie?.value?.trim()?.toLowerCase();
-        const required = categorie && CATEGORIES_OBLIGATOIRES.includes(catValue);
-        let valid = true;
-
-        const selectors = [
-            '#intervention_modele', '#intervention_numeroSerie', '#intervention_cpu', '#intervention_frequenceCpu',
-            '#intervention_ram', '#intervention_typeRam', '#intervention_stockage', '#intervention_typeStockage',
-            '#intervention_carteGraphique', '#intervention_memoireVideo', '#intervention_systemeExploitation',
-            '#intervention_versionSe', '#intervention_codeEtagere', '#intervention_statut'
+            'ordinateur', 'pc', 'mini pc', 'portable', 'all in one', 'unité centrale', 'mac'
         ];
 
-        selectors.forEach(selector => {
-            const field = document.querySelector(selector);
-            if (required && field && !field.value.trim()) {
-                field.classList.add('is-invalid');
-                valid = false;
-            } else if (field) {
-                field.classList.remove('is-invalid');
+        function isFormValid() {
+            const categorie = document.querySelector('#intervention_categorie');
+            const catValue = categorie?.value?.trim()?.toLowerCase();
+            
+            // Vérifier si la catégorie est dans la liste des catégories obligatoires
+            const isCategorieObligatoire = categorie && 
+                                        CATEGORIES_OBLIGATOIRES.some(c => 
+                                            catValue.includes(c.toLowerCase()));
+            
+            // Si la catégorie n'est pas obligatoire, on n'a pas besoin de vérifier 
+            // tous les champs techniques et on peut considérer le formulaire comme valide
+            if (!isCategorieObligatoire) {
+                return true; // Permettre l'enregistrement pour les catégories non-informatiques
             }
-        });
+            
+            let valid = true;
+            let champsManquants = [];
+            
+            // Liste des champs à vérifier (uniquement si catégorie est un ordinateur)
+            const champs = {
+                'Modèle': '#intervention_modele',
+                'N° Série': '#intervention_numeroSerie',
+                'CPU': '#intervention_cpu',
+                'Fréquence CPU': '#intervention_frequenceCpu',
+                'RAM': '#intervention_ram',
+                'Type de RAM': '#intervention_typeRam',
+                'Stockage': '#intervention_stockage',
+                'Type de Stockage': '#intervention_typeStockage',
+                'Carte Graphique': '#intervention_carteGraphique',
+                'Mémoire Vidéo': '#intervention_memoireVideo',
+                'Système': '#intervention_systemeExploitation',
+                'Version SE': '#intervention_versionSe',
+                'Étagère': '#intervention_codeEtagere',
+                'Statut': '#intervention_statut'
+            };
 
-        return valid;
-    }
+            // Vérification de chaque champ pour les catégories obligatoires
+            for (const [label, selector] of Object.entries(champs)) {
+                const field = document.querySelector(selector);
+                if (field && !field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    
+                    // Ajouter une bordure rouge plus visible
+                    field.style.borderColor = '#dc3545';
+                    field.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
+                    
+                    // Ajouter un message d'erreur sous le champ
+                    if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('invalid-feedback')) {
+                        const feedback = document.createElement('div');
+                        feedback.classList.add('invalid-feedback');
+                        feedback.textContent = `Le champ ${label} est requis`;
+                        field.parentNode.insertBefore(feedback, field.nextSibling);
+                    }
+                    
+                    champsManquants.push(label);
+                    valid = false;
+                } else if (field) {
+                    field.classList.remove('is-invalid');
+                    field.style.borderColor = '';
+                    field.style.boxShadow = '';
+                    
+                    // Supprimer le message d'erreur s'il existe
+                    const feedback = field.nextElementSibling;
+                    if (feedback && feedback.classList.contains('invalid-feedback')) {
+                        feedback.remove();
+                    }
+                }
+            }
+
+            // Alerter l'utilisateur si des champs sont manquants
+            if (!valid) {
+                // Faire défiler jusqu'au premier champ invalide
+                const firstInvalid = document.querySelector('.is-invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => firstInvalid.focus(), 500);
+                }
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Champs obligatoires manquants',
+                    html: `
+                        <p>Merci de compléter les champs suivants :</p>
+                        <ul style="text-align: left; max-height: 200px; overflow-y: auto; padding-left: 20px;">
+                            ${champsManquants.map(c => `<li style="margin-bottom: 8px; color: #dc3545;"><strong>${c}</strong></li>`).join('')}
+                        </ul>
+                    `,
+                    confirmButtonText: 'Corriger',
+                    confirmButtonColor: '#dc3545'
+                });
+            }
+
+            return valid;
+        }
 
         {% if produit and produit.codeBarre %}
             // Configuration améliorée du code-barres pour meilleure impression
@@ -272,25 +341,24 @@
             })
             .then(() => {
                 spinner.classList.add('d-none');
-                saveBtn.innerHTML = "<i class='bi bi-save'></i> Enregistrer";
-                saveBtn.classList.replace('btn-primary', 'btn-success');
-                
+
                 // SweetAlert pour succès
                 Swal.fire({
                     title: 'Enregistrement réussi !',
                     text: 'L\'intervention a été enregistrée avec succès',
                     icon: 'success',
-                    confirmButtonText: 'Parfait',
-                    confirmButtonColor: '#61a444',
-                    timer: 3000,
-                    timerProgressBar: true
+                    timer: 2500,
+                    
                 });
-                
-                setTimeout(() => {
-                    saveBtn.classList.replace('btn-success', 'btn-secondary');
-                    saveBtn.innerHTML = "<i class='bi bi-save'></i> Enregistrer";
-                    saveBtn.disabled = false;
-                }, 3500);
+
+                // Transformer le bouton en lien de retour
+                saveBtn.innerHTML = "<i class='bi bi-arrow-left-circle'></i> Retour";
+                saveBtn.classList.remove('btn-primary', 'btn-success');
+                saveBtn.classList.add('btn-secondary');
+                saveBtn.disabled = false;
+                saveBtn.onclick = function () {
+                    window.location.href = "{{ path('app_produit') }}";
+                };
             })
             .catch(error => {
                 console.error(error);

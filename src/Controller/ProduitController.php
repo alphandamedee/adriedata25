@@ -155,6 +155,7 @@ class ProduitController extends AbstractController
                 'categorie' => $produit->getCategorie() ? $produit->getCategorie()->getNom() : null,
                 'marque' => $produit->getMarque(),
                 'modele' => $produit->getModele(),
+                'taille' => $produit->getTaille(),
                 'numeroSerie' => $produit->getNumeroSerie(),
                 'cpu' => $produit->getCpu(),
                 'frequenceCpu' => $produit->getFrequenceCpu(),
