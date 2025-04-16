@@ -126,7 +126,7 @@ class InterventionType extends AbstractType
                     'Vendu' => 'Vendu',
                     'HS' => 'HS',
                 ],
-                'label' => 'Statut',
+                'label' => 'Status',
                 'required' => true,
                 'attr' => [
                     'class' => 'form-control',

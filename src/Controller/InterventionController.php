@@ -347,31 +347,6 @@ class InterventionController extends AbstractController
         );
     }
 
-    // #[Route('/api/dashboard-data', name: 'api_dashboard_data', methods: ['GET'])]
-    // public function getDashboardData(Request $request, InterventionRepository $interventionRepository): JsonResponse
-    // {
-    //     try {
-    //         $date = $request->query->get('date', (new \DateTime())->format('Y-m-d'));
-
-    //         // Ensure the date is correctly parsed
-    //         $startDate = new \DateTime($date . ' 00:00:00');
-    //         $endDate = new \DateTime($date . ' 23:59:59');
-
-    //         // Retrieve the count of interventions for the specified date
-    //         $interventionsCount = $interventionRepository->countInterventionsByDateRange($startDate, $endDate);
-
-    //         return new JsonResponse([
-    //             'interventionsCount' => $interventionsCount,
-    //             'labels' => [$date],
-    //             'interventionsData' => [$interventionsCount],
-    //             'productsData' => [$interventionsCount] // Placeholder for product data
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         // Log the error and return a JSON error response
-    //         return new JsonResponse(['error' => 'An error occurred while fetching dashboard data.'], 500);
-    //     }
-    // }
-
     #[Route('/api/dashboard-data', name: 'api_dashboard_data', methods: ['GET'])]
     public function getDashboardData(
         Request $request,
@@ -383,11 +358,12 @@ class InterventionController extends AbstractController
         $end = $request->query->get('end');
         $filter = $request->query->get('filter', 'my');
 
-        // Force la valeur du filtre à être "my" ou "all"
+        // 🔒 Sécurité : ne permettre que les filtres 'my' ou 'all'
         if (!in_array($filter, ['my', 'all'])) {
             $filter = 'my';
         }
 
+        // 📅 Conversion des dates avec gestion d'erreurs
         try {
             $startDate = new \DateTime($start);
             $endDate = new \DateTime($end);
@@ -396,36 +372,53 @@ class InterventionController extends AbstractController
             return new JsonResponse(['error' => 'Dates invalides'], 400);
         }
 
+        // 🔐 Vérification que l'utilisateur est bien connecté
         $user = $security->getUser();
         if (!$user) {
             return new JsonResponse(['error' => 'Utilisateur non authentifié'], 403);
         }
-    
+
+        // 📦 Récupération des interventions dans la période avec filtre utilisateur
         $interventions = $interventionRepository->findByDateRange($startDate, $endDate, $filter === 'my' ? $user : null);
 
-        
+        // 🏷️ Initialisation des étiquettes (labels) par jour
         $labels = [];
         $interventionsPerDay = [];
-        $productsPerDay = [];
-        $produitsUniques = [];
+        $productsPerDay = [];             // 📊 Produits uniques par jour
+        $produitsUniques = [];           // 🔢 Tous les produits uniques globalement
+        $produitsParDate = [];           // 🗓️ Stocke les ID produits par jour pour éviter doublons
 
+        // 📅 Construction de la période jour par jour
         $period = new \DatePeriod($startDate, new \DateInterval('P1D'), (clone $endDate)->modify('+1 day'));
         foreach ($period as $date) {
             $label = $date->format('Y-m-d');
             $labels[] = $label;
             $interventionsPerDay[$label] = 0;
-            $productsPerDay[$label] = 0;
+            $produitsParDate[$label] = [];  // Initialiser pour chaque jour
         }
 
+        // 🔁 Boucle sur les interventions pour remplir les compteurs
         foreach ($interventions as $intervention) {
             $date = $intervention->getDateIntervention()->format('Y-m-d');
             $interventionsPerDay[$date]++;
+
             if ($intervention->getProduit()) {
-                $productsPerDay[$date]++;
-                $produitsUniques[$intervention->getProduit()->getIdProduit()] = true;
+                $produitId = $intervention->getProduit()->getIdProduit();
+
+                // ✅ Ajouter uniquement si le produit n’a pas encore été compté pour ce jour
+                $produitsParDate[$date][$produitId] = true;
+
+                // ✅ Stocker globalement pour le total unique
+                $produitsUniques[$produitId] = true;
             }
         }
 
+        // 🧮 Compter les produits uniques par jour
+        foreach ($labels as $label) {
+            $productsPerDay[$label] = count($produitsParDate[$label]);
+        }
+
+        // ✅ Réponse JSON pour le frontend
         return new JsonResponse([
             'labels' => $labels,
             'interventionsData' => array_values($interventionsPerDay),
@@ -435,9 +428,7 @@ class InterventionController extends AbstractController
         ]);
     }
 
-   
 
-// ...
 
     #[Route('/dashboard', name: 'user_dashboard')]
     public function dashboard(UserRepository $userRepository): Response

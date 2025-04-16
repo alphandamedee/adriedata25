@@ -2,6 +2,7 @@
 
 {% block title %}Profil de {{ app.user.prenom }} {{ app.user.nomUser }}{% endblock %}
 
+
 {% block body %}
 <div class="container bg-light mt-4">
     <h2 class="text-center mb-4">Profil de {{ app.user.prenom }} {{ app.user.nomUser }}</h2>
@@ -197,6 +198,8 @@
                                 {% endif %}
                                 {{ intervention.produit.marque ?? 'N/A' }} - 
                                 {{ intervention.produit.modele ?? 'N/A' }} - 
+                                {% if intervention.produit.cpu %}{{ intervention.produit.cpu }}{% if intervention.produit.frequenceCpu %} {{ intervention.produit.frequenceCpu }}{% endif %} - {% endif %}
+                                {% if intervention.produit.carteGraphique %}{{ intervention.produit.carteGraphique }}{% if intervention.produit.memoireVideo %} {{ intervention.produit.memoireVideo }}{% endif %} - {% endif %}
                                 {{ intervention.produit.stockage ?? '' }}{{ intervention.produit.typeStockage is not null ? intervention.produit.typeStockage.nom ?? '' : '' }} - 
                                 {{ intervention.produit.ram ?? '' }}{{ intervention.produit.typeRam is not null ? intervention.produit.typeRam.nom ?? '' : '' }}
                             {% else %}
@@ -226,16 +229,15 @@
 
 <!-- Inclure DataTables JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <!-- Initialisation de DataTables -->
 <script>
     $(document).ready(function () {
         $('#interventions-table').DataTable({
-            pageLength: 10, // Nombre d'éléments par défaut
-            lengthMenu: [5, 10, 25, 50, 100], // Options de choix d'affichage par page
+            
             language: {
-                url: "https://cdn.datatables.net/plug-ins/1.13.4/i18n/fr-FR.json" // Traduction en français
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json" // Traduction en français
             }
         });
     });

@@ -194,30 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const code = result.codeResult.code;
             console.log("Code détecté :", code);
 
-    //         if (code) {
-    //             // Jouer un son de confirmation
-    //             scanSound.play();
 
-    //             // Remplir le champ de recherche avec le code détecté
-    //             if (searchInput) {
-    //                 searchInput.value = code;
-    //                 searchInput.classList.add('is-valid');
-    //             }
-
-    //             // Arrêter le scanner après détection
-    //             stopScanner();
-
-    //             // Fermer le modal après un court délai
-    //             const modal = bootstrap.Modal.getInstance(document.getElementById('barcodeModal'));
-    //             if (modal) {
-    //                 setTimeout(() => modal.hide(), 300);
-    //             }
-    //         } else {
-    //             alertBox?.classList.remove('d-none');
-    //             alertBox.textContent = "Aucun code détecté. Veuillez réessayer.";
-    //         }
-    //     });
-    // }
         if (searchInput) {
             searchInput.value = code;
             searchInput.classList.add('is-valid');

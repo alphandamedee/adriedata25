@@ -21,40 +21,54 @@ class ProduitController extends AbstractController
     #[Route('/produit', name: 'app_produit')]
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
+        // Récupération de la recherche et de la catégorie
         $search = $request->query->get('search', '');
-
+        $categorieId = $request->query->get('categorie');
+        $limit = $request->query->getInt('limit', 100); // valeur par défaut
+        
+        // On utilise le QueryBuilder pour construire la requête de manière dynamique
         $queryBuilder = $entityManager->getRepository(Produit::class)->createQueryBuilder('p')
-            ->leftJoin('p.categorie', 'c')         // 🔗 JOINTURE pour charger les catégories
-            ->addSelect('c');                      // 🔍 Assure le SELECT complet de la relation
-
+        ->leftJoin('p.categorie', 'c')         // 🔗 JOINTURE pour charger les catégories
+        ->addSelect('c');                      // 🔍 Assure le SELECT complet de la relation
+        
+        // On ajoute la recherche si elle est présente
         if ($search) {
             $queryBuilder->where('p.codeBarre LIKE :search')
-                ->orWhere('c.nom LIKE :search')    // 👈 on recherche aussi dans le nom de la catégorie
-                ->orWhere('p.marque LIKE :search')
-                ->orWhere('p.modele LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
+            ->orWhere('c.nom LIKE :search')    // 👈 on recherche aussi dans le nom de la catégorie
+            ->orWhere('p.marque LIKE :search')
+            ->orWhere('p.modele LIKE :search')
+            ->setParameter('search', '%' . $search . '%');
+        }
+        // 🔍 On peut filtrer par catégorie si besoin
+        if ($categorieId) {
+            $queryBuilder->andWhere('c.id = :catId')->setParameter('catId', $categorieId);
         }
 
+        // On ajoute l'ordre de tri par défaut
+        $queryBuilder->orderBy('p.codeBarre', 'ASC');
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            25
+            $limit
         );
-
+        // On ajoute la pagination à la vue
         return $this->render('produit/index.html.twig', [
             'pagination' => $pagination,
             'search' => $search,
         ]);
     }
 
-
+    //#Route('/produit/ajouter', name: 'produit_ajouter', methods: ['GET', 'POST'])
+    // Route pour ajouter un produit
     #[Route('/produit/ajouter', name: 'produit_ajouter')]
     public function ajouter(Request $request, EntityManagerInterface $em, ProduitRepository $produitRepo): Response
     {
+        // Création d'un nouveau produit
         $produit = new Produit();
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
-
+        
+        // On utilise le repository pour vérifier l'existence du code-barre
         if ($form->isSubmitted() && $form->isValid()) {
             $codeBarre = $produit->getCodeBarre();
 
@@ -65,10 +79,11 @@ class ProduitController extends AbstractController
                     'form' => $form->createView(),
                 ]);
             }
-
+            // On persiste le produit
             $em->persist($produit);
             $em->flush();
 
+            // On redirige vers la liste des produits avec un message de succès
             $this->addFlash('success', 'Produit ajouté avec succès.');
             return $this->redirectToRoute('app_produit');
         }
@@ -171,7 +186,7 @@ class ProduitController extends AbstractController
     {
         $response = new StreamedResponse(function() use ($produits) {
             $handle = fopen('php://output', 'w+');
-            fputcsv($handle, ['ID', 'Code Barre', 'Catégorie', 'Marque', 'Modèle', 'Stockage', 'RAM', 'Statut', 'Code Étagère']);
+            fputcsv($handle, ['ID', 'Code Barre', 'Catégorie', 'Marque', 'Modèle', 'Taille', 'Stockage', 'RAM', 'Statut', 'Code Étagère']);
 
             foreach ($produits as $produit) {
                 fputcsv($handle, [
@@ -180,6 +195,7 @@ class ProduitController extends AbstractController
                     $produit->getCategorie() ? $produit->getCategorie()->getNom() : 'N/A',
                     $produit->getMarque(),
                     $produit->getModele(),
+                    $produit->getTaille(),
                     $produit->getStockage() . ' ' . $produit->getTypeStockage(),
                     $produit->getRam() . ' ' . $produit->getTypeRam(),
                     $produit->getStatut(),
@@ -207,10 +223,11 @@ class ProduitController extends AbstractController
         $sheet->setCellValue('C1', 'Catégorie');
         $sheet->setCellValue('D1', 'Marque');
         $sheet->setCellValue('E1', 'Modèle');
-        $sheet->setCellValue('F1', 'Stockage');
-        $sheet->setCellValue('G1', 'RAM');
-        $sheet->setCellValue('H1', 'Statut');
-        $sheet->setCellValue('I1', 'Code Étagère');
+        $sheet->setCellValue('F1', 'Taille');
+        $sheet->setCellValue('G1', 'Stockage');
+        $sheet->setCellValue('H1', 'RAM');
+        $sheet->setCellValue('I1', 'Statut');
+        $sheet->setCellValue('J1', 'Code Étagère');
 
         // Populate the data rows
         $row = 2;
@@ -220,11 +237,13 @@ class ProduitController extends AbstractController
             $sheet->setCellValue('C' . $row, $produit->getCategorie() ? $produit->getCategorie()->getNom() : 'N/A');
             $sheet->setCellValue('D' . $row, $produit->getMarque());
             $sheet->setCellValue('E' . $row, $produit->getModele());
-            $sheet->setCellValue('F' . $row, $produit->getStockage() . ' ' . $produit->getTypeStockage());
-            $sheet->setCellValue('G' . $row, $produit->getRam() . ' ' . $produit->getTypeRam());
-            $sheet->setCellValue('H' . $row, $produit->getStatut());
-            $sheet->setCellValue('I' . $row, $produit->getCodeEtagere());
+            $sheet->setCellValue('F' . $row, $produit->getTaille());
+            $sheet->setCellValue('G' . $row, $produit->getStockage() . ' ' . $produit->getTypeStockage());
+            $sheet->setCellValue('H' . $row, $produit->getRam() . ' ' . $produit->getTypeRam());
+            $sheet->setCellValue('I' . $row, $produit->getStatut());
+            $sheet->setCellValue('J' . $row, $produit->getCodeEtagere());
             $row++;
+            
         }
 
         $writer = new Xlsx($spreadsheet);
@@ -238,5 +257,29 @@ class ProduitController extends AbstractController
 
         return $response;
     }
+    //Route AJAX pour la recherche de produit
+    #[Route('/produit/autocomplete', name: 'produit_autocomplete', methods: ['GET'])]
+    public function autocomplete(Request $request, ProduitRepository $produitRepository): JsonResponse
+    {
+        $query = $request->query->get('term');
+        $produits = $produitRepository->createQueryBuilder('p')
+            ->where('p.codeBarre LIKE :query OR p.modele LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+
+        $results = [];
+
+        foreach ($produits as $produit) {
+            $results[] = [
+                'id' => $produit->getIdProduit(),
+                'label' => $produit->getCodeBarre() . ' - ' . $produit->getModele(),
+            ];
+        }
+
+        return $this->json($results);
+    }
+
 }
 ?>

@@ -368,43 +368,40 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const CATEGORIES_OBLIGATOIRES = [
-        'ordinateur', 'pc', 'mini pc', 'portable', 'all in one', 'unité centrale', 'mac'
+        'Ordinateur', 'pc', 'mini pc', 'portable', 'all in one', 'unité centrale', 'mac'
     ];
 
-    function updateRequiredFields() {
+    function isFormValid() {
         const categorie = document.querySelector('#intervention_categorie');
-        const required = categorie && CATEGORIES_OBLIGATOIRES.includes(categorie.value.trim().toLowerCase());
+        const catValue = categorie?.value?.trim()?.toLowerCase();
+        const required = categorie && CATEGORIES_OBLIGATOIRES.includes(catValue);
+        let valid = true;
 
-        const fields = [
+        const selectors = [
             '#intervention_modele', '#intervention_numeroSerie', '#intervention_cpu', '#intervention_frequenceCpu',
             '#intervention_ram', '#intervention_typeRam', '#intervention_stockage', '#intervention_typeStockage',
             '#intervention_carteGraphique', '#intervention_memoireVideo', '#intervention_systemeExploitation',
             '#intervention_versionSe', '#intervention_codeEtagere', '#intervention_statut'
         ];
 
-        fields.forEach(selector => {
-            const el = document.querySelector(selector);
-            if (el) {
-                if (required) {
-                    el.setAttribute('required', 'required');
-                } else {
-                    el.removeAttribute('required');
-                }
+        selectors.forEach(selector => {
+            const field = document.querySelector(selector);
+            if (required && field && !field.value.trim()) {
+                field.classList.add('is-invalid');
+                valid = false;
+            } else if (field) {
+                field.classList.remove('is-invalid');
             }
         });
-    }
 
-    const categorieField = document.querySelector('#intervention_categorie');
-    if (categorieField) {
-        categorieField.addEventListener('change', updateRequiredFields);
-        updateRequiredFields();
+        return valid;
     }
 
         {% if produit and produit.codeBarre %}
@@ -427,7 +424,18 @@
         document.getElementById('save-button').addEventListener('click', function () {
             const form = document.querySelector('#intervention-form');
             const spinner = document.getElementById('loading-spinner');
-            const saveBtn = document.getElementById('save-button');
+            const saveBtn = this;
+
+            if (!isFormValid()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Champs requis manquants',
+                    text: 'Merci de compléter tous les champs nécessaires avant d\'enregistrer.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#dc3545'
+                });
+                return;
+            }
 
             spinner.classList.remove('d-none');
             saveBtn.disabled = true;
@@ -459,8 +467,10 @@
                 });
                 
                 setTimeout(() => {
-                    saveBtn.classList.replace('btn-success', 'btn-primary');
-                }, 3000);
+                    saveBtn.classList.replace('btn-success', 'btn-secondary');
+                    saveBtn.innerHTML = "<i class='bi bi-save'></i> Enregistrer";
+                    saveBtn.disabled = false;
+                }, 3500);
             })
             .catch(error => {
                 console.error(error);
@@ -470,7 +480,7 @@
                 // SweetAlert pour erreur
                 Swal.fire({
                     title: 'Erreur !',
-                    text: 'Une erreur est survenue lors de l\'enregistrement',
+                    text: 'L\'enregistrement a échoué. Veuillez réessayer.',
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#dc3545'
@@ -480,6 +490,18 @@
 
 
         document.getElementById('print-button').addEventListener('click', function () {
+                if (!isFormValid()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Champs requis manquants',
+                    text: 'Merci de compléter tous les champs nécessaires avant impression.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#dc3545'
+                });
+                return;
+            }
+
+
             document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
 
             const form = document.querySelector('#intervention-form');

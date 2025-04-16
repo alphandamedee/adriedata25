@@ -75,6 +75,9 @@ class Produit
 
     #[ORM\Column(name: "autres_logiciels", type: "datetime", nullable: true)]
     private ?\DateTimeInterface $autresLogiciels = null;
+
+    #[ORM\Column(name: "taille", type: "string", length: 50, nullable: true)]
+    private ?string $taille = null;
     
     
 
@@ -138,6 +141,17 @@ class Produit
     public function setModele(?string $modele): self
     {
         $this->modele = $modele;
+        return $this;
+    }
+
+    public function getTaille(): ?string
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(?string $taille): self
+    {
+        $this->taille = $taille;
         return $this;
     }
 

@@ -1,0 +1,27 @@
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0.7cm;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    #printable-area, #printable-area * {
+        visibility: visible;
+    }
+
+    #printable-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0.5cm;
+        max-width: none;
+    }
+
+    .no-print, nav, footer, button, .btn, #printable-image-area {
+        display: none !important;
+    }
+}

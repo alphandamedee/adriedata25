@@ -22,6 +22,21 @@ class ProduitType extends AbstractType
         $builder
             ->add('codeBarre', TextType::class, [
                 'label' => 'Code Barre',
+                'attr' => [
+                    'minlength' => 19,
+                    'maxlength' => 19,
+                    'pattern' => '\d{19}',
+                    'title' => '19 chiffres requis',
+                    'placeholder' => 'Ex : 2024010112345672504',
+                ],
+                'required' => true,
+            ])
+            ->add('codeEtagere', TextType::class, [
+                'label' => 'Étagère',
+                'attr' => [
+                    'placeholder' => 'Ex : A1',
+                ],
+                'required' => false,
             ])
             ->add('categorie', EntityType::class, [
                 'class' => CategorieProduit::class,
@@ -42,6 +57,15 @@ class ProduitType extends AbstractType
             ])
             ->add('modele', TextType::class, [
                 'label' => 'Modèle',
+            ])
+            ->add('taille', TextType::class, [
+                'label' => 'Taille',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Ex: 15.6" (pour écrans/portables) ou Tour/SFF/Mini PC',
+                    'class' => 'form-control'
+                ],
+                'help' => 'Pour écrans/portables: en pouces (ex: 15.6"). Pour UC: Tour, SFF, Mini PC'
             ])
             ->add('stockage', TextType::class, [
                 'label' => 'Stockage (en Go)',

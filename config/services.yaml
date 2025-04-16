@@ -15,6 +15,9 @@ services:
     App\EventListener\LogoutListener:
         tags:
             - { name: kernel.event_listener, event: Symfony\Component\Security\Http\Event\LogoutEvent, method: onLogoutEvent }
+    App\Twig\NavbarCategoriesExtension:
+        tags: [ 'twig.extension' ]
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

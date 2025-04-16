@@ -18,65 +18,68 @@
     <form method="get" action="{{ path('app_produit') }}" class="mb-4">
         <div class="row g-2">
 
-            <!-- Scanner -->
-            <div class="col-3 col-sm-2 col-md-1">
-                <button type="button" class="btn btn-secondary w-100" id="scan-barcode-btn" data-bs-toggle="modal" data-bs-target="#barcodeModal" title="Scanner">
-                    <i class="bi bi-upc-scan"></i>
-                </button>
-            </div>
-
             <!-- Champ de recherche -->
-            <div class="col-9 col-sm-6 col-md-4">
-                <input type="text" name="search" id="search-input" class="form-control" placeholder="Rechercher un produit" value="{{ app.request.query.get('search') }}">
-            </div>
+           <div class="row g-2 align-items-center mb-3">
+                <!-- Scanner -->
+                <div class="col-3 col-sm-2 col-md-1">
+                    <button type="button" class="btn btn-secondary w-100" id="scan-barcode-btn" data-bs-toggle="modal" data-bs-target="#barcodeModal" title="Scanner">
+                        <i class="bi bi-upc-scan"></i>
+                    </button>
+                </div>
 
-            <!-- Rechercher -->
-            <div class="col-6 col-sm-2 col-md-1">
-                <button class="btn btn-primary w-100" type="submit" title="Rechercher">
-                    <span class="d-none d-md-inline">🔍</span>
-                    <i class="bi bi-search d-md-none"></i>
-                </button>
-            </div>
+                <!-- Recherche -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="input-group">
+                        <input type="text" name="search" id="search-input" class="form-control" placeholder="Rechercher un produit" value="{{ app.request.query.get('search') }}">
+                    </div>
+                </div>
 
-            <!-- Réinitialiser -->
-            <div class="col-6 col-sm-2 col-md-1">
-                <a href="{{ path('app_produit') }}" class="btn btn-outline-secondary w-100" title="Réinitialiser">
-                    ♻️
-                </a>
-            </div>
+                <!-- Bouton Rechercher -->
+                <div class="col-auto">
+                    <button class="btn btn-primary" type="submit" title="Rechercher">
+                        🔍
+                    </button>
+                </div>
 
-            <!-- Ajouter un produit -->
-            <div class="col-12 col-sm-6 col-md-2">
-                <a href="{{ path('produit_ajouter') }}" id="add-product-link" class="btn btn-success w-100" title="Ajouter un Produit">
-                    <i class="bi bi-plus-circle"></i> <span class="d-none d-sm-inline">Ajouter</span>
-                </a>
-            </div>
-
-            {% if 'ROLE_ADMIN' in app.user.roles %}
-                <!-- Admin : Gérer catégories / types de RAM -->
-                <div class="col-6 col-sm-3 col-md-2 d-flex gap-2">
-                    <a href="{{ path('categorie_produit_index') }}" class="btn btn-outline-dark w-25 h-75" title="Catégories">
-                        <i class="bi bi-tags"></i>
-                    </a>
-                    <a href="{{ path('type_ram_index') }}" class="btn btn-outline-dark w-25 h-75" title="Types de RAM">
-                        <i class="bi bi-memory"></i>
+                <!-- Bouton Réinitialiser -->
+                <div class="col-auto">
+                    <a href="{{ path('app_produit') }}" class="btn btn-outline-secondary" title="Réinitialiser">
+                        ♻️
                     </a>
                 </div>
-            {% endif %}
 
-            <!-- Export -->
-            <div class="col-6 col-sm-3 col-md-2 d-flex gap-2 justify-content-end">
-                <a href="{{ path('produit_export', { format: 'csv' }) }}" class="btn btn-outline-primary w-25 h-100" title="Exporter CSV">
-                    <i class="bi bi-file-earmark-spreadsheet"></i>
-                </a>
-                <a href="{{ path('produit_export', { format: 'excel' }) }}" class="btn btn-outline-success w-25 h-100" title="Exporter Excel">
-                    <i class="bi bi-file-earmark-excel"></i>
-                </a>
+                <!-- Bouton Ajouter -->
+                <div class="col-auto">
+                    <a href="{{ path('produit_ajouter') }}" id="add-product-link" class="btn btn-success" title="Ajouter un Produit">
+                        <i class="bi bi-plus-circle"></i> <span class="d-none d-sm-inline">Ajouter</span>
+                    </a>
+                </div>
+
+                {% if 'ROLE_ADMIN' in app.user.roles %}
+                    <!-- Boutons Catégories / RAM -->
+                    <div class="col-auto d-flex gap-2">
+                        <a href="{{ path('categorie_produit_index') }}" class="btn btn-outline-dark" title="Catégories">
+                            <i class="bi bi-tags"></i>
+                        </a>
+                        <a href="{{ path('type_ram_index') }}" class="btn btn-outline-dark" title="Types de RAM">
+                            <i class="bi bi-memory"></i>
+                        </a>
+                    </div>
+                {% endif %}
+
+                <!-- Export CSV / Excel -->
+                <div class="col-auto d-flex gap-2">
+                    <a href="{{ path('produit_export', { format: 'csv' }) }}" class="btn btn-outline-primary" title="Exporter CSV">
+                        <i class="bi bi-file-earmark-spreadsheet"></i>
+                    </a>
+                    <a href="{{ path('produit_export', { format: 'excel' }) }}" class="btn btn-outline-success" title="Exporter Excel">
+                        <i class="bi bi-file-earmark-excel"></i>
+                    </a>
+                </div>
+
             </div>
-
         </div>
     </form>
-
 
     <!-- Tableau -->
     <div class="table-responsive">
@@ -88,6 +91,7 @@
                     <th>Catégorie</th>
                     <th>Marque</th>
                     <th>Modèle</th>
+                    <th>Taille</th>
                     <th>Stockage</th>
                     <th>RAM</th>
                     <th>CPU</th>
@@ -112,6 +116,7 @@
                         </td>
                         <td class="">{{ produit.marque | default('N/A') }}</td>
                         <td class="">{{ produit.modele | default('N/A') }}</td>
+                        <td class="no-wrap">{{ produit.taille | default('N/A') }}</td>
                         <td class="no-wrap">{{ produit.stockage | default('N/A') }} {{ produit.typeStockage | default('N/A') }}</td>
                         <td class="no-wrap">{{ produit.ram | default('N/A') }} {{ produit.typeRam | default('N/A') }}</td>
                         <td class="no-wrap">{{ produit.cpu | default('N/A') }}</td>
@@ -171,6 +176,57 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
-<script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/scan.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('search-input');
+    const resultBox = document.getElementById('autocomplete-list');
+
+    input.addEventListener('input', function () {
+        const term = input.value.trim();
+
+        if (term.length < 2) {
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = '';
+            return;
+        }
+
+        fetch('/produit/autocomplete?term=' + encodeURIComponent(term))
+            .then(response => response.json())
+            .then(data => {
+                resultBox.innerHTML = '';
+                if (data.length > 0) {
+                    resultBox.style.display = 'block';
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item list-group-item-action';
+                        li.textContent = item.label;
+                        li.addEventListener('click', () => {
+                            input.value = item.label;
+                            resultBox.innerHTML = '';
+                            resultBox.style.display = 'none';
+                            // Optionnel : rediriger vers la fiche produit
+                            // window.location.href = `/produit/${item.id}`;
+                        });
+                        resultBox.appendChild(li);
+                    });
+                } else {
+                    resultBox.style.display = 'none';
+                }
+            });
+    });
+
+    // Masquer si clic ailleurs
+    document.addEventListener('click', function (e) {
+        if (!resultBox.contains(e.target) && e.target !== input) {
+            resultBox.style.display = 'none';
+        }
+    });
+});
+</script>
+
+
+
 {% endblock %}

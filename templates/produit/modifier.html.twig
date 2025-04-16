@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier un Produit{% endblock %}
-
+    
 {% block body %}
     <div class="container mt-4">
         <h2 class="text-center mb-4">Modifier un Produit</h2>
 
+        <div class="fw-bold">
         {{ form_start(form) }}
                 <div class="col-md-6 mb-3">
                     {{ form_label(form.codeBarre) }}
@@ -33,34 +34,13 @@
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    {{ form_label(form.stockage) }}
-                    {{ form_widget(form.stockage, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.taille, null, {'label_attr': {'class': 'label-blue-bold'}}) }}
+                    {{ form_widget(form.taille, {'attr': {'class': 'form-control'}}) }}
+                    <small class="text-muted">Écrans/Portables: en pouces (15.6"). UC: Tour/SFF/Mini PC</small>
                 </div>
                 <div class="col-md-6 mb-3">
-                    {{ form_label(form.typeStockage) }}
-                    {{ form_widget(form.typeStockage, {'attr': {'class': 'form-control'}}) }}
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    {{ form_label(form.ram) }}
-                    {{ form_widget(form.ram, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="col-md-6 mb-3">
-                    {{ form_label(form.typeRam) }}
-                    {{ form_widget(form.typeRam, {'attr': {'class': 'form-control'}}) }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    {{ form_label(form.statut) }}
-                    {{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="col-md-6 mb-3">
-                    {{ form_label(form.codeEtagere) }}
-                    {{ form_widget(form.codeEtagere, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.cpu) }}
+                    {{ form_widget(form.cpu, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
 
@@ -84,6 +64,38 @@
                     {{ form_label(form.memoireVideo) }}
                     {{ form_widget(form.memoireVideo, {'attr': {'class': 'form-control'}}) }}
                 </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form_label(form.stockage) }}
+                    {{ form_widget(form.stockage, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form_label(form.typeStockage) }}
+                    {{ form_widget(form.typeStockage, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form_label(form.ram) }}
+                    {{ form_widget(form.ram, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form_label(form.typeRam) }}
+                    {{ form_widget(form.typeRam, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form_label(form.statut) }}
+                    {{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form_label(form.codeEtagere) }}
+                    {{ form_widget(form.codeEtagere, {'attr': {'class': 'form-control'}}) }}
+                </div>
             </div>
 
 
@@ -101,5 +113,6 @@
             </div>
             
         {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}

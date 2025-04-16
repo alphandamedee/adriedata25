@@ -49,12 +49,13 @@
       <!-- Champs alignés 2 colonnes ligne par ligne -->
       {% set champs = [
         ['categorie', 'marque'],
-        ['modele', 'numeroSerie'],
-        ['cpu', 'frequenceCpu'],
-        ['ram', 'typeRam'],
-        ['stockage', 'typeStockage'],
-        ['carteGraphique', 'memoireVideo'],
-        ['codeEtagere', 'statut']
+        ['modele', 'taille'],
+        ['numeroSerie', 'cpu'],
+        ['frequenceCpu', 'carteGraphique'],
+        ['memoireVideo', 'ram'],
+        ['typeRam', 'stockage'],
+        ['typeStockage', 'codeEtagere'],
+        ['statut', '']
       ] %}
 
       {% for pair in champs %}
@@ -72,16 +73,16 @@
 
       <!-- Bouton de soumission -->
       <div class="row justify-content-center mt-4">
-        <div class="col-md-4 text-center">
-          <button type="submit" class="btn btn-success mt-4 px-5">
-            <i class="bi bi-plus-circle"></i> Enregistrer
-          </button>
-        </div>
-        <div class="col-md-4 text-center">
-          <a href="{{ path('app_produit') }}" class="btn btn-secondary">
-              <i class="bi bi-arrow-left"></i> Retour
-          </a>
-        </div>
+          <div class="col-md-4 text-center">
+            <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-4">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+          </div>
+          <div class="col-md-4 text-center">
+            <button type="submit" class="btn btn-success mt-4 px-5">
+              <i class="bi bi-plus-circle"></i> Enregistrer
+            </button>
+          </div>
       </div>
 
       {{ form_end(form) }}
@@ -107,7 +108,7 @@
       let isValid = true;
 
       const code = codeInput.value.trim();
-      if (!/^\d{21}$/.test(code)) {
+      if (!/^\d{19}$/.test(code)) {
         e.preventDefault();
         codeInput.classList.add('is-invalid');
         isValid = false;
