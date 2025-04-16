@@ -71,8 +71,13 @@ class Intervention
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $ram = null;
 
+
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $typeRam = null;
+
+    #[ORM\ManyToOne(targetEntity: TypeRam::class)]
+    #[ORM\JoinColumn(name: "type_ram_relation_id", referencedColumnName: "id", nullable: true)]
+    private ?TypeRam $typeRamRelation = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $stockage = null;
@@ -97,6 +102,9 @@ class Intervention
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $pdfFilePath = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $taille = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFilePath = null;
@@ -147,6 +155,9 @@ class Intervention
     public function getMarque(): ?string { return $this->marque; }
     public function setMarque(?string $marque): self { $this->marque = $marque; return $this; }
 
+    public function getTaille(): ?string { return $this->taille; }
+    public function setTaille(?string $taille): self { $this->taille = $taille; return $this; }
+    
     public function getModele(): ?string { return $this->modele; }
     public function setModele(?string $modele): self { $this->modele = $modele; return $this; }
 
@@ -192,4 +203,7 @@ class Intervention
 
     public function getImageFilePath(): ?string { return $this->imageFilePath; }
     public function setImageFilePath(?string $imageFilePath): self { $this->imageFilePath = $imageFilePath; return $this;}
+
+    public function getTypeRamRelation(): ?TypeRam { return $this->typeRamRelation;}
+    public function setTypeRamRelation(?TypeRam $typeRamRelation): self { $this->typeRamRelation = $typeRamRelation; return $this;}
 }

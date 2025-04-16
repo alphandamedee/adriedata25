@@ -3,6 +3,7 @@ namespace App\Form;
 
 use App\Entity\Intervention;
 use App\Entity\User;
+use App\Entity\TypeRam;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,6 +41,10 @@ class InterventionType extends AbstractType
                 'required' => false,
                 'attr' => ['readonly' => true]
             ])
+            ->add('taille', TextType::class, [
+                'label' => 'Taille',
+                'required' => false
+            ])
             ->add('modele', TextType::class, [
                 'label' => 'Modèle',
                 'required' => false
@@ -60,17 +65,39 @@ class InterventionType extends AbstractType
                 'label' => 'RAM',
                 'required' => false
             ])
-            ->add('typeRam', TextType::class, [
+            ->add('typeRam', ChoiceType::class, [
                 'label' => 'Type de RAM',
-                'required' => false
+                'choices' => [
+                    ' ' => ' ',
+                    'DDR3' => 'DDR3',
+                    'DDR4' => 'DDR4',
+                    'DDR5' => 'DDR5',
+                    'LPDDR4' => 'LPDDR4',
+                    'LPDDR5' => 'LPDDR5',
+                    'SDRAM' => 'SDRAM',
+                ],
+                'placeholder' => 'Sélectionner...',
+                'required' => false,
+                'attr' => ['class' => 'form-control']
             ])
             ->add('stockage', TextType::class, [
                 'label' => 'Stockage (en Go)',
-                'required' => false
+                'required' => false,
             ])
-            ->add('typeStockage', TextType::class, [
+            ->add('typeStockage', ChoiceType::class, [
                 'label' => 'Type de Stockage',
-                'required' => false
+                'choices' => [
+                    ' ' => ' ',
+                    'SSD' => 'SSD',
+                    'HDD' => 'HDD',
+                    'Hybrid' => 'Hybrid',
+                    'eMMC' => 'eMMC',
+                    'NVMe' => 'NVMe',
+                    'M.2' => 'M.2',
+                    'SATA' => 'SATA',
+                ],
+                'required' => false,
+                'attr' => ['class' => 'form-control']
             ])
             ->add('carteGraphique', TextType::class, [
                 'label' => 'Carte Graphique',

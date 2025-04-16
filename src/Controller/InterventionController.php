@@ -58,7 +58,6 @@ class InterventionController extends AbstractController
         $intervention->setFrequenceCpu($produit->getFrequenceCpu());
         $intervention->setStatut($produit->getStatut());
         $intervention->setRam($produit->getRam());
-
         $intervention->setTypeRam($produit->getTypeRam());
         $intervention->setStockage($produit->getStockage());
         $intervention->setTypeStockage($produit->getTypeStockage());
@@ -70,15 +69,15 @@ class InterventionController extends AbstractController
             'intervenant' => $user,
         ]);
         $form->handleRequest($request);
-
+            
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Set 1 in the Intervention table for the checkboxes
+            // Ces champs sont déjà des booléens, donc pas besoin de les convertir
+            // Mettre à jour les champs de l'intervention avec les valeurs des checkboxes
             $intervention->setMiseAJourWindows($intervention->getMiseAJourWindows() ? true : false);
             $intervention->setMiseAJourPilotes($intervention->getMiseAJourPilotes() ? true : false);
             $intervention->setAutresLogiciels($intervention->getAutresLogiciels() ? true : false);
-
-            // Update the Produit table with the current date for the checkboxes
+            
             if ($intervention->getMiseAJourWindows()) {
                 $produit->setMiseAJourWindows(new \DateTime());
             }
@@ -304,6 +303,7 @@ class InterventionController extends AbstractController
                 'categorie' => $produit->getCategorie(),
                 'marque' => $produit->getMarque(),
                 'modele' => $produit->getModele(),
+                'taille' => $produit->getTaille(),
                 'numeroSerie' => $produit->getNumeroSerie(),
                 'cpu' => $produit->getCpu(),
                 'frequenceCpu' => $produit->getFrequenceCpu(),
@@ -313,6 +313,8 @@ class InterventionController extends AbstractController
                 'typeStockage' => $produit->getTypeStockage(),
                 'carteGraphique' => $produit->getCarteGraphique(),
                 'memoireVideo' => $produit->getMemoireVideo(),
+                'systemeExploitation' => $produit->getSystemeExploitation(),
+                
             ]
         ]);
     }

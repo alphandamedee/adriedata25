@@ -3,190 +3,7 @@
 {% block title %}Nouvelle Intervention{% endblock %}
 
 {% block body %}
-<style>
-    /* Styles d'impression pour les fiches d'intervention */
-        @media print {
-            /* Configuration d'impression */
-            @page {
-                size: A4 portrait;
-                margin: 0.7cm;  /* Marges réduites mais suffisantes */
-            }
-            
-            /* Règles de base */
-            body * {
-                visibility: hidden;
-            }
-            
-            /* Afficher uniquement la zone d'intérêt */
-            #printable-area, #printable-area * {
-                visibility: visible;
-            }
-            
-            /* Positionner la zone et maximiser sa taille */
-            #printable-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                padding: 0.5cm !important;
-                max-width: none !important;
-            }
-            
-            /* Masquer les éléments hors zone */
-            .container > .row, .no-print, #printable-image-area, .btn, button {
-                display: none !important;
-            }
-            
-            /* Garantir que les accordéons sont ouverts */
-            .accordion-collapse {
-                display: block !important;
-            }
-            
-            .accordion-button::after {
-                display: none !important;
-            }
-            
-            .accordion-button {
-                border: none !important;
-                background-color: white !important;
-                color: black !important;
-                font-weight: bold !important;
-                font-size: 12px !important;
-                padding: 2px 0 !important;
-                margin-bottom: 5px !important;
-            }
-            
-            /* Préserver la structure à deux colonnes avec plus d'espace */
-            .row {
-                display: flex !important;
-                width: 100% !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-            }
-            
-            .col-md-6, .col-md-4, .col-md-8 {
-                float: left !important;
-                padding: 0 4px !important;
-            }
-            
-            .col-md-6 {
-                width: 50% !important;
-            }
-            
-            .col-md-4 {
-                width: 33.33% !important;
-            }
-            
-            .col-md-8 {
-                width: 66.67% !important;
-            }
-            
-            /* Augmenter la taille des polices */
-            body, input, textarea, select, .form-control {
-                font-size: 12px !important;
-            }
-            
-            label, .form-check-label, .label-bold {
-                font-size: 11px !important;
-                font-weight: bold !important;
-            }
-            
-            h2 {
-                font-size: 18px !important;
-                margin-bottom: 12px !important;
-                margin-top: 5px !important;
-            }
-            
-            /* Optimiser la hauteur des champs pour plus de lisibilité */
-            input, select {
-                height: 24px !important;
-                min-height: 24px !important;
-                padding: 2px 4px !important;
-            }
-            
-            textarea {
-                height: 60px !important;
-                min-height: 60px !important;
-            }
-            
-            /* Espacement vertical optimisé */
-            .mb-2, .mb-3, .mb-4 {
-                margin-bottom: 5px !important;
-            }
-            
-            .mt-3, .mt-4 {
-                margin-top: 5px !important;
-            }
-            
-            /* Optimiser les cases à cocher */
-            .form-check {
-                padding-left: 20px !important;
-                margin-bottom: 4px !important;
-                min-height: 15px !important;
-            }
-            
-            .form-check-input {
-                margin-top: 3px !important;
-                width: 14px !important;
-                height: 14px !important;
-            }
-            
-            /* Contrôler la taille du code-barre */
-            svg#barcode {
-                max-height: 45px !important;
-                width: auto !important;
-                margin: 5px 0 !important;
-            }
-            
-            /* Éviter les sauts de page indésirables */
-            .card, .card-body, #printable-area {
-                page-break-inside: avoid;
-            }
-            
-            /* Optimiser le conteneur */
-            .container {
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            
-            .card {
-                border: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                box-shadow: none !important;
-            }
-            
-            .card-body {
-                padding: 0 !important;
-            }
-            
-            /* Amélioration de l'apparence des contrôles */
-            .form-control {
-                border: 1px solid #999 !important;
-                background-color: #fff !important;
-            }
-            
-            /* Améliorer l'affichage de l'accordéon */
-            .accordion {
-                margin-top: 10px !important;
-            }
-            
-            .accordion-item {
-                border: none !important;
-            }
-            
-            .accordion-body {
-                padding: 5px 0 !important;
-            }
-        }
 
-        /* Style pour les labels en gras */
-        .label-bold {
-            font-weight: bold;
-        }
-</style>
 <div class="container mt-4">
     <div class="card shadow mb-4">
         <div class="card-body card-body-custom" id="printable-area">
@@ -234,9 +51,13 @@
                                         {{ form_label(form.categorie, null, {'label_attr': {'class': 'label-bold'}}) }}
                                         {{ form_widget(form.categorie, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-3 mb-2">
                                         {{ form_label(form.marque, null, {'label_attr': {'class': 'label-bold'}}) }}
                                         {{ form_widget(form.marque, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        {{ form_label(form.taille, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.taille, {'attr': {'class': 'form-control'}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -368,7 +189,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -488,9 +308,8 @@
             });
         });
 
-
         document.getElementById('print-button').addEventListener('click', function () {
-                if (!isFormValid()) {
+            if (!isFormValid()) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Champs requis manquants',
@@ -501,34 +320,90 @@
                 return;
             }
 
+            Swal.fire({
+                title: 'Enregistrement en cours...',
+                text: 'Veuillez patienter pendant l\'enregistrement.',
+                timer: 2500,
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            }).then(() => {
+                // Afficher tous les accordéons avant impression
+                document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
+                const form = document.querySelector('#intervention-form');
+                const formData = new FormData(form);
 
-            document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
+                fetch(form.getAttribute('action'), {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(() => {
+                    let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+                    let codeProduit = "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
+                    let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
 
-            const form = document.querySelector('#intervention-form');
-            const formData = new FormData(form);
+                    codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
+                    let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
 
-            fetch(form.getAttribute('action'), {
-                method: 'POST',
-                body: formData,
-            })
-            .then(() => {
-                let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-                let codeProduit = "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
-                let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
+                    const originalTitle = document.title;
+                    document.title = fileName;
 
-                codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
-                let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
+                    // Variable pour détecter l'état de l'impression
+                    let printState = 'pending'; // 'pending', 'completed', 'cancelled'
 
-                const originalTitle = document.title;
-                document.title = fileName;
+                    // Gestionnaire après impression (succès)
+                    window.onafterprint = function() {
+                        document.title = originalTitle;
+                        
+                        // Seulement marquer comme complété si ce n'est pas déjà annulé
+                        if (printState === 'pending') {
+                            printState = 'completed';
+                            
+                            Swal.fire({
+                                title: 'Impression terminée',
+                                text: 'Redirection vers la liste des produits...',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#61a444',
+                                timer: 1000,
+                                timerProgressBar: true
+                            }).then(() => {
+                                // Redirection vers la liste des produits
+                                window.location.href = "{{ path('app_produit') }}";
+                            });
+                        }
+                    };
 
-                setTimeout(() => {
-                    window.print();
-                    document.title = originalTitle;
-                }, 300);
-            })
-            .catch(() => {
-                alert("Erreur : l'enregistrement a échoué, impression annulée.");
+                    // Lancer l'impression
+                    setTimeout(() => {
+                        window.print();
+                        
+                        // Détection d'annulation: si après un certain délai, l'état n'est ni complété ni annulé
+                        setTimeout(() => {
+                            if (printState === 'pending') {
+                                printState = 'cancelled';
+                                document.title = originalTitle;
+                                
+                                Swal.fire({
+                                    title: 'Impression annulée',
+                                    text: 'Vous avez annulé l\'impression',
+                                    icon: 'info',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#6c757d'
+                                });
+                                // Pas de redirection pour rester sur la même page
+                            }
+                        }, 1000); // Délai réduit pour détecter plus rapidement l'annulation
+                    }, 300);
+                })
+                .catch(() => {
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: 'L\'enregistrement a échoué. Impression annulée.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#dc3545'
+                    });
+                });
             });
         });
     });
