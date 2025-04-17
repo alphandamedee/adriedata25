@@ -281,6 +281,5 @@ class ProduitController extends AbstractController
 
         return $this->json($results);
     }
-
 }
 ?>
