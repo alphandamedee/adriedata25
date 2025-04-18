@@ -29,7 +29,7 @@ when@test:
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
 when@prod:
-    doctrine:       
+    doctrine:
         orm:
             auto_generate_proxy_classes: false
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'

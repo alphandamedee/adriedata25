@@ -93,8 +93,8 @@ class InterventionController extends AbstractController
             $entityManager->persist($produit);
 
             // Générer et enregistrer le chemin du PDF
-            //$pdfFilePath = $this->generatePdf($intervention);
-           // $intervention->setPdfFilePath($pdfFilePath);
+            $pdfFilePath = $this->generatePdf($intervention);
+           $intervention->setPdfFilePath($pdfFilePath);
 
             // Mettre à jour les champs statut et codeEtagere du produit
             $produit->setStatut($intervention->getStatut());
@@ -117,6 +117,7 @@ class InterventionController extends AbstractController
             $produit->setCpu($intervention->getCpu());
             $produit->setFrequenceCpu($intervention->getFrequenceCpu());
 
+            
             $entityManager->persist($intervention);
             $entityManager->flush(); // Sauvegarde l'intervention pour obtenir son ID
 
@@ -190,9 +191,9 @@ class InterventionController extends AbstractController
             $em->flush();
 
             // Générer le PDF
-            // $pdfFilePath = $this->generatePdf($intervention);
-            // $intervention->setPdfFilePath($pdfFilePath);
-            // $em->flush();
+            $pdfFilePath = $this->generatePdf($intervention);
+            $intervention->setPdfFilePath($pdfFilePath);
+            $em->flush();
 
             return $this->redirectToRoute('intervention_show', ['id' => $intervention->getId()]);
         }
@@ -206,38 +207,38 @@ class InterventionController extends AbstractController
 
     public function generatePdf(Intervention $intervention): string
     {
-        // $options = new Options();
-        // $options->set('defaultFont', 'Arial');
-        // $dompdf = new Dompdf($options);
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
 
-        // // Remove barcode generation code
-        // $barcodeBase64 = null;
+        // Remove barcode generation code
+        $barcodeBase64 = null;
 
-        // $html = $this->renderView('intervention/pdf_template.html.twig', [
-        //     'intervention' => $intervention,
-        //     'produit' => $intervention->getProduit(), // Pass the produit variable
-        //     'barcode' => $barcodeBase64
-        // ]);
+        $html = $this->renderView('intervention/pdf_template.html.twig', [
+            'intervention' => $intervention,
+            'produit' => $intervention->getProduit(), // Pass the produit variable
+            'barcode' => $barcodeBase64
+        ]);
 
-        // $dompdf->loadHtml($html);
-        // $dompdf->setPaper('A4', 'portrait');
-        // $dompdf->render();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
 
-        // $pdfPath = $this->getParameter('kernel.project_dir') . '/public/uploads/interventions/';
-        // if (!file_exists($pdfPath)) {
-        //     mkdir($pdfPath, 0777, true);
-        // }
+        $pdfPath = $this->getParameter('kernel.project_dir') . '/public/uploads/interventions/';
+        if (!file_exists($pdfPath)) {
+            mkdir($pdfPath, 0777, true);
+        }
 
-        // $codeBarre = $intervention->getCodeBarre() ?: 'unknown';
-        // $intervenantId = $intervention->getIntervenant() ? $intervention->getIntervenant()->getId() : 'unknown';
-        // $date = $intervention->getDateIntervention()->format('Ymd');
-        // $pdfFileName = sprintf('%s-%s-%s.pdf', $date, $codeBarre, $intervenantId);
-        // $fullPdfPath = $pdfPath . $pdfFileName;
+        $codeBarre = $intervention->getCodeBarre() ?: 'unknown';
+        $intervenantId = $intervention->getIntervenant() ? $intervention->getIntervenant()->getId() : 'unknown';
+        $date = $intervention->getDateIntervention()->format('Ymd');
+        $pdfFileName = sprintf('%s-%s-%s.pdf', $date, $codeBarre, $intervenantId);
+        $fullPdfPath = $pdfPath . $pdfFileName;
 
-        // file_put_contents($fullPdfPath, $dompdf->output());
+        file_put_contents($fullPdfPath, $dompdf->output());
 
-        // return '/uploads/interventions/' . $pdfFileName;
-        return null;
+        return '/uploads/interventions/' . $pdfFileName;
+        //return null;
     }
 
     #[Route('/confirm-pdf/{id}', name: 'intervention_confirm_pdf')]
@@ -433,7 +434,6 @@ class InterventionController extends AbstractController
             'uniqueProductsCount' => count($produitsUniques),
         ]);
     }
-
 
 
     #[Route('/dashboard', name: 'user_dashboard')]

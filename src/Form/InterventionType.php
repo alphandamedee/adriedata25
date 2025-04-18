@@ -63,7 +63,8 @@ class InterventionType extends AbstractType
             ])
             ->add('ram', TextType::class, [
                 'label' => 'RAM',
-                'required' => false
+                'required' => false,
+                'attr' => ['placeholder' => 'Ex: 8 Go']
             ])
             ->add('typeRam', ChoiceType::class, [
                 'label' => 'Type de RAM',
@@ -82,6 +83,10 @@ class InterventionType extends AbstractType
             ])
             ->add('stockage', TextType::class, [
                 'label' => 'Stockage (en Go)',
+                'attr' => [
+                    'placeholder' => 'Ex: 256, 500, 1000',
+                    'class' => 'form-control'
+                ],
                 'required' => false,
             ])
             ->add('typeStockage', ChoiceType::class, [
