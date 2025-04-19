@@ -241,6 +241,29 @@ class InterventionController extends AbstractController
         //return null;
     }
 
+    #[Route('/delete-multiple', name: 'intervention_delete_multiple', methods: ['POST'])]
+    public function deleteMultiple(Request $request, EntityManagerInterface $em): Response
+    {
+        $ids = $request->request->all('ids');
+
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
+                $intervention = $em->getRepository(Intervention::class)->find($id);
+                if ($intervention) {
+                    $em->remove($intervention);
+                }
+            }
+            $em->flush();
+            $this->addFlash('success', 'Intervention(s) supprimée(s) avec succès.');
+        } else {
+            $this->addFlash('warning', 'Aucune intervention sélectionnée.');
+        }
+
+        return $this->redirectToRoute('app_profil');
+    }
+
+
+
     #[Route('/confirm-pdf/{id}', name: 'intervention_confirm_pdf')]
     public function confirmPdf(Intervention $intervention, EntityManagerInterface $entityManager): Response
     {

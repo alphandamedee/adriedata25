@@ -172,78 +172,67 @@
 </div>
 
     <div>
-        <table class="table table-striped" id="interventions-table">
-            <thead class="table-dark">
-                <tr style="color: #61a444">
-                    <th>ID</th>
-                    <th>Intervenant</th>
-                    <th>Produit</th>
-                    <th>Code Barre</th>
-                    <th>Date</th>
-                    <th>Commentaire</th>
-                    <th>Fiche</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for intervention in interventions %}
-                    <tr>
-                        <td>{{ intervention.id }}</td>
-                        <td>{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td>
-                        <td>
-                            {% if intervention.produit is defined and intervention.produit is not null %}
-                                {% if intervention.produit.categorie is defined and intervention.produit.categorie is not null %}
-                                    {{ intervention.produit.categorie.nom ?? 'N/A' }} - 
-                                {% else %}
-                                    N/A - 
-                                {% endif %}
-                                {{ intervention.produit.marque ?? 'N/A' }} - 
-                                {{ intervention.produit.modele ?? 'N/A' }} - 
-                                {% if intervention.produit.cpu %}{{ intervention.produit.cpu }}{% if intervention.produit.frequenceCpu %} {{ intervention.produit.frequenceCpu }}{% endif %} - {% endif %}
-                                {% if intervention.produit.carteGraphique %}{{ intervention.produit.carteGraphique }}{% if intervention.produit.memoireVideo %} {{ intervention.produit.memoireVideo }}{% endif %} - {% endif %}
-                                {{ intervention.produit.stockage ?? '' }}{{ intervention.produit.typeStockage is not null ? intervention.produit.typeStockage.nom ?? '' : '' }} - 
-                                {{ intervention.produit.ram ?? '' }}{{ intervention.produit.typeRam is not null ? intervention.produit.typeRam.nom ?? '' : '' }}
-                            {% else %}
-                                <span class="text-muted">Produit non trouvé</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ intervention.codeBarre }}</td>
-                        <td>{{ intervention.dateIntervention|date('d/m/Y') }}</td>
-                        <td>{{ intervention.commentaire }}</td>
-                        <td>
-                            {% if intervention.pdfFilePath %}
-                                <a href="{{ path('intervention_show', { id: intervention.id }) }}" class="btn btn-sm btn-info" title="Afficher la fiche intervention">
-                                    👁
-                                </a>
-                            {% else %}
-                                <span class="text-muted">Aucun PDF</span>
-                            {% endif %}
-                        </td>
-
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+            <form id="delete-form" method="post" action="{{ path('intervention_delete_multiple') }}">
+            {% endif %}
+            <table class="table table-striped" id="interventions-table">
+                <thead class="table-dark">
+                    <tr style="color: #61a444">
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                            <th><input type="checkbox" id="select-all"></th>
+                        {% endif %}
+                        <th>ID</th>
+                        <th>Intervenant</th>
+                        <th>Produit</th>
+                        <th>Code Barre</th>
+                        <th>Date</th>
+                        <th>Commentaire</th>
+                        <th>Fiche</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for intervention in interventions %}
+                        <tr>
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
+                                <td><input type="checkbox" name="ids[]" value="{{ intervention.id }}"></td>
+                            {% endif %}
+                            <td>{{ intervention.id }}</td>
+                            <td>{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td>
+                            <td>
+                                {% if intervention.produit %}
+                                    {{ intervention.produit.categorie.nom ?? 'N/A' }} - {{ intervention.produit.marque ?? 'N/A' }} - {{ intervention.produit.modele ?? 'N/A' }}
+                                {% else %}
+                                    <span class="text-muted">Produit non trouvé</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ intervention.codeBarre }}</td>
+                            <td>{{ intervention.dateIntervention|date('d/m/Y') }}</td>
+                            <td>{{ intervention.commentaire }}</td>
+                            <td>
+                                
+                                    <a href="{{ path('intervention_show', { id: intervention.id }) }}" class="btn btn-sm btn-info" title="Afficher la fiche intervention">
+                                        👁
+                                    </a>
+                               
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash3"></i> Supprimer sélection
+                    </button>
+                </div>
+            </form>
+            {% endif %}
+
     </div>    
     {% endif %}
 </div>
 
-<!-- Inclure DataTables JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-<!-- Initialisation de DataTables -->
-<script>
-    $(document).ready(function () {
-        $('#interventions-table').DataTable({
-            
-            language: {
-                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json" // Traduction en français
-            }
-        });
-    });
-</script>
-
-<script src="{{ asset('js/sort.js') }}"></script>
         <div class="col-md-4 justify-items-center mt-4">
             {% if 'ROLE_ADMIN' in app.user.roles %}
             
@@ -256,5 +245,64 @@
                     <i class="bi bi-speedometer2"></i> Accéder au Dashboard Utilisateur
                 </a>
             {% endif %}
-        </div>    
+        </div>  
+<!-- Inclure DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#interventions-table').DataTable({
+            
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json" // Traduction en français
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAll = document.getElementById('select-all');
+        if (selectAll) {
+            selectAll.addEventListener('click', function () {
+                const checkboxes = document.querySelectorAll('input[name="ids[]"]');
+                checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            });
+        }
+        const deleteForm = document.getElementById('delete-form');
+        const deleteButton = deleteForm.querySelector('button[type="submit"]');
+
+        deleteButton.addEventListener('click', function (e) {
+            console.log("click !");
+            e.preventDefault();
+
+            const selected = deleteForm.querySelectorAll('input[name="ids[]"]:checked');
+            if (selected.length === 0) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Aucune sélection',
+                    text: 'Veuillez sélectionner au moins une intervention à supprimer.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                text: "Cette action est irréversible !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, supprimer',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.submit();
+                }
+            });
+        });
+    });
+
+</script>
+
 {% endblock %}

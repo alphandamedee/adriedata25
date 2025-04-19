@@ -173,11 +173,19 @@
                 </button>
             </div>
             
+<<<<<<< HEAD
                 <div class="text-center col-md-3" id="print-button-container" style:"display: none;">
                     <button type="button" id="print-button" class="btn btn-info mt-3 no-print">
                         <i class="bi bi-printer"></i> Imprimer
                     </button>
                 </div>
+=======
+            <div class="text-center col-md-3" id="print-button-container" style="display: none;">
+                <button type="button" id="print-button" class="btn btn-info mt-3 no-print">
+                    <i class="bi bi-printer"></i> Imprimer
+                </button>
+            </div>
+>>>>>>> dev
                 
             <div class="text-center col-md-3">
                 <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print">
@@ -193,6 +201,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -351,18 +360,27 @@
                     text: 'L\'intervention a été enregistrée avec succès',
                     icon: 'success',
                     timer: 2500,
-                    
+                    showConfirmButton: false
                 });
                 // Afficher le bouton d'impression après succès
                 document.getElementById('print-button-container').style.display = 'block';
         
 
+<<<<<<< HEAD
                 // Rendre le bouton "Imprimer" visible
                         printButtonContainer.style.display = 'block';
                         
+=======
+                // Afficher le bouton d'impression après succès
+                const printButtonContainer = document.getElementById('print-button-container');
+                if (printButtonContainer) {
+                    printButtonContainer.style.display = 'block';
+                }
+                
+>>>>>>> dev
                 // Transformer le bouton en lien de retour
                 saveBtn.innerHTML = "<i class='bi bi-arrow-left-circle'></i> Retour";
-                saveBtn.classList.remove('btn-primary', 'btn-success');
+                saveBtn.classList.remove('btn-primary');
                 saveBtn.classList.add('btn-secondary');
                 saveBtn.disabled = false;
                 saveBtn.onclick = function () {
@@ -416,7 +434,28 @@
         if (printState === 'pending') {
             printState = 'completed';
 
+            document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
+
+            // Préparation du nom de fichier
+            let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            let codeProduit = document.querySelector('#intervention_codeBarre')?.value || "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
+            let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
+            codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
+            let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
+
+            // Configuration pour html2pdf
+            const element = document.getElementById('printable-area');
+            const opt = {
+                margin: 0.5,
+                filename: `${fileName}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Afficher le loader pendant la génération
             Swal.fire({
+<<<<<<< HEAD
                 title: 'Impression terminée',
                 text: 'Redirection vers la liste des produits...',
                 icon: 'success',
@@ -450,6 +489,35 @@
     }, 300);
 });
 
+=======
+                title: 'Génération du PDF...',
+                text: 'Veuillez patienter...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Générer le PDF
+            html2pdf().set(opt).from(element).save()
+                .then(() => {
+                    Swal.fire({
+                        title: 'PDF généré !',
+                        text: 'Le document a été téléchargé avec succès',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                })
+                .catch(err => {
+                    console.error('Erreur PDF:', err);
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: 'La génération du PDF a échoué',
+                        icon: 'error'
+                    });
+                });
+>>>>>>> dev
         });
 
 </script>
