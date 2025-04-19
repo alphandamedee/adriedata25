@@ -4,5 +4,32 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-    <h1>Welcome to the Home Page!</h1>
+    <div class="container mt-5">
+        <div class="card shadow p-4">
+            <h1 class="text-center mb-4">Bienvenue sur <strong>ADRIEDATA</strong> 👋</h1>
+            <p class="fs-5">
+                Je m'appelle <strong>ANDRIATIANA</strong> Alphand Amédée, stagiaire en développement web et web mobile (DWWM), 
+                et j’ai créé cette application dans le cadre de ma période en entreprise.
+            </p>
+            <p class="fs-5">
+                ADRIEDATA est un outil simple et pratique pour aider l’association <em>ADRIE</em> 
+                à gérer le matériel informatique collecté, réparé et redistribué.
+            </p>
+            <p class="fs-5">
+                L'application permet de suivre les produits, organiser les interventions 
+                et travailler même sans connexion Internet — le tout avec une interface accessible 
+                selon les rôles de chacun.
+            </p>
+            <p class="fs-5 text-success">
+                Un grand merci à toutes les personnes qui m'ont accompagné et soutenu pendant ce projet 🙏
+            <p class="fs-5 text-center">
+                <a href="{{ path('app_login') }}" class="btn btn-outline-primary fw-bold d-inline-flex align-items-center discover-btn">
+                    <span class="me-2">Bonne découverte !</span>
+                    <i class="bi bi-compass"></i>
+                </a>
+            </p>
+        </div>
+    </div>
+
+
 {% endblock %}

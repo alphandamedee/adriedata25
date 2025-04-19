@@ -64,10 +64,14 @@
           <div class="col-md-4">
             {{ form_widget(attribute(form, pair[0]), {'attr': {'class': 'form-control shadow-sm required-field'}}) }}
           </div>
-          <div class="col-md-2 text-end">{{ form_label(attribute(form, pair[1]), null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}</div>
-          <div class="col-md-4">
-            {{ form_widget(attribute(form, pair[1]), {'attr': {'class': 'form-control shadow-sm'}}) }}
-          </div>
+          {% if pair[1] %}
+            <div class="col-md-2 text-end">
+              {{ form_label(attribute(form, pair[1]), null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            </div>
+            <div class="col-md-4">
+              {{ form_widget(attribute(form, pair[1]), {'attr': {'class': 'form-control shadow-sm'}}) }}
+            </div>
+          {% endif %}
         </div>
       {% endfor %}
 

@@ -200,7 +200,7 @@
             <div class="row">
                 <div class="col-md-4 mb-2">
                     {{ form_label(form.codeBarre, null, {'label_attr': {'class': 'label-bold'}}) }}
-                    {{ form_widget(form.codeBarre, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(form.codeBarre, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                 </div>
                 <div class="col-md-8 mb-2 text-end">
                     {% if intervention.codeBarre %}<svg id="barcode"></svg>{% endif %}
@@ -210,11 +210,11 @@
             <div class="row">
                 <div class="col-md-6 mb-2">
                     {{ form_label(form.intervenant) }}
-                    {{ form_widget(form.intervenant, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(form.intervenant, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                 </div>
                 <div class="col-md-6 mb-2">
                     {{ form_label(form.dateIntervention) }}
-                    {{ form_widget(form.dateIntervention, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(form.dateIntervention, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                 </div>
             </div>
 
@@ -232,79 +232,83 @@
                                         {{ form_label(form.categorie, null, {'label_attr': {'class': 'label-bold'}}) }}
                                         {{ form_widget(form.categorie, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         {{ form_label(form.marque, null, {'label_attr': {'class': 'label-bold'}}) }}
                                         {{ form_widget(form.marque, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        {{ form_label(form.taille, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.taille, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.modele, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.modele, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.modele, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.numeroSerie, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.numeroSerie, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.numeroSerie, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.cpu, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.cpu, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.cpu, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.frequenceCpu, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.frequenceCpu, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.frequenceCpu, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.ram, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.ram, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.ram, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.typeRam, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.typeRam, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.typeRam, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.stockage, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.stockage, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.stockage, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.typeStockage, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.typeStockage, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.typeStockage, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.carteGraphique, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.carteGraphique, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.carteGraphique, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.memoireVideo, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.memoireVideo, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.memoireVideo, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.systemeExploitation, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.systemeExploitation, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.systemeExploitation, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.versionSe, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.versionSe, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.versionSe, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.codeEtagere, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.codeEtagere, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.codeEtagere, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.statut, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.statut, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                         </div>
@@ -314,13 +318,13 @@
 
             <div class="row mt-3">
                 <div class="col-md-4 mb-2">
-                    <div class="form-check">{{ form_widget(form.miseAJourWindows) }} {{ form_label(form.miseAJourWindows) }}</div>
-                    <div class="form-check">{{ form_widget(form.miseAJourPilotes) }} {{ form_label(form.miseAJourPilotes) }}</div>
-                    <div class="form-check">{{ form_widget(form.autresLogiciels) }} {{ form_label(form.autresLogiciels) }}</div>
+                    <div class="form-check">{{ form_widget(form.miseAJourWindows, {'attr': {'disabled': true}}) }} {{ form_label(form.miseAJourWindows) }}</div>
+                    <div class="form-check">{{ form_widget(form.miseAJourPilotes, {'attr': {'disabled': true}}) }} {{ form_label(form.miseAJourPilotes) }}</div>
+                    <div class="form-check">{{ form_widget(form.autresLogiciels, {'attr': {'disabled': true}}) }} {{ form_label(form.autresLogiciels) }}</div>
                 </div>
                 <div class="col-md-8 mb-2">
                     {{ form_label(form.commentaire) }}
-                    {{ form_widget(form.commentaire, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(form.commentaire, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                 </div>
             </div>
 

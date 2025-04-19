@@ -172,11 +172,13 @@
                     <i class="bi bi-save"></i> Enregistrer
                 </button>
             </div>
-            <div class="text-center col-md-3">
+            
+            <div class="text-center col-md-3" id="print-button-container" style="display: none;">
                 <button type="button" id="print-button" class="btn btn-info mt-3 no-print">
                     <i class="bi bi-printer"></i> Imprimer
                 </button>
             </div>
+                
             <div class="text-center col-md-3">
                 <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print">
                     <i class="bi bi-x-circle"></i> Annuler
@@ -191,6 +193,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -314,6 +317,7 @@
             const form = document.querySelector('#intervention-form');
             const spinner = document.getElementById('loading-spinner');
             const saveBtn = this;
+            const printButtonContainer = document.getElementById('print-button-container');
 
             if (!isFormValid()) {
                 Swal.fire({
@@ -348,12 +352,18 @@
                     text: 'L\'intervention a été enregistrée avec succès',
                     icon: 'success',
                     timer: 2500,
-                    
+                    showConfirmButton: false
                 });
 
+                // Afficher le bouton d'impression après succès
+                const printButtonContainer = document.getElementById('print-button-container');
+                if (printButtonContainer) {
+                    printButtonContainer.style.display = 'block';
+                }
+                
                 // Transformer le bouton en lien de retour
                 saveBtn.innerHTML = "<i class='bi bi-arrow-left-circle'></i> Retour";
-                saveBtn.classList.remove('btn-primary', 'btn-success');
+                saveBtn.classList.remove('btn-primary');
                 saveBtn.classList.add('btn-secondary');
                 saveBtn.disabled = false;
                 saveBtn.onclick = function () {
@@ -388,91 +398,54 @@
                 return;
             }
 
+            document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
+
+            // Préparation du nom de fichier
+            let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            let codeProduit = document.querySelector('#intervention_codeBarre')?.value || "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
+            let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
+            codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
+            let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
+
+            // Configuration pour html2pdf
+            const element = document.getElementById('printable-area');
+            const opt = {
+                margin: 0.5,
+                filename: `${fileName}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Afficher le loader pendant la génération
             Swal.fire({
-                title: 'Enregistrement en cours...',
-                text: 'Veuillez patienter pendant l\'enregistrement.',
-                timer: 2500,
+                title: 'Génération du PDF...',
+                text: 'Veuillez patienter...',
                 allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            }).then(() => {
-                // Afficher tous les accordéons avant impression
-                document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
-                const form = document.querySelector('#intervention-form');
-                const formData = new FormData(form);
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
-                fetch(form.getAttribute('action'), {
-                    method: 'POST',
-                    body: formData,
-                })
+            // Générer le PDF
+            html2pdf().set(opt).from(element).save()
                 .then(() => {
-                    let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-                    let codeProduit = "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
-                    let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
-
-                    codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
-                    let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
-
-                    const originalTitle = document.title;
-                    document.title = fileName;
-
-                    // Variable pour détecter l'état de l'impression
-                    let printState = 'pending'; // 'pending', 'completed', 'cancelled'
-
-                    // Gestionnaire après impression (succès)
-                    window.onafterprint = function() {
-                        document.title = originalTitle;
-                        
-                        // Seulement marquer comme complété si ce n'est pas déjà annulé
-                        if (printState === 'pending') {
-                            printState = 'completed';
-                            
-                            Swal.fire({
-                                title: 'Impression terminée',
-                                text: 'Redirection vers la liste des produits...',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#61a444',
-                                timer: 1000,
-                                timerProgressBar: true
-                            }).then(() => {
-                                // Redirection vers la liste des produits
-                                window.location.href = "{{ path('app_produit') }}";
-                            });
-                        }
-                    };
-
-                    // Lancer l'impression
-                    setTimeout(() => {
-                        window.print();
-                        
-                        // Détection d'annulation: si après un certain délai, l'état n'est ni complété ni annulé
-                        setTimeout(() => {
-                            if (printState === 'pending') {
-                                printState = 'cancelled';
-                                document.title = originalTitle;
-                                
-                                Swal.fire({
-                                    title: 'Impression annulée',
-                                    text: 'Vous avez annulé l\'impression',
-                                    icon: 'info',
-                                    confirmButtonText: 'OK',
-                                    confirmButtonColor: '#6c757d'
-                                });
-                                // Pas de redirection pour rester sur la même page
-                            }
-                        }, 1000); // Délai réduit pour détecter plus rapidement l'annulation
-                    }, 300);
+                    Swal.fire({
+                        title: 'PDF généré !',
+                        text: 'Le document a été téléchargé avec succès',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
                 })
-                .catch(() => {
+                .catch(err => {
+                    console.error('Erreur PDF:', err);
                     Swal.fire({
                         title: 'Erreur !',
-                        text: 'L\'enregistrement a échoué. Impression annulée.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#dc3545'
+                        text: 'La génération du PDF a échoué',
+                        icon: 'error'
                     });
                 });
-            });
         });
     });
 </script>
