@@ -358,18 +358,9 @@
                 document.getElementById('print-button-container').style.display = 'block';
         
 
-<<<<<<< HEAD
                 // Rendre le bouton "Imprimer" visible
                         printButtonContainer.style.display = 'block';
                         
-=======
-                // Afficher le bouton d'impression après succès
-                const printButtonContainer = document.getElementById('print-button-container');
-                if (printButtonContainer) {
-                    printButtonContainer.style.display = 'block';
-                }
-                
->>>>>>> dev
                 // Transformer le bouton en lien de retour
                 saveBtn.innerHTML = "<i class='bi bi-arrow-left-circle'></i> Retour";
                 saveBtn.classList.remove('btn-primary');
@@ -447,7 +438,6 @@
 
             // Afficher le loader pendant la génération
             Swal.fire({
-<<<<<<< HEAD
                 title: 'Impression terminée',
                 text: 'Redirection vers la liste des produits...',
                 icon: 'success',
@@ -481,35 +471,6 @@
     }, 300);
 });
 
-=======
-                title: 'Génération du PDF...',
-                text: 'Veuillez patienter...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            // Générer le PDF
-            html2pdf().set(opt).from(element).save()
-                .then(() => {
-                    Swal.fire({
-                        title: 'PDF généré !',
-                        text: 'Le document a été téléchargé avec succès',
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                })
-                .catch(err => {
-                    console.error('Erreur PDF:', err);
-                    Swal.fire({
-                        title: 'Erreur !',
-                        text: 'La génération du PDF a échoué',
-                        icon: 'error'
-                    });
-                });
->>>>>>> dev
         });
 
 </script>
