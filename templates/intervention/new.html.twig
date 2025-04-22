@@ -173,12 +173,12 @@
                 </button>
             </div>
             
-                <div class="text-center col-md-3" id="print-button-container" style:"display: none;">
-                    <button type="button" id="print-button" class="btn btn-info mt-3 no-print">
-                        <i class="bi bi-printer"></i> Imprimer
-                    </button>
-                </div>
-              
+            <div class="text-center col-md-3" id="print-button-container" style="display: none;">
+                <button type="button" id="print-button" class="btn btn-info mt-3 no-print">
+                    <i class="bi bi-printer"></i> Imprimer
+                </button>
+            </div>
+                
             <div class="text-center col-md-3">
                 <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print">
                     <i class="bi bi-x-circle"></i> Annuler
@@ -354,13 +354,13 @@
                     timer: 2500,
                     showConfirmButton: false
                 });
-                // Afficher le bouton d'impression après succès
-                document.getElementById('print-button-container').style.display = 'block';
-        
 
-                // Rendre le bouton "Imprimer" visible
-                        printButtonContainer.style.display = 'block';
-                        
+                // Afficher le bouton d'impression après succès
+                const printButtonContainer = document.getElementById('print-button-container');
+                if (printButtonContainer) {
+                    printButtonContainer.style.display = 'block';
+                }
+                
                 // Transformer le bouton en lien de retour
                 saveBtn.innerHTML = "<i class='bi bi-arrow-left-circle'></i> Retour";
                 saveBtn.classList.remove('btn-primary');
@@ -387,35 +387,16 @@
         });
 
         document.getElementById('print-button').addEventListener('click', function () {
-    if (!isFormValid()) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Champs requis manquants',
-            text: 'Merci de compléter tous les champs nécessaires avant impression.',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#dc3545'
-        });
-        return;
-    }
-
-    document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
-
-    let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    let codeProduit = "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
-    let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
-
-    codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
-    let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
-    const originalTitle = document.title;
-    document.title = fileName;
-
-    let printState = 'pending';
-
-    window.onafterprint = function () {
-        document.title = originalTitle;
-
-        if (printState === 'pending') {
-            printState = 'completed';
+            if (!isFormValid()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Champs requis manquants',
+                    text: 'Merci de compléter tous les champs nécessaires avant impression.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#dc3545'
+                });
+                return;
+            }
 
             document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
 
@@ -438,41 +419,35 @@
 
             // Afficher le loader pendant la génération
             Swal.fire({
-                title: 'Impression terminée',
-                text: 'Redirection vers la liste des produits...',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#61a444',
-                timer: 1000,
-                timerProgressBar: true
-            }).then(() => {
-                window.location.href = "{{ path('app_produit') }}";
+                title: 'Génération du PDF...',
+                text: 'Veuillez patienter...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
             });
-        }
-    };
 
-    setTimeout(() => {
-        window.print();
-
-        setTimeout(() => {
-            if (printState === 'pending') {
-                printState = 'cancelled';
-                document.title = originalTitle;
-
-                Swal.fire({
-                    title: 'Impression annulée',
-                    text: 'Vous avez annulé l\'impression',
-                    icon: 'info',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#6c757d'
+            // Générer le PDF
+            html2pdf().set(opt).from(element).save()
+                .then(() => {
+                    Swal.fire({
+                        title: 'PDF généré !',
+                        text: 'Le document a été téléchargé avec succès',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                })
+                .catch(err => {
+                    console.error('Erreur PDF:', err);
+                    Swal.fire({
+                        title: 'Erreur !',
+                        text: 'La génération du PDF a échoué',
+                        icon: 'error'
+                    });
                 });
-            }
-        }, 1000);
-    }, 300);
-});
-
         });
-
+    });
 </script>
 
 <script src="{{ asset('js/scan.js') }}"></script>
