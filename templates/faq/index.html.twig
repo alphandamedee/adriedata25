@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FAQ - AdrieData{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Foire Aux Questions</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="accordion" id="faqAccordion">
+                {% for categorie in faqs %}
+                    <div class="accordion-item mb-3 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse{{ loop.index }}" 
+                                    aria-expanded="{{ loop.first ? 'true' : 'false' }}" 
+                                    aria-controls="collapse{{ loop.index }}">
+                                <strong>{{ categorie.categorie }}</strong>
+                            </button>
+                        </h2>
+                        <div id="collapse{{ loop.index }}" 
+                             class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
+                             data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {% for qa in categorie.questions %}
+                                    <div class="faq-item mb-4">
+                                        <h4 class="text-primary mb-3">
+                                            <i class="bi bi-question-circle me-2"></i>
+                                            {{ qa.question }}
+                                        </h4>
+                                        <p class="ms-4 mb-4 pb-2 border-bottom">
+                                            {{ qa.reponse }}
+                                        </p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <p class="text-muted">
+            Vous ne trouvez pas la réponse à votre question ?<br>
+            N'hésitez pas à contacter l'administrateur du système.
+        </p>
+    </div>
+</div>
+
+<style>
+    .accordion-button:not(.collapsed) {
+        background-color: #f8f9fa;
+        color: #0d6efd;
+    }
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: rgba(0,0,0,.125);
+    }
+    .faq-item:last-child p {
+        border-bottom: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+</style>
+{% endblock %}
