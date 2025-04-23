@@ -24,7 +24,7 @@
 
 // Initialisation de DataTables avec en-tête fixe et pagination KnpPaginator
 // Assurez-vous que jQuery et DataTables sont chargés avant ce script
-// ✅ Initialisation DataTable (corrigée et nettoyée)
+// Initialisation DataTable (corrigée et nettoyée)
 document.addEventListener('DOMContentLoaded', function () {
     const table = $('#produit-table');
     if (table.length) {
