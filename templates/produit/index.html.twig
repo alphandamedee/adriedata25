@@ -48,6 +48,7 @@
                     </a>
                 </div>
 
+                {% if 'ROLE_ADMIN' in app.user.roles %}
                 <!-- Bouton Ajouter -->
                 <div class="col-auto">
                     <a href="{{ path('produit_ajouter') }}" id="add-product-link" class="btn btn-success" title="Ajouter un Produit">
@@ -55,7 +56,6 @@
                     </a>
                 </div>
 
-                {% if 'ROLE_ADMIN' in app.user.roles %}
                     <!-- Boutons Catégories / RAM -->
                     <div class="col-auto d-flex gap-2">
                         <a href="{{ path('categorie_produit_index') }}" class="btn btn-outline-dark" title="Catégories">
@@ -65,7 +65,6 @@
                             <i class="bi bi-memory"></i>
                         </a>
                     </div>
-                {% endif %}
 
                 <!-- Export CSV / Excel -->
                 <div class="col-auto d-flex gap-2">
@@ -76,6 +75,7 @@
                         <i class="bi bi-file-earmark-excel"></i>
                     </a>
                 </div>
+                {% endif %}
 
             </div>
         </div>

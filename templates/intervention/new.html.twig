@@ -521,11 +521,15 @@
 
             document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
 
-            let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            let now = new Date();
+            let dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+            let heureMinute = now.getHours().toString().padStart(2, '0') + now.getMinutes().toString().padStart(2, '0');
             let codeProduit = document.querySelector('#intervention_codeBarre')?.value || "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
             let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
+
             codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
-            let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
+            let fileName = `${dateStr}_${heureMinute}_${codeProduit}_${idIntervenant}`;
+
 
             const originalTitle = document.title;
             document.title = fileName;

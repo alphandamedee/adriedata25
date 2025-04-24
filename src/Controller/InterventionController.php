@@ -231,8 +231,13 @@ class InterventionController extends AbstractController
 
         $codeBarre = $intervention->getCodeBarre() ?: 'unknown';
         $intervenantId = $intervention->getIntervenant() ? $intervention->getIntervenant()->getId() : 'unknown';
-        $date = $intervention->getDateIntervention()->format('Ymd');
-        $pdfFileName = sprintf('%s-%s-%s.pdf', $date, $codeBarre, $intervenantId);
+        $dateHeure = $intervention->getDateIntervention()->format('Ymd_Hi'); // YYYYMMDD_HHMM
+        $codeBarre = $intervention->getCodeBarre() ?: 'unknown';
+        $intervenantId = $intervention->getIntervenant() ? $intervention->getIntervenant()->getId() : 'unknown';
+
+        $codeBarre = preg_replace('/[^a-zA-Z0-9]/', '', $codeBarre); // nettoyage pour éviter caractères spéciaux
+        $pdfFileName = sprintf('%s_%s_%s.pdf', $dateHeure, $codeBarre, $intervenantId);
+
         $fullPdfPath = $pdfPath . $pdfFileName;
 
         file_put_contents($fullPdfPath, $dompdf->output());
