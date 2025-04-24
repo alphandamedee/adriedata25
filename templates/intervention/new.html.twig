@@ -1,8 +1,111 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nouvelle Intervention{% endblock %}
-
 {% block body %}
+<style>
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0.7cm;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    #printable-area, #printable-area * {
+        visibility: visible;
+    }
+
+    #printable-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0.5cm;
+        max-width: none;
+    }
+
+    .no-print,
+    .container > .row,
+    .btn,
+    #printable-image-area,
+    #save-button,
+    #loading-spinner {
+        display: none !important;
+    }
+
+    .accordion-collapse {
+        display: block !important;
+    }
+
+    .accordion-button::after {
+        display: none !important;
+    }
+
+    .accordion-button {
+        background-color: white !important;
+        color: black !important;
+        font-weight: bold !important;
+        font-size: 12px !important;
+    }
+
+    .form-control {
+        border: 1px solid #999 !important;
+        background-color: #fff !important;
+        font-size: 12px !important;
+        padding: 2px 4px !important;
+        height: 24px !important;
+    }
+
+    label,
+    .form-check-label,
+    .label-bold {
+        font-size: 11px !important;
+        font-weight: bold !important;
+    }
+
+    h2 {
+        font-size: 18px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .row {
+        display: flex !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .col-md-4, .col-md-6, .col-md-8 {
+        float: left !important;
+        padding: 0 4px !important;
+    }
+
+    .col-md-4 { width: 33.33% !important; }
+    .col-md-6 { width: 50% !important; }
+    .col-md-8 { width: 66.66% !important; }
+
+    svg#barcode {
+        max-height: 45px !important;
+        margin: 5px 0 !important;
+    }
+
+    .form-check {
+        padding-left: 20px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .form-check-input {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    .accordion-item, .accordion-body, .card, .card-body {
+        page-break-inside: avoid;
+    }
+}
+</style>
+
 
 <div class="container mt-4">
     <div class="card shadow mb-4">
@@ -197,30 +300,58 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const CATEGORIES_OBLIGATOIRES = [
-            'ordinateur', 'pc', 'mini pc', 'portable', 'all in one', 'unité centrale', 'mac'
-        ];
-
         function isFormValid() {
+            const CATEGORIES_OBLIGATOIRES = [
+                'ordinateur', 'pc', 'mini pc', 'portable', 'all in one', 'unité centrale', 'mac'
+            ];
+
             const categorie = document.querySelector('#intervention_categorie');
             const catValue = categorie?.value?.trim()?.toLowerCase();
-            
-            // Vérifier si la catégorie est dans la liste des catégories obligatoires
+
             const isCategorieObligatoire = categorie && 
-                                        CATEGORIES_OBLIGATOIRES.some(c => 
-                                            catValue.includes(c.toLowerCase()));
-            
-            // Si la catégorie n'est pas obligatoire, on n'a pas besoin de vérifier 
-            // tous les champs techniques et on peut considérer le formulaire comme valide
-            if (!isCategorieObligatoire) {
-                return true; // Permettre l'enregistrement pour les catégories non-informatiques
-            }
-            
+                CATEGORIES_OBLIGATOIRES.some(c => catValue.includes(c.toLowerCase()));
+
             let valid = true;
             let champsManquants = [];
-            
-            // Liste des champs à vérifier (uniquement si catégorie est un ordinateur)
-            const champs = {
+
+            // Champs toujours obligatoires (toutes catégories)
+            const champsObligatoiresCommuns = {
+                'Étagère': '#intervention_codeEtagere',
+                'Statut': '#intervention_statut'
+            };
+
+            for (const [label, selector] of Object.entries(champsObligatoiresCommuns)) {
+                const field = document.querySelector(selector);
+                if (field && !field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    field.style.borderColor = '#dc3545';
+                    field.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
+                    if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('invalid-feedback')) {
+                        const feedback = document.createElement('div');
+                        feedback.classList.add('invalid-feedback');
+                        feedback.textContent = `Le champ ${label} est requis`;
+                        field.parentNode.insertBefore(feedback, field.nextSibling);
+                    }
+                    champsManquants.push(label);
+                    valid = false;
+                } else if (field) {
+                    field.classList.remove('is-invalid');
+                    field.style.borderColor = '';
+                    field.style.boxShadow = '';
+                    const feedback = field.nextElementSibling;
+                    if (feedback && feedback.classList.contains('invalid-feedback')) {
+                        feedback.remove();
+                    }
+                }
+            }
+
+            // Si catégorie non informatique, pas besoin des champs techniques
+            if (!isCategorieObligatoire) {
+                return valid;
+            }
+
+            // Champs techniques requis uniquement pour les catégories PC
+            const champsTechniques = {
                 'Modèle': '#intervention_modele',
                 'N° Série': '#intervention_numeroSerie',
                 'CPU': '#intervention_cpu',
@@ -232,37 +363,27 @@
                 'Carte Graphique': '#intervention_carteGraphique',
                 'Mémoire Vidéo': '#intervention_memoireVideo',
                 'Système': '#intervention_systemeExploitation',
-                'Version SE': '#intervention_versionSe',
-                'Étagère': '#intervention_codeEtagere',
-                'Statut': '#intervention_statut'
+                'Version SE': '#intervention_versionSe'
             };
 
-            // Vérification de chaque champ pour les catégories obligatoires
-            for (const [label, selector] of Object.entries(champs)) {
+            for (const [label, selector] of Object.entries(champsTechniques)) {
                 const field = document.querySelector(selector);
                 if (field && !field.value.trim()) {
                     field.classList.add('is-invalid');
-                    
-                    // Ajouter une bordure rouge plus visible
                     field.style.borderColor = '#dc3545';
                     field.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
-                    
-                    // Ajouter un message d'erreur sous le champ
                     if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('invalid-feedback')) {
                         const feedback = document.createElement('div');
                         feedback.classList.add('invalid-feedback');
                         feedback.textContent = `Le champ ${label} est requis`;
                         field.parentNode.insertBefore(feedback, field.nextSibling);
                     }
-                    
                     champsManquants.push(label);
                     valid = false;
                 } else if (field) {
                     field.classList.remove('is-invalid');
                     field.style.borderColor = '';
                     field.style.boxShadow = '';
-                    
-                    // Supprimer le message d'erreur s'il existe
                     const feedback = field.nextElementSibling;
                     if (feedback && feedback.classList.contains('invalid-feedback')) {
                         feedback.remove();
@@ -270,15 +391,14 @@
                 }
             }
 
-            // Alerter l'utilisateur si des champs sont manquants
+            // Message global si non valide
             if (!valid) {
-                // Faire défiler jusqu'au premier champ invalide
                 const firstInvalid = document.querySelector('.is-invalid');
                 if (firstInvalid) {
                     firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     setTimeout(() => firstInvalid.focus(), 500);
                 }
-                
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Champs obligatoires manquants',
@@ -295,6 +415,7 @@
 
             return valid;
         }
+
 
         {% if produit and produit.codeBarre %}
             // Configuration améliorée du code-barres pour meilleure impression
@@ -400,53 +521,21 @@
 
             document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
 
-            // Préparation du nom de fichier
             let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
             let codeProduit = document.querySelector('#intervention_codeBarre')?.value || "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
             let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
             codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
             let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
 
-            // Configuration pour html2pdf
-            const element = document.getElementById('printable-area');
-            const opt = {
-                margin: 0.5,
-                filename: `${fileName}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
+            const originalTitle = document.title;
+            document.title = fileName;
 
-            // Afficher le loader pendant la génération
-            Swal.fire({
-                title: 'Génération du PDF...',
-                text: 'Veuillez patienter...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            // Générer le PDF
-            html2pdf().set(opt).from(element).save()
-                .then(() => {
-                    Swal.fire({
-                        title: 'PDF généré !',
-                        text: 'Le document a été téléchargé avec succès',
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                })
-                .catch(err => {
-                    console.error('Erreur PDF:', err);
-                    Swal.fire({
-                        title: 'Erreur !',
-                        text: 'La génération du PDF a échoué',
-                        icon: 'error'
-                    });
-                });
+            setTimeout(() => {
+                window.print();
+                document.title = originalTitle;
+            }, 300);
         });
+
     });
 </script>
 

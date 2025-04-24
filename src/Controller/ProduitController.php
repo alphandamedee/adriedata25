@@ -61,38 +61,55 @@ class ProduitController extends AbstractController
     //#Route('/produit/ajouter', name: 'produit_ajouter', methods: ['GET', 'POST'])
     // Route pour ajouter un produit
     #[Route('/produit/ajouter', name: 'produit_ajouter')]
-    public function ajouter(Request $request, EntityManagerInterface $em, ProduitRepository $produitRepo): Response
+    public function ajouter(Request $request, ProduitRepository $produitRepository, EntityManagerInterface $em): Response
     {
-        // Création d'un nouveau produit
         $produit = new Produit();
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
-        
-        // On utilise le repository pour vérifier l'existence du code-barre
-        if ($form->isSubmitted() && $form->isValid()) {
-            $codeBarre = $produit->getCodeBarre();
 
-            // 🔒 Vérifie si le code-barre existe déjà
-            if ($produitRepo->findOneBy(['codeBarre' => $codeBarre])) {
-                $this->addFlash('danger', 'Ce code-barre est déjà utilisé pour un autre produit.');
-                return $this->render('produit/ajouter.html.twig', [
-                    'form' => $form->createView(),
-                ]);
+        if ($request->isMethod('POST')) {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $existant = $produitRepository->findOneBy(['codeBarre' => $produit->getCodeBarre()]);
+                if ($existant) {
+                    return new JsonResponse([
+                        'status' => 'exists',
+                        'message' => 'Ce code-barres existe déjà dans la base.'
+                    ]);
+                }
+
+                try {
+                    $em->persist($produit);
+                    $em->flush();
+
+                    return new JsonResponse([
+                        'status' => 'success',
+                        'message' => 'Produit ajouté avec succès.'
+                    ]);
+                } catch (\Exception $e) {
+                    return new JsonResponse([
+                        'status' => 'error',
+                        'message' => 'Une erreur est survenue lors de l\'enregistrement.'
+                    ], 500);
+                }
+            } else {
+                // Retourner les erreurs de validation si le formulaire n'est pas valide
+                $errors = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errors[] = $error->getMessage();
+                }
+                
+                return new JsonResponse([
+                    'status' => 'validation_error',
+                    'message' => 'Le formulaire contient des erreurs',
+                    'errors' => $errors
+                ], 400);
             }
-            // On persiste le produit
-            $em->persist($produit);
-            $em->flush();
-
-            // On redirige vers la liste des produits avec un message de succès
-            $this->addFlash('success', 'Produit ajouté avec succès.');
-            return $this->redirectToRoute('app_produit');
         }
 
         return $this->render('produit/ajouter.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
-
 
     #[Route('/produit/modifier/{id}', name: 'produit_modifier')]
     public function modifier(Request $request, EntityManagerInterface $entityManager, int $id): Response

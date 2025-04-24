@@ -3,23 +3,13 @@
 {% block title %}Ajouter un Produit{% endblock %}
 
 {% block body %}
-{% for label, messages in app.flashes %}
-    {% for msg in messages %}
-        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-            {{ msg }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
-        </div>
-    {% endfor %}
-{% endfor %}
-
-
 <div class="container mt-4">
   <h2 class="text-center mb-4">Ajouter un Produit</h2>
   <div class="card shadow border-0 mb-4">
     <div class="card-body">
-      {{ form_start(form) }}
+      {{ form_start(form, {'attr': {'id': 'produit-form'}}) }}
 
-      <!-- Champ Code-barre sans scan -->
+      <!-- Code-barres -->
       <div class="row mb-4 align-items-center">
         <div class="col-md-2">
           {{ form_label(form.codeBarre, null, {'label_attr': {'class': 'form-label fw-bold'}}) }}
@@ -32,11 +22,11 @@
               'value': app.request.query.get('scanned')
             }
           }) }}
-          <div class="invalid-feedback">Le code-barres doit contenir exactement 21 chiffres.</div>
+          <div class="invalid-feedback">Le code-barres doit contenir exactement 19 chiffres.</div>
         </div>
       </div>
 
-      <!-- Affichage utilisateur -->
+      <!-- Ajouté par -->
       <div class="row mb-4">
         <div class="col-md-2">
           <label class="form-label fw-semibold">Ajouté par</label>
@@ -46,7 +36,7 @@
         </div>
       </div>
 
-      <!-- Champs alignés 2 colonnes ligne par ligne -->
+      <!-- Autres champs -->
       {% set champs = [
         ['categorie', 'marque'],
         ['modele', 'taille'],
@@ -75,18 +65,18 @@
         </div>
       {% endfor %}
 
-      <!-- Bouton de soumission -->
+      <!-- Boutons -->
       <div class="row justify-content-center mt-4">
-          <div class="col-md-4 text-center">
-            <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-4">
-                <i class="bi bi-arrow-left"></i> Retour
-            </a>
-          </div>
-          <div class="col-md-4 text-center">
-            <button type="submit" class="btn btn-success mt-4 px-5">
-              <i class="bi bi-plus-circle"></i> Enregistrer
-            </button>
-          </div>
+        <div class="col-md-4 text-center">
+          <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-4">
+            <i class="bi bi-arrow-left"></i> Retour
+          </a>
+        </div>
+        <div class="col-md-4 text-center">
+          <button type="submit" class="btn btn-success mt-4 px-5">
+            <i class="bi bi-plus-circle"></i> Enregistrer
+          </button>
+        </div>
       </div>
 
       {{ form_end(form) }}
@@ -94,46 +84,87 @@
   </div>
 </div>
 
+<!-- SweetAlert & Script AJAX -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const codeInput = document.getElementById('codeBarreInput');
-    const form = document.querySelector('form');
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('produit-form');
+  const codeInput = document.getElementById('codeBarreInput');
+  
+  if (!form) {
+    console.error('Le formulaire produit-form n\'a pas été trouvé');
+    return;
+  }
 
-    const requiredFields = document.querySelectorAll('.required-field');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-    // ✅ Coller la valeur scannée si présente dans l'URL
-    const scanned = new URLSearchParams(window.location.search).get('scanned');
-    if (scanned && codeInput && !codeInput.value) {
-      codeInput.value = scanned;
-    }
-
-    // ✅ Validation côté client
-    form.addEventListener('submit', function (e) {
-      let isValid = true;
-
+    let isValid = true;
+    
+    // Vérification du code-barres seulement si l'input existe
+    if (codeInput) {
       const code = codeInput.value.trim();
       if (!/^\d{19}$/.test(code)) {
-        e.preventDefault();
         codeInput.classList.add('is-invalid');
         isValid = false;
       } else {
         codeInput.classList.remove('is-invalid');
       }
+    }
 
-      requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-          field.classList.add('is-invalid');
-          isValid = false;
-        } else {
-          field.classList.remove('is-invalid');
-        }
-      });
-
-      if (!isValid) {
-        e.preventDefault();
-        alert("Veuillez remplir tous les champs obligatoires correctement.");
+    // Vérification des champs requis
+    const requiredFields = document.querySelectorAll('.required-field');
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        field.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        field.classList.remove('is-invalid');
       }
     });
+
+    if (!isValid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Champs requis',
+        text: 'Veuillez remplir correctement tous les champs obligatoires.'
+      });
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    fetch('{{ path('produit_ajouter') }}', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'exists') {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Code-barres déjà présent',
+          text: data.message
+        });
+      } else if (data.status === 'success') {
+        Swal.fire({
+          icon: 'success',
+          title: 'Produit enregistré',
+          text: data.message
+        }).then(() => {
+          window.location.href = '{{ path('app_produit') }}';
+        });
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur serveur',
+        text: 'Une erreur est survenue lors de l\'enregistrement.'
+      });
+    });
   });
+});
 </script>
 {% endblock %}
