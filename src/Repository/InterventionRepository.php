@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository pour gérer les requêtes de l'entité Intervention
  * @extends ServiceEntityRepository<Intervention>
  * @method Intervention|null find($id, $lockMode = null, $lockVersion = null)
  * @method Intervention|null findOneBy(array $criteria, array $orderBy = null)
@@ -16,13 +17,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class InterventionRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur du repository
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Intervention::class);
     }
 
     /**
-     * @return Intervention[] Returns an array of Intervention objects
+     * Recherche les interventions par date
+     * 
+     * @param \DateTimeInterface $date La date à rechercher
+     * @return Intervention[] Liste des interventions pour la date donnée
      */
     public function findByDateIntervention(\DateTimeInterface $date): array
     {
@@ -35,7 +42,10 @@ class InterventionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Intervention[] Returns an array of Intervention objects
+     * Recherche les interventions par intervenant
+     * 
+     * @param mixed $intervenant L'intervenant à rechercher
+     * @return Intervention[] Liste des interventions pour l'intervenant donné
      */
     public function findByIntervenant($intervenant): array
     {
@@ -48,7 +58,10 @@ class InterventionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Intervention[] Returns an array of Intervention objects
+     * Recherche les interventions par produit
+     * 
+     * @param mixed $produit Le produit à rechercher
+     * @return Intervention[] Liste des interventions pour le produit donné
      */
     public function findByProduit($produit): array
     {
@@ -61,7 +74,10 @@ class InterventionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Intervention|null Returns an Intervention object or null
+     * Recherche une intervention par un champ spécifique
+     * 
+     * @param mixed $value La valeur du champ à rechercher
+     * @return Intervention|null L'intervention trouvée ou null
      */
     public function findOneBySomeField($value): ?Intervention
     {
@@ -72,6 +88,12 @@ class InterventionRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * Recherche les interventions pour une date donnée
+     * 
+     * @param \DateTime $date La date à rechercher
+     * @return Intervention[] Liste des interventions pour la date donnée
+     */
     public function findByDate(\DateTime $date)
     {
         $start = (clone $date)->setTime(0, 0, 0);
@@ -85,6 +107,11 @@ class InterventionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Compte le nombre d'interventions pour aujourd'hui
+     * 
+     * @return int Le nombre total d'interventions pour aujourd'hui
+     */
     public function countInterventionsToday(): int
     {
         return $this->createQueryBuilder('i')
@@ -95,6 +122,12 @@ class InterventionRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
     
+    /**
+     * Compte le nombre d'interventions pour une date donnée
+     * 
+     * @param string $date La date à rechercher
+     * @return int Le nombre total d'interventions pour la date donnée
+     */
     public function countInterventionsByDate(string $date): int
     {
         $startDate = new \DateTime($date . ' 00:00:00');
@@ -102,13 +135,20 @@ class InterventionRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('i')
             ->select('COUNT(i.id)')
-            ->where('i.dateIntervention BETWEEN :start AND :end') // ✅ Corrigé : Remplace DATE() par BETWEEN
+            ->where('i.dateIntervention BETWEEN :start AND :end')
             ->setParameter('start', $startDate)
             ->setParameter('end', $endDate)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
+    /**
+     * Compte le nombre d'interventions pour une plage de dates
+     * 
+     * @param \DateTime $startDate La date de début
+     * @param \DateTime $endDate La date de fin
+     * @return int Le nombre total d'interventions pour la plage de dates
+     */
     public function countInterventionsByDateRange(\DateTime $startDate, \DateTime $endDate): int
     {
         return $this->createQueryBuilder('i')
@@ -120,6 +160,16 @@ class InterventionRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * Recherche les interventions avec des filtres
+     * 
+     * @param User|null $user L'utilisateur (intervenant) à filtrer
+     * @param string|null $search Le terme de recherche
+     * @param string|null $start La date de début
+     * @param string|null $end La date de fin
+     * @param string|null $intervenant Le nom de l'intervenant
+     * @return Intervention[] Liste des interventions correspondant aux filtres
+     */
     public function findByFilters(?User $user = null, ?string $search = '', ?string $start = null, ?string $end = null, ?string $intervenant = ''): array
     {
         $qb = $this->createQueryBuilder('i')
@@ -160,6 +210,14 @@ class InterventionRepository extends ServiceEntityRepository
         return $qb->orderBy('i.dateIntervention', 'DESC')->getQuery()->getResult();
     }
 
+    /**
+     * Compte le nombre d'interventions pour une plage de dates et un filtre
+     * 
+     * @param \DateTime $startDate La date de début
+     * @param \DateTime $endDate La date de fin
+     * @param User|null $user L'utilisateur (intervenant) à filtrer
+     * @return int Le nombre total d'interventions correspondant aux critères
+     */
     public function countInterventionsByDateRangeAndFilter(\DateTime $startDate, \DateTime $endDate, ?User $user = null): int
     {
         $qb = $this->createQueryBuilder('i')
@@ -176,6 +234,14 @@ class InterventionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * Compte le nombre de produits uniques pour une plage de dates et un filtre
+     * 
+     * @param \DateTime $startDate La date de début
+     * @param \DateTime $endDate La date de fin
+     * @param User|null $user L'utilisateur (intervenant) à filtrer
+     * @return int Le nombre total de produits uniques correspondant aux critères
+     */
     public function countUniqueProductsByDateRangeAndFilter(\DateTime $startDate, \DateTime $endDate, ?User $user = null): int
     {
         $qb = $this->createQueryBuilder('i')
@@ -192,6 +258,14 @@ class InterventionRepository extends ServiceEntityRepository
     return $qb->getQuery()->getSingleScalarResult();
 }
 
+    /**
+     * Recherche les interventions pour une plage de dates
+     * 
+     * @param \DateTime $startDate La date de début
+     * @param \DateTime $endDate La date de fin
+     * @param User|null $user L'utilisateur (intervenant) à filtrer
+     * @return Intervention[] Liste des interventions correspondant aux critères
+     */
     public function findByDateRange(\DateTime $startDate, \DateTime $endDate, ?User $user = null): array
     {
         $qb = $this->createQueryBuilder('i')
@@ -208,5 +282,21 @@ class InterventionRepository extends ServiceEntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Compte le nombre d'interventions par intervenant
+     * 
+     * @param User $user L'intervenant dont on veut compter les interventions
+     * @return int Le nombre total d'interventions
+     */
+    public function countByUser(User $user): int
+    {
+        return $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->andWhere('i.intervenant = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

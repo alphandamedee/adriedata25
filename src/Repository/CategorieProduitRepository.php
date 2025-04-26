@@ -7,22 +7,25 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository pour gérer les requêtes de l'entité CategorieProduit
+ * Gère les différentes catégories de produits disponibles
  * @extends ServiceEntityRepository<CategorieProduit>
- *
- * @method CategorieProduit|null find($id, $lockMode = null, $lockVersion = null)
- * @method CategorieProduit|null findOneBy(array $criteria, array $orderBy = null)
- * @method CategorieProduit[]    findAll()
- * @method CategorieProduit[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CategorieProduitRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur du repository
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CategorieProduit::class);
     }
 
     /**
-     * @return CategorieProduit[] Returns an array of CategorieProduit objects
+     * Recherche des catégories par nom
+     * 
+     * @param mixed $value Le nom à rechercher
+     * @return CategorieProduit[] Liste des catégories correspondant au critère
      */
     public function findByExampleField($value): array
     {
@@ -32,17 +35,21 @@ class CategorieProduitRepository extends ServiceEntityRepository
             ->orderBy('c.nom', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
+    /**
+     * Recherche une catégorie unique par un critère spécifique
+     * 
+     * @param mixed $value La valeur à rechercher
+     * @return CategorieProduit|null La catégorie trouvée ou null si aucune trouvée
+     */
     public function findOneByNom($value): ?CategorieProduit
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.nom = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

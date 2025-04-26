@@ -7,41 +7,24 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository pour gérer les requêtes de l'entité Produit
  * @extends ServiceEntityRepository<Produit>
  */
 class ProduitRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructeur du repository
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Produit::class);
     }
     
-
-    //    /**
-    //     * @return Produit[] Returns an array of Produit objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Produit
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
-
+    /**
+     * Compte le nombre de catégories distinctes dans la table produit
+     * 
+     * @return int Le nombre total de catégories différentes
+     */
     public function countDistinctCategories(): int
     {
         return (int) $this->createQueryBuilder('p')
@@ -49,6 +32,13 @@ class ProduitRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Recherche des produits par mot-clé dans plusieurs champs
+     * 
+     * @param string $keyword Le mot-clé à rechercher
+     * @return array Liste des produits correspondant au critère de recherche
+     */
     public function searchByKeyword(string $keyword): array
     {
         $qb = $this->createQueryBuilder('p');
@@ -65,6 +55,12 @@ class ProduitRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Recherche des produits par code-barre ou d'autres champs spécifiques
+     * 
+     * @param string $search Le terme à rechercher
+     * @return array Liste des produits correspondant aux critères
+     */
     public function findByCodeBarreOrOtherFields(string $search): array
     {
         return $this->createQueryBuilder('p')
@@ -76,5 +72,4 @@ class ProduitRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 }
