@@ -174,37 +174,39 @@ class InterventionRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('i')
             ->leftJoin('i.produit', 'p')
+            ->leftJoin('p.categorie', 'c')
             ->leftJoin('i.intervenant', 'u')
-            ->addSelect('p', 'u')
+            ->addSelect('p', 'c', 'u')
             ->orderBy('i.dateIntervention', 'DESC');
 
         if ($user && !in_array('ROLE_ADMIN', $user->getRoles())) {
             $qb->andWhere('i.intervenant = :user')
-            ->setParameter('user', $user);
+                ->setParameter('user', $user);
         }
 
         if ($search) {
             $qb->andWhere('p.modele LIKE :search OR
-            p.categorie LIKE :search OR
-            p.marque LIKE :search OR
-            i.codeBarre LIKE :search OR
-            i.commentaire LIKE :search')
-            ->setParameter('search', '%' . $search . '%');
+                (c.nom IS NOT NULL AND c.nom LIKE :search) OR
+                p.marque LIKE :search OR
+                i.codeBarre LIKE :search OR
+                i.commentaire LIKE :search OR
+                i.categorie LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
         }
 
         if ($start) {
             $qb->andWhere('i.dateIntervention >= :start')
-            ->setParameter('start', new \DateTime($start));
+                ->setParameter('start', new \DateTime($start));
         }
 
         if ($end) {
             $qb->andWhere('i.dateIntervention <= :end')
-            ->setParameter('end', new \DateTime($end));
+                ->setParameter('end', new \DateTime($end));
         }
 
         if ($intervenant) {
-            $qb->andWhere('LOWER(CONCAT(u.prenom, \' \', u.nomUser)) LIKE :intervenant')
-            ->setParameter('intervenant', '%' . strtolower($intervenant) . '%');
+            $qb->andWhere("LOWER(CONCAT(u.prenom, ' ', u.nomUser)) LIKE :intervenant")
+                ->setParameter('intervenant', '%' . strtolower($intervenant) . '%');
         }
 
         return $qb->orderBy('i.dateIntervention', 'DESC')->getQuery()->getResult();
