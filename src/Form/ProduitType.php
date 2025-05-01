@@ -98,6 +98,8 @@ class ProduitType extends AbstractType
                     'Réparé' => 'Réparé',
                     'Vendu' => 'Vendu',
                     'HS' => 'HS',
+                    'Jetté' => 'Jetté',
+                    'A détruire' => 'A détruire',
                 ],
                 'label' => 'Statut',
             ])
