@@ -43,5 +43,6 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/tech, roles: ROLE_TECHNICIEN }
+        - { path: ^/benev, roles: ROLE_BENEVOLE }
         - { path: ^/produit, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/profil, roles: ROLE_USER } # Permet aux utilisateurs connectés d'accéder au profil
