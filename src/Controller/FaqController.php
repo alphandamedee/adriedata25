@@ -6,11 +6,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Contrôleur pour gérer la FAQ (Foire Aux Questions)
+ */
 class FaqController extends AbstractController
 {
+    /**
+     * Affiche la page de FAQ avec les questions et réponses organisées par catégories
+     *
+     * @return Response Page de la FAQ
+     */
     #[Route('/faq', name: 'app_faq')]
     public function index(): Response
     {
+        // Structure des questions/réponses organisée par catégories
         $faqs = [
             [
                 'categorie' => 'Général',
@@ -78,6 +87,7 @@ class FaqController extends AbstractController
             ]
         ];
 
+        // Rendu de la vue avec les données de la FAQ
         return $this->render('faq/index.html.twig', [
             'faqs' => $faqs
         ]);

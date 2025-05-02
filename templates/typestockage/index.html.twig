@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Types de Stockage{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Types de Stockage</h1>
+            <a href="{{ path('type_stockage_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouveau Type
+            </a>
+        </div>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for type_stockage in types_stockage %}
+                    <tr>
+                        <td>{{ type_stockage.id }}</td>
+                        <td>{{ type_stockage.nom }}</td>
+                        <td>{{ type_stockage.description }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{{ path('type_stockage_show', {'id': type_stockage.id}) }}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ path('type_stockage_edit', {'id': type_stockage.id}) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="{{ path('type_stockage_delete', {'id': type_stockage.id}) }}" style="display: inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce type de stockage ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ type_stockage.id) }}">
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Aucun type de stockage trouvé</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

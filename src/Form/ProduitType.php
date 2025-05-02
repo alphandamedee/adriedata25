@@ -7,11 +7,13 @@ use App\Entity\CategorieProduit;
 use App\Repository\CategorieProduitRepository;
 use App\Entity\TypeRam;
 use App\Repository\TypeRamRepository;
+use App\Entity\TypeStockage;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -67,16 +69,21 @@ class ProduitType extends AbstractType
                 ],
                 'help' => 'Pour écrans/portables: en pouces (ex: 15.6"). Pour UC: Tour, SFF, Mini PC'
             ])
-            ->add('stockage', TextType::class, [
+            ->add('stockage', IntegerType::class, [
                 'label' => 'Stockage (en Go)',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Ex: 256, 500, 1000',
+                    'class' => 'form-control'
+                ]
             ])
-            ->add('typeStockage', ChoiceType::class, [
-                'choices' => [
-                    ' ' => ' ',
-                    'SSD' => 'SSD',
-                    'HDD' => 'HDD',
-                ],
+            ->add('typeStockage', EntityType::class, [
+                'class' => TypeStockage::class,
+                'choice_label' => 'nom',
                 'label' => 'Type de Stockage',
+                'required' => false,
+                'placeholder' => 'Sélectionner un type de stockage',
+                'attr' => ['class' => 'form-control']
             ])
             ->add('numeroSerie', TextType::class, [
                 'label' => 'Numéro de série',

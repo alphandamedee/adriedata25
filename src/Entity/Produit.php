@@ -6,6 +6,8 @@ use App\Repository\ProduitRepository;
 use App\Entity\CategorieProduit;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ORM\Table(name: "produit")]
@@ -33,8 +35,8 @@ class Produit
     #[ORM\Column(name: "stockage", type: "integer", nullable: true)]
     private ?int $stockage = null;
 
-    #[ORM\Column(name: "type_stockage", type: "string", length: 50, nullable: true)]
-    private ?string $typeStockage = null;
+    #[ORM\ManyToOne(targetEntity: TypeStockage::class, inversedBy: 'produits')]
+    private ?TypeStockage $typeStockage = null;
 
     #[ORM\Column(name: "ram", type: "string", length: 50, nullable: true)]
     private ?string $ram = null;
@@ -168,12 +170,12 @@ class Produit
         return $this;
     }
 
-    public function getTypeStockage(): ?string
+    public function getTypeStockage(): ?TypeStockage
     {
         return $this->typeStockage;
     }
 
-    public function setTypeStockage(?string $typeStockage): self
+    public function setTypeStockage(?TypeStockage $typeStockage): self
     {
         $this->typeStockage = $typeStockage;
         return $this;

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Type de Stockage{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Modifier le type de stockage</h1>
+
+        {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form_label(form.nom) }}
+                    {{ form_widget(form.nom) }}
+                    {{ form_errors(form.nom) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.description) }}
+                    {{ form_widget(form.description) }}
+                    {{ form_errors(form.description) }}
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Enregistrer les modifications
+                </button>
+                <a href="{{ path('type_stockage_index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

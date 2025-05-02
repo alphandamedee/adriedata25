@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Type de Stockage{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Détails du type de stockage</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ type_stockage.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ type_stockage.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ type_stockage.description }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <a href="{{ path('type_stockage_edit', {'id': type_stockage.id}) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <a href="{{ path('type_stockage_index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+
+                <form method="post" action="{{ path('type_stockage_delete', {'id': type_stockage.id}) }}" style="display: inline-block" class="float-end" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce type de stockage ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ type_stockage.id) }}">
+                    <button class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

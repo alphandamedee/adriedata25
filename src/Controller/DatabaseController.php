@@ -8,8 +8,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Contrôleur pour la gestion de la base de données
+ * Ce contrôleur permet de créer et initialiser la structure de la base de données
+ */
 class DatabaseController extends AbstractController
 {
+    /**
+     * Point d'entrée pour la configuration de la base de données
+     * 
+     * @param EntityManagerInterface $entityManager Gestionnaire d'entités Doctrine
+     * @return Response Réponse HTTP avec le résultat de l'opération
+     */
     #[Route('/setup-database', name: 'setup_database')]
     public function setupDatabase(EntityManagerInterface $entityManager): Response
     {
@@ -26,6 +36,13 @@ class DatabaseController extends AbstractController
         return new Response("Base de données et tables vérifiées !");
     }
 
+    /**
+     * Vérifie l'existence de la base de données et la crée si elle n'existe pas
+     * 
+     * @param EntityManagerInterface $entityManager Gestionnaire d'entités Doctrine
+     * @param string $databaseName Nom de la base de données
+     * @return bool True si la base a été créée, False si elle existait déjà
+     */
     private function checkAndCreateDatabase(EntityManagerInterface $entityManager, string $databaseName): bool
     {
         $conn = $entityManager->getConnection();
@@ -42,6 +59,11 @@ class DatabaseController extends AbstractController
         return false;
     }
 
+    /**
+     * Vérifie et crée les tables nécessaires si elles n'existent pas
+     * 
+     * @param EntityManagerInterface $entityManager Gestionnaire d'entités Doctrine
+     */
     private function createTablesIfNotExists(EntityManagerInterface $entityManager)
     {
         $conn = $entityManager->getConnection();

@@ -32,19 +32,20 @@ class InterventionController extends AbstractController
         $this->interventionRepository = $interventionRepository;
     }
 
-    #[Route('/new/{id}', name: 'intervention_new')]
+    // Route pour créer une nouvelle intervention
+    #[Route('/new/{id}', name: 'intervention_new')] 
     public function new(Request $request, Produit $produit, EntityManagerInterface $entityManager, ProduitRepository $produitRepository, Security $security, int $id): Response
     {
         $user = $security->getUser(); // Récupère l'utilisateur connecté
         
         if (!$user) {
-            throw $this->createAccessDeniedException('Vous devez être connecté pour créer une intervention.');
+            throw $this->createAccessDeniedException('Vous devez être connecté pour créer une intervention.'); // Vérifie si l'utilisateur est connecté
         }
-        $intervention = new Intervention();
-        $produit = $produitRepository->find($id);
+        $intervention = new Intervention(); // Nouvelle intervention
+        $produit = $produitRepository->find($id); // Récupère le produit par ID
 
         if (!$produit) {
-            throw $this->createNotFoundException('Produit non trouvé');
+            throw $this->createNotFoundException('Produit non trouvé'); // Vérifie si le produit existe
         }
 
         // Pré-remplir les champs de l'intervention avec les données du produit
@@ -66,19 +67,19 @@ class InterventionController extends AbstractController
         $intervention->setMemoireVideo($produit->getMemoireVideo());
         $intervention->setIntervenant($user); // Assigner l'intervenant
        
-        $form = $this->createForm(InterventionType::class, $intervention, [
-            'intervenant' => $user,
+        $form = $this->createForm(InterventionType::class, $intervention, [ 
+            'intervenant' => $user, // Passer l'utilisateur à la vue du formulaire
         ]);
-        $form->handleRequest($request);
-            
-        if ($form->isSubmitted() && $form->isValid()) {
+        $form->handleRequest($request); // Gérer la soumission du formulaire
+    
+        if ($form->isSubmitted() && $form->isValid()) { // Vérifier si le formulaire est soumis et valide
 
             // Ces champs sont déjà des booléens, donc pas besoin de les convertir
-            // Mettre à jour les champs de l'intervention avec les valeurs des checkboxes
             $intervention->setMiseAJourWindows($intervention->getMiseAJourWindows() ? true : false);
             $intervention->setMiseAJourPilotes($intervention->getMiseAJourPilotes() ? true : false);
             $intervention->setAutresLogiciels($intervention->getAutresLogiciels() ? true : false);
             
+            // Mettre à jour les champs de l'intervention avec les valeurs des checkboxes
             if ($intervention->getMiseAJourWindows()) {
                 $produit->setMiseAJourWindows(new \DateTime());
             }
@@ -89,12 +90,12 @@ class InterventionController extends AbstractController
                 $produit->setAutresLogiciels(new \DateTime());
             }
 
-            // Persist changes to Produit
-            $entityManager->persist($produit);
+            // Enregistrer les modifications du produit
+            $entityManager->persist($produit); 
 
             // Générer et enregistrer le chemin du PDF
             $pdfFilePath = $this->generatePdf($intervention);
-           $intervention->setPdfFilePath($pdfFilePath);
+            $intervention->setPdfFilePath($pdfFilePath);
 
             // Mettre à jour les champs statut et codeEtagere du produit
             $produit->setStatut($intervention->getStatut());
@@ -118,8 +119,8 @@ class InterventionController extends AbstractController
             $produit->setFrequenceCpu($intervention->getFrequenceCpu());
 
             
-            $entityManager->persist($intervention);
-            $entityManager->flush(); // Sauvegarde l'intervention pour obtenir son ID
+            $entityManager->persist($intervention); // Enregistre l'intervention
+            $entityManager->flush(); // Enregistre les modifications dans la base de données
 
             $this->addFlash('success', 'Intervention enregistrée et produit mis à jour avec succès.');
             return $this->redirectToRoute('intervention_show', ['id' => $intervention->getId()]);
@@ -131,7 +132,7 @@ class InterventionController extends AbstractController
             'intervention' => $intervention,
             'intervenant' => $user->getPrenom() . ' ' . $user->getNomUser(),
             'intervent' => $user,
-            'dateIntervention' => $intervention->getDateIntervention(),
+            'dateIntervention' => $intervention->getDateIntervention(), 
         ]);
     }
 
@@ -152,17 +153,17 @@ class InterventionController extends AbstractController
 
         $produit = null;
 
-        // 💡 1. Récupération par ID (via query param)
+        //  Récupération par ID (via query param)
         if ($request->query->has('id')) {
             $produit = $produitRepository->find($request->query->get('id'));
         }
 
-        // 💡 2. Récupération par code-barre
+        //  Récupération par code-barre
         if (!$produit && $request->query->has('codeBarre')) {
             $produit = $produitRepository->findOneBy(['codeBarre' => $request->query->get('codeBarre')]);
         }
 
-        // ✅ Remplir l'intervention avec les données produit si trouvé
+        //  Remplir l'intervention avec les données produit si trouvé
         if ($produit) {
             $intervention->setProduit($produit); // 🔴 Important pour éviter l'erreur SQL
             $intervention->setCodeBarre($produit->getCodeBarre());
@@ -211,12 +212,12 @@ class InterventionController extends AbstractController
         $options->set('defaultFont', 'Arial');
         $dompdf = new Dompdf($options);
 
-        // Remove barcode generation code
+        // Générer le code-barres
         $barcodeBase64 = null;
 
         $html = $this->renderView('intervention/pdf_template.html.twig', [
             'intervention' => $intervention,
-            'produit' => $intervention->getProduit(), // Pass the produit variable
+            'produit' => $intervention->getProduit(), // Assurez-vous que le produit est chargé
             'barcode' => $barcodeBase64
         ]);
 
@@ -226,10 +227,10 @@ class InterventionController extends AbstractController
 
         $pdfPath = $this->getParameter('kernel.project_dir') . '/public/uploads/interventions/';
         if (!file_exists($pdfPath)) {
-            mkdir($pdfPath, 0777, true);
+            mkdir($pdfPath, 0777, true); // Créer le répertoire s'il n'existe pas
         }
 
-        $codeBarre = $intervention->getCodeBarre() ?: 'unknown';
+        $codeBarre = $intervention->getCodeBarre() ?: 'unknown'; // Utiliser 'unknown' si le code-barres est vide
         $intervenantId = $intervention->getIntervenant() ? $intervention->getIntervenant()->getId() : 'unknown';
         $dateHeure = $intervention->getDateIntervention()->format('Ymd_Hi'); // YYYYMMDD_HHMM
         $codeBarre = $intervention->getCodeBarre() ?: 'unknown';
@@ -258,13 +259,13 @@ class InterventionController extends AbstractController
                     $em->remove($intervention);
                 }
             }
-            $em->flush();
+            $em->flush(); // Enregistre les modifications dans la base de données
             $this->addFlash('success', 'Intervention(s) supprimée(s) avec succès.');
         } else {
             $this->addFlash('warning', 'Aucune intervention sélectionnée.');
         }
 
-        return $this->redirectToRoute('app_profil');
+        return $this->redirectToRoute('app_profil'); // Redirige vers la page de profil ou une autre page appropriée
     }
 
 
@@ -381,8 +382,8 @@ class InterventionController extends AbstractController
             ]
         );
     }
-
-    #[Route('/api/dashboard-data', name: 'api_dashboard_data', methods: ['GET'])]
+    // Route pour récupérer les données du tableau de bord
+    #[Route('/api/dashboard-data', name: 'api_dashboard_data', methods: ['GET'])] // API pour récupérer les données du tableau de bord
     public function getDashboardData(
         Request $request,
         InterventionRepository $interventionRepository,

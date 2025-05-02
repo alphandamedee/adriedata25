@@ -4,6 +4,7 @@ namespace App\Form;
 use App\Entity\Intervention;
 use App\Entity\User;
 use App\Entity\TypeRam;
+use App\Entity\TypeStockage;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -89,19 +90,12 @@ class InterventionType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('typeStockage', ChoiceType::class, [
+            ->add('typeStockage', EntityType::class, [
+                'class' => TypeStockage::class,
+                'choice_label' => 'nom',
                 'label' => 'Type de Stockage',
-                'choices' => [
-                    ' ' => ' ',
-                    'SSD' => 'SSD',
-                    'HDD' => 'HDD',
-                    'Hybrid' => 'Hybrid',
-                    'eMMC' => 'eMMC',
-                    'NVMe' => 'NVMe',
-                    'M.2' => 'M.2',
-                    'SATA' => 'SATA',
-                ],
                 'required' => false,
+                'placeholder' => 'Sélectionner un type de stockage',
                 'attr' => ['class' => 'form-control']
             ])
             ->add('carteGraphique', TextType::class, [

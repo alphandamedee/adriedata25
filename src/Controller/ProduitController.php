@@ -57,21 +57,19 @@ class ProduitController extends AbstractController
             'search' => $search,
         ]);
     }
-
-    //#Route('/produit/ajouter', name: 'produit_ajouter', methods: ['GET', 'POST'])
     // Route pour ajouter un produit
     #[Route('/produit/ajouter', name: 'produit_ajouter')]
     public function ajouter(Request $request, ProduitRepository $produitRepository, EntityManagerInterface $em): Response
     {
         $produit = new Produit();
         $form = $this->createForm(ProduitType::class, $produit);
-        $form->handleRequest($request);
+        $form->handleRequest($request); // Traite le formulaire
 
         if ($request->isMethod('POST')) {
             if ($form->isSubmitted() && $form->isValid()) {
                 $existant = $produitRepository->findOneBy(['codeBarre' => $produit->getCodeBarre()]);
                 if ($existant) {
-                    return new JsonResponse([
+                    return new JsonResponse([ 
                         'status' => 'exists',
                         'message' => 'Ce code-barres existe déjà dans la base.'
                     ]);

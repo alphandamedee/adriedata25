@@ -16,11 +16,27 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
+/**
+ * Contrôleur pour la gestion des utilisateurs par l'administrateur
+ * Toutes les routes nécessitent le rôle ROLE_ADMIN
+ */
 #[Route('/admin/user')]
 #[IsGranted('ROLE_ADMIN')]
 class AdminUserController extends AbstractController
 {
+    /**
+     * Ajoute un nouvel utilisateur
+     * 
+     * @param Request $request La requête HTTP
+     * @param EntityManagerInterface $em Gestionnaire d'entités
+     * @param UserPasswordHasherInterface $passwordHasher Service de hachage des mots de passe
+     * @param SluggerInterface $slugger Service de création de slugs
+     * @return Response Page d'ajout ou redirection
+     */
     #[Route('/add', name: 'admin_user_add')]
     public function add(
         Request $request,
@@ -30,14 +46,14 @@ class AdminUserController extends AbstractController
     ): Response {
         $user = new User();
         $form = $this->createForm(AdminUserType::class, $user);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gérer le mot de passe
+            // Hashage du mot de passe
             $plainPassword = $form->get('password')->getData();
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
 
-            // Gérer l'upload de photo
+            // Gestion de la photo de profil
             /** @var UploadedFile $photoFile */
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
@@ -53,14 +69,22 @@ class AdminUserController extends AbstractController
             return $this->redirectToRoute('admin_user_list');
         }
 
-       
-
         return $this->render('admin/user_form.html.twig', [
             'form' => $form->createView(),
             'is_edit' => false,
         ]);
     }
 
+    /**
+     * Modifie un utilisateur existant
+     * 
+     * @param User $user L'utilisateur à modifier
+     * @param Request $request La requête HTTP
+     * @param EntityManagerInterface $em Gestionnaire d'entités
+     * @param UserPasswordHasherInterface $passwordHasher Service de hachage des mots de passe
+     * @param SluggerInterface $slugger Service de création de slugs
+     * @return Response Page de modification ou redirection
+     */
     #[Route('/edit/{id}', name: 'admin_user_edit')]
     public function edit(
         User $user,
@@ -70,16 +94,16 @@ class AdminUserController extends AbstractController
         SluggerInterface $slugger
     ): Response {
         $form = $this->createForm(AdminUserType::class, $user, ['is_edit' => true]);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mettre à jour le mot de passe si rempli
+            // Mise à jour du mot de passe si fourni
             $plainPassword = $form->get('password')->getData();
             if ($plainPassword) {
                 $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             }
 
-            // Gérer upload photo
+            // Gestion de la photo de profil
             /** @var UploadedFile $photoFile */
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
@@ -99,16 +123,31 @@ class AdminUserController extends AbstractController
         ]);
     }
 
+    /**
+     * Liste tous les utilisateurs
+     * 
+     * @param UserRepository $userRepository Repository des utilisateurs
+     * @return Response Page listant les utilisateurs
+     */
     #[Route('/list', name: 'admin_user_list')]
-        public function list(UserRepository $userRepository): Response
+    public function list(UserRepository $userRepository): Response
     {
         $users = $userRepository->findAll();
-
         return $this->render('admin/user_list.html.twig', [
             'users' => $users,
         ]);
     }
 
+    /**
+     * Réinitialise le mot de passe d'un utilisateur
+     * Génère un mot de passe aléatoire et l'envoie par email
+     * 
+     * @param User $user L'utilisateur concerné
+     * @param EntityManagerInterface $em Gestionnaire d'entités
+     * @param UserPasswordHasherInterface $passwordHasher Service de hachage des mots de passe
+     * @param MailerInterface $mailer Service d'envoi d'emails
+     * @return Response Redirection vers la liste des utilisateurs
+     */
     #[Route('/reset-password/{id}', name: 'admin_user_reset_password')]
     public function resetPassword(
         User $user,
@@ -116,15 +155,16 @@ class AdminUserController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         MailerInterface $mailer
     ): Response {
-        $newPassword = bin2hex(random_bytes(4)); // ex: a3f9b2d1
+        // Génération d'un mot de passe aléatoire
+        $newPassword = bin2hex(random_bytes(4));
         $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
         $user->setPassword($hashedPassword);
         $em->flush();
     
-        // Envoi de l'email
+        // Envoi du nouveau mot de passe par email
         $email = (new Email())
             ->from('admin@votresite.com')
-            ->to($user->getEmail()) // fonctionne car getEmail() existe
+            ->to($user->getEmail())
             ->subject('Votre mot de passe a été réinitialisé')
             ->html("
                 <p>Bonjour <strong>{$user->getPrenom()}</strong>,</p>
@@ -136,13 +176,19 @@ class AdminUserController extends AbstractController
             ");
     
         $mailer->send($email);
-    
-        // Message pour l'admin
         $this->addFlash('success', "Mot de passe réinitialisé et envoyé à <strong>{$user->getEmail()}</strong>");
     
         return $this->redirectToRoute('admin_user_list');
     }
 
+    /**
+     * Supprime la photo de profil d'un utilisateur
+     * 
+     * @param User $user L'utilisateur concerné
+     * @param EntityManagerInterface $em Gestionnaire d'entités
+     * @param Filesystem $fs Service de gestion des fichiers
+     * @return Response Redirection vers la page d'édition
+     */
     #[Route('/delete-photo/{id}', name: 'admin_user_delete_photo')]
     public function deletePhoto(User $user, EntityManagerInterface $em, Filesystem $fs): Response
     {
@@ -160,19 +206,28 @@ class AdminUserController extends AbstractController
         return $this->redirectToRoute('admin_user_edit', ['id' => $user->getId()]);
     }
 
-    #[IsGranted('ROLE_ADMIN')]
-   
+    /**
+     * Affiche le tableau de bord administrateur
+     * Montre les statistiques globales du système
+     * 
+     * @param UserRepository $userRepository Repository des utilisateurs
+     * @param ProduitRepository $produitRepository Repository des produits
+     * @param InterventionRepository $interventionRepository Repository des interventions
+     * @return Response Page du tableau de bord
+     */
     #[Route('/dashboard', name: 'admin_dashboard')]
     public function adminDashboard(
         UserRepository $userRepository,
         ProduitRepository $produitRepository,
         InterventionRepository $interventionRepository
     ): Response {
+        // Statistiques des utilisateurs par rôle
         $nbUsers = $userRepository->count([]);
         $nbAdmins = $userRepository->countByRole('Administrateur');
         $nbTechniciens = $userRepository->countByRole('Technicien');
         $nbBenevoles = $userRepository->countByRole('Bénévole');
     
+        // Statistiques globales
         $nbProduits = $produitRepository->count([]);
         $nbInterventions = $interventionRepository->count([]);
     
@@ -186,6 +241,13 @@ class AdminUserController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche le tableau de bord technicien
+     * 
+     * @param ProduitRepository $produitRepository Repository des produits
+     * @param InterventionRepository $interventionRepository Repository des interventions
+     * @return Response Page du tableau de bord technicien
+     */
     #[Route('/technicien/dashboard', name: 'technicien_dashboard')]
     #[IsGranted('ROLE_TECHNICIEN')]
     public function technicienDashboard(
@@ -201,6 +263,12 @@ class AdminUserController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche le tableau de bord bénévole
+     * 
+     * @param ProduitRepository $produitRepository Repository des produits
+     * @return Response Page du tableau de bord bénévole
+     */
     #[Route('/benevole/dashboard', name: 'benevole_dashboard')]
     #[IsGranted('ROLE_BENEVOLE')]
     public function benevoleDashboard(
