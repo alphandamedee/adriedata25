@@ -82,7 +82,7 @@
     </form>
 
     <!-- Tableau -->
-    <div class="table-responsive">
+    <div class="table-responsive"> <!-- Utilisation de table-responsive pour le défilement sur mobile -->
         <table id="produit-table" class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
@@ -104,9 +104,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for produit in pagination %}
+                {% for produit in pagination %} <!-- Utilisation de pagination pour la boucle -->
                     <tr>
-                        <td class="no-wrap">{{ produit.idProduit | default('N/A') }}</td>
+                        <td class="no-wrap">{{ produit.idProduit | default('N/A') }}</td> <!-- Utilisation de no-wrap pour éviter le retour à la ligne -->
                         <td class="no-wrap">{{ produit.codeBarre | default('N/A') }}</td>
                         <td class="no-wrap">
                             {% if produit.categorie is not null %}
@@ -119,8 +119,12 @@
                         </td>
                         <td class="">{{ produit.marque | default('N/A') }}</td>
                         <td class="">{{ produit.modele | default('N/A') }}</td>
-                        <td class="no-wrap">{{ produit.taille | default('N/A') }}</td>
-                        <td class="no-wrap">{{ produit.stockage | default('N/A') }} {{ produit.typeStockage | default('N/A') }}</td>
+                        <td class="no-wrap">{{ produit.taille | default('N/A') }}</td> 
+                        {% if produit.typeStockage is not null %}
+                            <td class="no-wrap">{{ produit.stockage | default('N/A') }} {{ produit.typeStockage.nom | default('N/A') }}</td>
+                        {% else %}
+                            <td class="no-wrap">N/A</td>
+                        {% endif %}
                         <td class="no-wrap">{{ produit.ram | default('N/A') }} {{ produit.typeRam | default('N/A') }}</td>
                         <td class="no-wrap">{{ produit.cpu | default('N/A') }}</td>
                         <td class="no-wrap">

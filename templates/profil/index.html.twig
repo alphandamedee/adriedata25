@@ -172,16 +172,17 @@
 </div>
 
     <div>
-        {% if 'ROLE_ADMIN' in app.user.roles %}
-            <form id="delete-form" method="post" action="{{ path('intervention_delete_multiple') }}">
+        {% if 'ROLE_ADMIN' in app.user.roles %} <!-- Vérification du rôle admin -->
+            <form id="delete-form" method="post" action="{{ path('intervention_delete_multiple') }}"> <!-- Formulaire pour la suppression multiple -->
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_multiple') }}">
             {% endif %}
-            <table class="table table-striped" id="interventions-table">
+            <table class="table table-striped" id="interventions-table"> <!-- ID de la table pour DataTables -->
                 <thead class="table-dark">
                     <tr style="color: #61a444">
                         {% if 'ROLE_ADMIN' in app.user.roles %}
                             <th><input type="checkbox" id="select-all"></th>
                         {% endif %}
-                        <th>ID</th>
+                        <th>ID</th> 
                         <th>Intervenant</th>
                         <th>Produit</th>
                         <th>Code Barre</th>
@@ -191,13 +192,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for intervention in interventions %}
+                    {% for intervention in interventions %} <!-- Boucle sur les interventions -->
                         <tr>
                             {% if 'ROLE_ADMIN' in app.user.roles %}
                                 <td><input type="checkbox" name="ids[]" value="{{ intervention.id }}"></td>
                             {% endif %}
                             <td>{{ intervention.id }}</td>
-                            <td>{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td>
+                            <td>{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td> 
                             <td>
                                 {% if intervention.produit %}
                                     {{ intervention.produit.categorie.nom ?? 'N/A' }} - {{ intervention.produit.marque ?? 'N/A' }} - {{ intervention.produit.modele ?? 'N/A' }}
@@ -205,7 +206,7 @@
                                     <span class="text-muted">Produit non trouvé</span>
                                 {% endif %}
                             </td>
-                            <td>{{ intervention.codeBarre }}</td>
+                            <td>{{ intervention.codeBarre }}</td> 
                             <td>{{ intervention.dateIntervention|date('d/m/Y') }}</td>
                             <td>{{ intervention.commentaire }}</td>
                             <td>

@@ -271,7 +271,7 @@ class InterventionRepository extends ServiceEntityRepository
     public function findByDateRange(\DateTime $startDate, \DateTime $endDate, ?User $user = null): array
     {
         $qb = $this->createQueryBuilder('i')
-            ->leftJoin('i.produit', 'p')->addSelect('p')
+            ->leftJoin('i.produit', 'p')->addSelect('p') 
             ->leftJoin('i.intervenant', 'u')->addSelect('u')
             ->where('i.dateIntervention BETWEEN :start AND :end')
             ->setParameter('start', $startDate)

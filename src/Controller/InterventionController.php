@@ -97,11 +97,10 @@ class InterventionController extends AbstractController
             $pdfFilePath = $this->generatePdf($intervention);
             $intervention->setPdfFilePath($pdfFilePath);
 
-            // Mettre à jour les champs statut et codeEtagere du produit
+            // Mettre à jour les informations du produit
             $produit->setStatut($intervention->getStatut());
             $produit->setCodeEtagere($intervention->getCodeEtagere());
             $produit->setRam($intervention->getRam());
-            // Ajoute avant setTypeRam pour éviter l'erreur de type
             $typeRamEntity = $entityManager->getRepository(\App\Entity\TypeRam::class)->findOneBy([
                 'nom' => $intervention->getTypeRam()
             ]);
@@ -225,6 +224,7 @@ class InterventionController extends AbstractController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
+            // Créer le répertoire pour stocker les PDF s'il n'existe pas
         $pdfPath = $this->getParameter('kernel.project_dir') . '/public/uploads/interventions/';
         if (!file_exists($pdfPath)) {
             mkdir($pdfPath, 0777, true); // Créer le répertoire s'il n'existe pas
@@ -354,14 +354,14 @@ class InterventionController extends AbstractController
     }
 
     #[Route('/intervention/pdf/{id}', name: 'intervention_pdf')]
-    public function genererPdf(Intervention $intervention): Response
+    public function genererPdf(Intervention $intervention): Response 
     {
-        $options = new Options();
+        $options = new Options(); // Instanciation des options de Dompdf
         $options->set('defaultFont', 'Arial');
-        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isHtml5ParserEnabled', true); // Permet d'utiliser HTML5
         $options->set('isRemoteEnabled', true); // Permet d'afficher les images et CSS externes
 
-        $dompdf = new Dompdf($options);
+        $dompdf = new Dompdf($options); // Instanciation de Dompdf
 
         // Générer le HTML depuis `show.html.twig`, en passant `is_pdf = true`
         $html = $this->renderView('intervention/show.html.twig', [
@@ -369,16 +369,16 @@ class InterventionController extends AbstractController
             'is_pdf' => true // Permet de masquer les boutons et autres éléments interactifs
         ]);
 
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->loadHtml($html); // Charger le HTML
+        $dompdf->setPaper('A4', 'portrait'); // Définir le format de papier
         $dompdf->render();
 
-        return new Response(
-            $dompdf->output(),
-            200,
+        return new Response( // Retourner le PDF
+            $dompdf->output(), // Générer le PDF
+            200, // Code de statut HTTP 200
             [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="intervention_'.$intervention->getId().'.pdf"',
+                'Content-Disposition' => 'inline; filename="intervention_'.$intervention->getId().'.pdf"', //
             ]
         );
     }

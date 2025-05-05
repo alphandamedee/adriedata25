@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <style>
+     .navbar,
+    .navbar .container,
+    .navbar .container-fluid {
+        max-width: 100% !important;
+        overflow-x: hidden;
+    }
+
+    .navbar-toggler {
+        margin-right: 1rem;
+    }
+
+    .offcanvas {
+        max-width: 80%;
+    }
+
+    .container, .container-fluid {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+    </style>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon-180x180.png') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Ma page{% endblock %}</title>
@@ -32,7 +54,7 @@
 
     {# PWA: Fichier manifest pour l'icône, nom et couleur de l'application #}
     <link rel="manifest" href="{{ asset('images/site.webmanifest') }}">
-
+    
     {# PWA: Enregistrement du service worker pour fonctionnement offline #}
     <script>
       if ('serviceWorker' in navigator) {
@@ -45,6 +67,7 @@
         });
       }
     </script>
+
 </head>
 <body class="d-flex flex-column min-vh-100 bg-image" style="background-image: url('{{ asset('images/logo-Adrie.png') }}'); background-size: cover; background-position: center;">
 
@@ -53,7 +76,7 @@
 </div>
 
     <!-- ✅ NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light py-3 fixed-top shadow-sm">
+    <nav class="navbar navbar-expand-md navbar-light bg-light py-3 fixed-top shadow-sm w-100">
         <div class="container-fluid">
                 {% if app.user %}
             <a class="navbar-brand fw-bold " href="{{ path('app_profil') }}">
