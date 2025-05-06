@@ -103,6 +103,23 @@
     .accordion-item, .accordion-body, .card, .card-body {
         page-break-inside: avoid;
     }
+    #save-button {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #007bff, #00c6ff);
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    color: white;
+    transition: all 0.3s ease-in-out;
+    }
+
+    #save-button:hover {
+        background: linear-gradient(to right, #0056b3, #0099cc);
+        transform: scale(1.03);
+    }
+
 }
 </style>
 
@@ -121,6 +138,7 @@
                             {{ form_widget(form.codeBarre, {'attr': {'class': 'form-control', 'id': 'search-input'}}) }}
                         </div>
                     </div>
+                    
                     <div class="col-md-8 mb-2">
                         {% if produit and produit.codeBarre %}
                             <svg id="barcode"></svg>
@@ -261,18 +279,11 @@
                 </div>
                 
 
-            {{ form_end(form) }}
-            
-            <div id="printable-image-area" class="text-center mt-4 d-none">
-                <canvas id="capture-canvas" style="max-width: 100%;"></canvas>
-            </div>
-        </div>
-
-        <div class="row justify-content-center">
-            <div class="text-center col-md-3">
-                <button type="button" id="save-button" class="btn btn-primary mt-3">
+        <div class="row justify-content-center ">
+            <div class="text-start col-md-3">
+                <button type="button" id="save-button" class="btn btn-primary mt-3 w-100 no-print">
                     <span class="spinner-border spinner-border-sm d-none" id="loading-spinner"></span>
-                    <i class="bi bi-save"></i> Enregistrer
+                    <i class="bi bi-save-fill ms-1"></i> Enregistrer
                 </button>
             </div>
             
@@ -284,10 +295,17 @@
                 
             <div class="text-center col-md-3">
                 <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print">
-                    <i class="bi bi-x-circle"></i> Annuler
+                    <i class="bi bi-x-circle me-1"></i> Annuler
                 </a>
             </div>
         </div>
+            {{ form_end(form) }}
+            
+            <div id="printable-image-area" class="text-center mt-4 d-none">
+                <canvas id="capture-canvas" style="max-width: 100%;"></canvas>
+            </div>
+        </div>
+
     </div>
 </div>
 

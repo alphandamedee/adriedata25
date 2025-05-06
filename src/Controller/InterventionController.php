@@ -344,7 +344,7 @@ class InterventionController extends AbstractController
                 'ram' => $produit->getRam(),
                 'typeRam' => $produit->getTypeRam(),
                 'stockage' => $produit->getStockage(),
-                'typeStockage' => $produit->getTypeStockage(),
+                'typeStockage' => $produit->getTypeStockage() ? $produit->getTypeStockage()->getId() : null,
                 'carteGraphique' => $produit->getCarteGraphique(),
                 'memoireVideo' => $produit->getMemoireVideo(),
                 'systemeExploitation' => $produit->getSystemeExploitation(),

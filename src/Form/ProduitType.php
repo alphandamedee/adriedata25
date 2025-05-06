@@ -110,10 +110,7 @@ class ProduitType extends AbstractType
                 ],
                 'label' => 'Statut',
             ])
-            ->add('codeEtagere', TextType::class, [
-                'label' => 'Étagère',
-                'required' => false,
-            ])
+           
             ->add('carteGraphique', TextType::class, [
                 'label' => 'Carte Graphique',
                 'required' => false,

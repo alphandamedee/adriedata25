@@ -377,6 +377,22 @@ main {
     color: white;
     transform: scale(1.05);
 }
+#save-button {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #007bff, #00c6ff);
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    color: white;
+    transition: all 0.3s ease-in-out;
+    }
+
+    #save-button:hover {
+        background: linear-gradient(to right, #0056b3, #0099cc);
+        transform: scale(1.03);
+    }
 
 
 @keyframes fadeText {

@@ -22,10 +22,11 @@
         <video id="scanner" style="width: 50%;"></video>
     </div>
 
+<!-- Affichage du code-barres scanné -->
     <div id="product-info" >
-        <h3 class="mt-4">Caractéristiques du Produit</h3>
+        <h3 class="mt-4">Caractéristiques du Produit</h3> 
         {% set fields = [
-            {'label': form.categorie, 'widget': form.categorie, 'id': 'form_categorie'},
+            {'label': form.categorie, 'widget': form.categorie, 'id': 'form_categorie'}, 
             {'label': form.marque, 'widget': form.marque, 'id': 'form_marque'},
             {'label': form.modele, 'widget': form.modele, 'id': 'form_modele'},
             {'label': form.numeroSerie, 'widget': form.numeroSerie, 'id': 'form_numeroSerie'},

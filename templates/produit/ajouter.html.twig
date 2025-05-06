@@ -29,9 +29,9 @@
       <!-- Ajouté par -->
       <div class="row mb-4">
         <div class="col-md-2">
-          <label class="form-label fw-semibold">Ajouté par</label>
+          <label class="form-label fw-semibold text-end">Ajouté par</label>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-6">
           <input type="text" class="form-control bg-light border-0" value="{{ app.user.prenom ~ ' ' ~ app.user.nomUser }}" readonly>
         </div>
       </div>
@@ -39,26 +39,26 @@
       <!-- Autres champs -->
       {% set champs = [
         ['categorie', 'marque'],
-        ['modele', 'taille'],
-        ['numeroSerie', 'cpu'],
-        ['frequenceCpu', 'carteGraphique'],
-        ['memoireVideo', 'ram'],
-        ['typeRam', 'stockage'],
-        ['typeStockage', 'codeEtagere'],
-        ['statut', '']
+        ['modele', 'numeroSerie'],
+        ['taille',''],
+        ['cpu', 'frequenceCpu'],
+        ['carteGraphique', 'memoireVideo'],
+        ['ram', 'typeRam'],
+        ['stockage', 'typeStockage'],
+        ['statut', 'codeEtagere']
       ] %}
 
       {% for pair in champs %}
         <div class="row mb-3 align-items-center">
           <div class="col-md-2 text-end">{{ form_label(attribute(form, pair[0]), null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}</div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             {{ form_widget(attribute(form, pair[0]), {'attr': {'class': 'form-control shadow-sm required-field'}}) }}
           </div>
           {% if pair[1] %}
             <div class="col-md-2 text-end">
               {{ form_label(attribute(form, pair[1]), null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               {{ form_widget(attribute(form, pair[1]), {'attr': {'class': 'form-control shadow-sm'}}) }}
             </div>
           {% endif %}

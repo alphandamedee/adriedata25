@@ -84,8 +84,8 @@ class TypeStockage
         return $this;
     }
 
-    public function __toString(): string
+    public function getLabel(): string
     {
-        return $this->nom;
+        return $this->nom ?? '';
     }
 }

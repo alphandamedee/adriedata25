@@ -82,8 +82,8 @@ class Intervention
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $stockage = null;
 
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private ?string $typeStockage = null;
+    #[ORM\ManyToOne(targetEntity: TypeStockage::class)]
+    private ?TypeStockage $typeStockage = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $carteGraphique = null;
@@ -180,8 +180,8 @@ class Intervention
     public function getStockage(): ?string { return $this->stockage; }
     public function setStockage(?string $stockage): self { $this->stockage = $stockage; return $this; }
 
-    public function getTypeStockage(): ?string { return $this->typeStockage; }
-    public function setTypeStockage(?string $typeStockage): self { $this->typeStockage = $typeStockage; return $this; }
+    public function getTypeStockage(): ?TypeStockage { return $this->typeStockage; }
+    public function setTypeStockage(?TypeStockage $typeStockage): self { $this->typeStockage = $typeStockage; return $this; }
 
     public function getCarteGraphique(): ?string { return $this->carteGraphique; }
     public function setCarteGraphique(?string $carteGraphique): self { $this->carteGraphique = $carteGraphique; return $this; }
