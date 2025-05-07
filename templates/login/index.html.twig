@@ -17,10 +17,16 @@
             </div>
         {% endif %}
         
-        {% if error %}
+        {# {% if error %}
             <div class="alert alert-danger text-center">
                 {{ error.messageKey|trans(error.messageData, 'security') }}
             </div>
+        {% endif %} #}
+
+         {% if error %}
+        <div class="alert alert-danger w-100 text-center" role="alert">
+            <p >Adresse mail et/ou mot de passe incorrect! </p>
+        </div>
         {% endif %}
 
         <form method="post" class="login-form">
