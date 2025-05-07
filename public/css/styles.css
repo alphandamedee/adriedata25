@@ -395,6 +395,34 @@ main {
     }
 
 
+
+    /* Animation pour le texte qui apparaît */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+    }
+    
+    table {
+        width: 100%;
+        table-layout: auto;
+        border-collapse: collapse;
+    }
+    
+    th, td {
+        white-space: nowrap;
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    thead th {
+        position: sticky;
+        top: 0;
+        background-color: #fff; /* ou la couleur de ton entête */
+        z-index: 1;
+    }
+    /* Animation pour le texte qui apparaît */    
+
 @keyframes fadeText {
     0% { opacity: 0; transform: scale(0.95); }
     100% { opacity: 1; transform: scale(1); }
