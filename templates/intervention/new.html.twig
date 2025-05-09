@@ -6,7 +6,14 @@
 @media print {
     @page {
         size: A4 portrait;
-        margin: 0.7cm;
+        margin: 5mm 10mm;
+    }
+
+    html, body {
+        height: auto !important;
+        overflow: hidden !important;
+        font-size: 10px !important;
+        background: white !important;
     }
 
     body * {
@@ -15,6 +22,7 @@
 
     #printable-area, #printable-area * {
         visibility: visible;
+        color: black !important;
     }
 
     #printable-area {
@@ -22,77 +30,54 @@
         left: 0;
         top: 0;
         width: 100%;
-        padding: 0.5cm;
-        max-width: none;
+        padding: 0.3cm;
+        background: white !important;
     }
 
     .no-print,
-    .container > .row,
+    .container > .row:last-child,
     .btn,
     #printable-image-area,
     #save-button,
-    #loading-spinner {
+    #loading-spinner,
+    .invalid-feedback {
         display: none !important;
-    }
-
-    .accordion-collapse {
-        display: block !important;
-    }
-
-    .accordion-button::after {
-        display: none !important;
-    }
-
-    .accordion-button {
-        background-color: white !important;
-        color: black !important;
-        font-weight: bold !important;
-        font-size: 12px !important;
-    }
-
-    .form-control {
-        border: 1px solid #999 !important;
-        background-color: #fff !important;
-        font-size: 12px !important;
-        padding: 2px 4px !important;
-        height: 24px !important;
-    }
-
-    label,
-    .form-check-label,
-    .label-bold {
-        font-size: 11px !important;
-        font-weight: bold !important;
-    }
-
-    h2 {
-        font-size: 18px !important;
-        margin-bottom: 12px !important;
     }
 
     .row {
         display: flex !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        flex-wrap: wrap !important;
+        margin: 0 -5px 4px -5px !important;
+        width: 100% !important;
+        clear: both !important;
     }
 
-    .col-md-4, .col-md-6, .col-md-8 {
+    .col-md-2, .col-md-3, .col-md-4, .col-md-6, .col-md-8 {
         float: left !important;
-        padding: 0 4px !important;
+        padding: 0 5px !important;
+        margin-bottom: 4px !important;
+        box-sizing: border-box !important;
     }
 
+    .col-md-2 { width: 16.66% !important; }
+    .col-md-3 { width: 25% !important; }
     .col-md-4 { width: 33.33% !important; }
     .col-md-6 { width: 50% !important; }
     .col-md-8 { width: 66.66% !important; }
 
-    svg#barcode {
-        max-height: 45px !important;
-        margin: 5px 0 !important;
+    .form-control {
+        border: 1px solid #999 !important;
+        background-color: white !important;
+        font-size: 10px !important;
+        padding: 1px 3px !important;
+        height: 20px !important;
+        width: 100% !important;
     }
 
     .form-check {
         padding-left: 20px !important;
         margin-bottom: 4px !important;
+        page-break-inside: avoid !important;
     }
 
     .form-check-input {
@@ -100,26 +85,62 @@
         height: 14px !important;
     }
 
-    .accordion-item, .accordion-body, .card, .card-body {
-        page-break-inside: avoid;
-    }
-    #save-button {
-    font-size: 1.1rem;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 10px;
-    background: linear-gradient(to right, #007bff, #00c6ff);
-    border: none;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-    color: white;
-    transition: all 0.3s ease-in-out;
+    label, .form-check-label, .label-bold {
+        font-size: 11px !important;
+        font-weight: bold !important;
+        margin-bottom: 2px !important;
     }
 
-    #save-button:hover {
-        background: linear-gradient(to right, #0056b3, #0099cc);
-        transform: scale(1.03);
+    h2 {
+        font-size: 18px !important;
+        margin-bottom: 12px !important;
+        text-align: center !important;
+        page-break-after: avoid !important;
     }
 
+    .accordion {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .accordion-item {
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .accordion-button {
+        background: none !important;
+        color: black !important;
+        font-weight: bold !important;
+        font-size: 12px !important;
+        padding: 5px 0 !important;
+        margin-bottom: 10px !important;
+    }
+
+    .accordion-button::after {
+        display: none !important;
+    }
+
+    .accordion-collapse {
+        display: block !important;
+    }
+
+    svg#barcode {
+        max-height: 45px !important;
+        margin: 5px 0 !important;
+        display: block !important;
+    }
+
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .card-body {
+        padding: 0 !important;
+    }
 }
 </style>
 
@@ -167,7 +188,7 @@
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#productAccordion">
                             <div class="accordion-body">
                                 
-                                <div class="row">
+                                <div class="row ">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.categorie, null, {'label_attr': {'class': 'label-bold'}}) }}
                                         {{ form_widget(form.categorie, {'attr': {'class': 'form-control', 'readonly': true}}) }}
