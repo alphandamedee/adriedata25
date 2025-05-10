@@ -12,6 +12,9 @@ const filesToCache = [
   '/js/scan.js',
   '/images/logo-Adrie.png',
   '/offline.html',
+  '/templates/produit/index.html.twig',
+  '/templates/intervention/new.html.twig',
+  '/templates/profil/index.html.twig',
 ];
 
 self.addEventListener('install', function (event) {
