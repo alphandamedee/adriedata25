@@ -23,7 +23,7 @@
                 <!-- Scanner -->
                 <div class="col-3 col-sm-2 col-md-1">
                     <button type="button" class="btn btn-secondary w-100" id="scan-barcode-btn" data-bs-toggle="modal" data-bs-target="#barcodeModal" title="Scanner">
-                        <i class="bi bi-upc-scan"></i>
+                        <i class="bi bi-upc-scan" alt="Icône scanner"></i>
                     </button>
                 </div>
 
@@ -52,27 +52,27 @@
                 <!-- Bouton Ajouter -->
                 <div class="col-auto">
                     <a href="{{ path('produit_ajouter') }}" id="add-product-link" class="btn btn-success" title="Ajouter un Produit">
-                        <i class="bi bi-plus-circle"></i> <span class="d-none d-sm-inline">Ajouter</span>
+                        <i class="bi bi-plus-circle" alt="Icône ajouter"></i> <span class="d-none d-sm-inline">Ajouter</span>
                     </a>
                 </div>
 
                     <!-- Boutons Catégories / RAM -->
                     <div class="col-auto d-flex gap-2">
                         <a href="{{ path('categorie_produit_index') }}" class="btn btn-outline-dark" title="Catégories">
-                            <i class="bi bi-tags"></i>
+                            <i class="bi bi-tags" alt="Icône catégories"></i>
                         </a>
                         <a href="{{ path('type_ram_index') }}" class="btn btn-outline-dark" title="Types de RAM">
-                            <i class="bi bi-memory"></i>
+                            <i class="bi bi-memory" alt="Icône RAM"></i>
                         </a>
                     </div>
 
                 <!-- Export CSV / Excel -->
                 <div class="col-auto d-flex gap-2">
                     <a href="{{ path('produit_export', { format: 'csv' }) }}" class="btn btn-outline-primary" title="Exporter CSV">
-                        <i class="bi bi-file-earmark-spreadsheet"></i>
+                        <i class="bi bi-file-earmark-spreadsheet" alt="Icône CSV"></i>
                     </a>
                     <a href="{{ path('produit_export', { format: 'excel' }) }}" class="btn btn-outline-success" title="Exporter Excel">
-                        <i class="bi bi-file-earmark-excel"></i>
+                        <i class="bi bi-file-earmark-excel" alt="Icône Excel"></i>
                     </a>
                 </div>
                 {% endif %}

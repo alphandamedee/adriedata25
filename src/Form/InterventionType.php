@@ -151,6 +151,8 @@ class InterventionType extends AbstractType
                     'Réparé' => 'Réparé',
                     'Vendu' => 'Vendu',
                     'HS' => 'HS',
+                    'Déchetterie' => 'Déchetterie',
+                    'Autre' => 'Autre',
                 ],
                 'label' => 'Status',
                 'required' => true,

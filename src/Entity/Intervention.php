@@ -29,7 +29,7 @@ class Intervention
     #[ORM\Column(type: "string", length: 50, nullable: true)]
     private ?string $versionSe = null;
 
-    #[ORM\Column(type: "date")]
+    #[ORM\Column(type: "date")] 
     private \DateTimeInterface $dateIntervention;
 
     #[ORM\Column(type: "datetime", nullable: true, options: ["default" => "CURRENT_TIMESTAMP"])]

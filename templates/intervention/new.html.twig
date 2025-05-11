@@ -149,7 +149,7 @@
 <div class="container mt-4">
     <div class="card shadow mb-4">
         <div class="card-body card-body-custom" id="printable-area">
-            <h2 class="text-center mb-4"><i class="bi bi-tools"></i> FICHE D'INTERVENTION</h2>
+            <h2 class="text-center mb-4"><i class="bi bi-tools" alt="Icône outils"></i> FICHE D'INTERVENTION</h2>
            
             {{ form_start(form, {
                 'action' : path('intervention_new', {id: produit.idProduit }), 'attr': {'id': 'intervention-form', 'class': 'needs-validation', 'novalidate': true}}) }}
@@ -300,32 +300,32 @@
                     </div>
                 </div>
                 
+        <div class="row justify-content-center ">
+            <div class="text-start col-md-3">
+                <button type="button" id="save-button" class="btn btn-primary mt-3 w-100 no-print">
+                    <span class="spinner-border spinner-border-sm d-none" id="loading-spinner"></span>
+                    <i class="bi bi-save-fill ms-1" alt="Icône sauvegarder"></i> Enregistrer
+                </button>
+            </div>
+            
+            <div class="text-center col-md-3" id="print-button-container" style="display: none;">
+                <button type="button" id="print-button" class="btn btn-info mt-3 no-print">
+                    <i class="bi bi-printer" alt="Icône imprimer"></i> Imprimer
+                </button>
+            </div>
+                
+            <div class="text-center col-md-3">
+                <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print">
+                    <i class="bi bi-x-circle me-1" alt="Icône annuler"></i> Annuler
+                </a>
+            </div>
+        </div>
             {{ form_end(form) }}
 
         
             
             <div id="printable-image-area" class="text-center mt-4 d-none">
                 <canvas id="capture-canvas" style="max-width: 100%;"></canvas>
-            </div>
-        </div>
-    <div class="row justify-content-center ">
-            <div class="text-start col-md-3">
-                <button type="button" id="save-button" class="btn btn-primary mt-3 w-100 no-print">
-                    <span class="spinner-border spinner-border-sm d-none" id="loading-spinner"></span>
-                    <i class="bi bi-save-fill ms-1"></i> Enregistrer
-                </button>
-            </div>
-            
-            <div class="text-center col-md-3" id="print-button-container" style="display: none;">
-                <button type="button" id="print-button" class="btn btn-info mt-3 no-print">
-                    <i class="bi bi-printer"></i> Imprimer
-                </button>
-            </div>
-                
-            <div class="text-center col-md-3">
-                <a href="{{ path('app_produit') }}" class="btn btn-secondary mt-3 no-print">
-                    <i class="bi bi-x-circle me-1"></i> Annuler
-                </a>
             </div>
         </div>
     </div>

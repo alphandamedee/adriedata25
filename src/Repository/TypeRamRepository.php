@@ -20,4 +20,9 @@ class TypeRamRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TypeRam::class);
     }
+    public function findByNom(string $nom): ?TypeRam
+    {
+        return $this->findOneBy(['nom' => $nom]);
+    }
+
 }

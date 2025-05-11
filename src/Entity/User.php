@@ -100,14 +100,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // 🔹 Correction de la méthode getRoles()
-    // public function getRoles(): array
-    // {
-    //     $roles = [$this->role]->getRoleName; // Récupération du rôle depuis l'entité Role
-    //     $roles[] = 'ROLE_USER'; // Assurer que tous les utilisateurs ont au moins ROLE_USER
-    //     return array_unique($roles);
-    // }
-
+    // Gestion des rôles
+   
     public function getRoles(): array
     {
         $roleName = $this->role->getRoleName(); // Ex: "Administrateur"

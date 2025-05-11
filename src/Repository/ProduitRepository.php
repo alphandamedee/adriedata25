@@ -29,8 +29,8 @@ class ProduitRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('p')
             ->select('COUNT(DISTINCT p.categorie)')
-            ->getQuery()
-            ->getSingleScalarResult();
+            ->getQuery() // Exécute la requête
+            ->getSingleScalarResult(); // Récupère le résultat unique
     }
 
     /**
@@ -41,15 +41,15 @@ class ProduitRepository extends ServiceEntityRepository
      */
     public function searchByKeyword(string $keyword): array
     {
-        $qb = $this->createQueryBuilder('p');
+        $qb = $this->createQueryBuilder('p'); 
 
         return $qb
-            ->where('LOWER(p.categorie) LIKE :kw')
-            ->orWhere('LOWER(p.marque) LIKE :kw')
+            ->where('LOWER(p.categorie) LIKE :kw') 
+            ->orWhere('LOWER(p.marque) LIKE :kw') 
             ->orWhere('LOWER(p.modele) LIKE :kw')
             ->orWhere('LOWER(p.codeBarre) LIKE :kw')
             ->orWhere('LOWER(p.statut) LIKE :kw')
-            ->setParameter('kw', '%' . strtolower($keyword) . '%')
+            ->setParameter('kw', '%' . strtolower($keyword) . '%') // Utilisation de strtolower pour ignorer la casse
             ->orderBy('p.idProduit', 'DESC')
             ->getQuery()
             ->getResult();

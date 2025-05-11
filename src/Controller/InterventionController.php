@@ -6,6 +6,7 @@ use App\Entity\Intervention;
 use App\Entity\Produit;
 use App\Form\InterventionType;
 use App\Repository\InterventionRepository;
+use App\Repository\TypeRamRepository;
 use App\Repository\UserRepository;
 use App\Repository\ProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,7 +35,10 @@ class InterventionController extends AbstractController
 
     // Route pour créer une nouvelle intervention
     #[Route('/new/{id}', name: 'intervention_new')] 
-    public function new(Request $request, Produit $produit, EntityManagerInterface $entityManager, ProduitRepository $produitRepository, Security $security, int $id): Response
+    public function new(Request $request, Produit $produit, 
+    EntityManagerInterface $entityManager, ProduitRepository $produitRepository,
+    TypeRamRepository $typeRamRepo, 
+    Security $security, int $id): Response
     {
         $user = $security->getUser(); // Récupère l'utilisateur connecté
         
@@ -101,11 +105,8 @@ class InterventionController extends AbstractController
             $produit->setStatut($intervention->getStatut());
             $produit->setCodeEtagere($intervention->getCodeEtagere());
             $produit->setRam($intervention->getRam());
-            $typeRamEntity = $entityManager->getRepository(\App\Entity\TypeRam::class)->findOneBy([
-                'nom' => $intervention->getTypeRam()
-            ]);
+            $typeRamEntity = $typeRamRepo->findByNom($intervention->getTypeRam());
             $produit->setTypeRam($typeRamEntity);
-            // $produit->setTypeRam($intervention->getTypeRam());
             $produit->setModele($intervention->getModele());
             $produit->setMarque($intervention->getMarque());
             $produit->setTaille($intervention->getTaille());    
@@ -227,16 +228,15 @@ class InterventionController extends AbstractController
             // Créer le répertoire pour stocker les PDF s'il n'existe pas
         $pdfPath = $this->getParameter('kernel.project_dir') . '/public/uploads/interventions/';
         if (!file_exists($pdfPath)) {
-            mkdir($pdfPath, 0777, true); // Créer le répertoire s'il n'existe pas
+            mkdir($pdfPath, 0777, true);
         }
 
-        $codeBarre = $intervention->getCodeBarre() ?: 'unknown'; // Utiliser 'unknown' si le code-barres est vide
-        $intervenantId = $intervention->getIntervenant() ? $intervention->getIntervenant()->getId() : 'unknown';
-        $dateHeure = $intervention->getDateIntervention()->format('Ymd_Hi'); // YYYYMMDD_HHMM
+        // Générer le nom du fichier PDF avec heure et minutes
+        $dateHeure = $intervention->getDateIntervention()->format('Ymd'); // His : Heure et minutes
         $codeBarre = $intervention->getCodeBarre() ?: 'unknown';
         $intervenantId = $intervention->getIntervenant() ? $intervention->getIntervenant()->getId() : 'unknown';
 
-        $codeBarre = preg_replace('/[^a-zA-Z0-9]/', '', $codeBarre); // nettoyage pour éviter caractères spéciaux
+        $codeBarre = preg_replace('/[^a-zA-Z0-9]/', '', $codeBarre); // Supprimer les caractères spéciaux
         $pdfFileName = sprintf('%s_%s_%s.pdf', $dateHeure, $codeBarre, $intervenantId);
 
         $fullPdfPath = $pdfPath . $pdfFileName;

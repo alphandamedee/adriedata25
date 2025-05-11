@@ -96,12 +96,12 @@ class InterventionRepository extends ServiceEntityRepository
      */
     public function findByDate(\DateTime $date)
     {
-        $start = (clone $date)->setTime(0, 0, 0);
+        $start = (clone $date)->setTime(0, 0, 0); 
         $end = (clone $date)->setTime(23, 59, 59);
 
         return $this->createQueryBuilder('i')
             ->andWhere('i.dateIntervention BETWEEN :start AND :end')
-            ->setParameter('start', $start)
+            ->setParameter('start', $start) // Utilisation de clone pour éviter de modifier l'objet original
             ->setParameter('end', $end)
             ->getQuery()
             ->getResult();
