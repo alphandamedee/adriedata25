@@ -200,8 +200,8 @@
                                 <td><input type="checkbox" name="ids[]" value="{{ intervention.id }}"></td>
                             {% endif %}
                             <td>{{ intervention.id }}</td>
-                            <td>{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td> 
-                            <td>
+                            <td class="text-start">{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td> <!-- Alignement à gauche -->
+                            <td class="text-start">
                                 {% if intervention.produit %}
                                     {{ intervention.produit.categorie.nom ?? 'N/A' }} - {{ intervention.produit.marque ?? 'N/A' }} - {{ intervention.produit.modele ?? 'N/A' }}
                                 {% else %}
@@ -210,13 +210,11 @@
                             </td>
                             <td>{{ intervention.codeBarre }}</td> 
                             <td>{{ intervention.dateIntervention|date('d/m/Y') }}</td>
-                            <td>{{ intervention.commentaire }}</td>
+                            <td class="text-start" style="white-space: normal;">{{ intervention.commentaire }}</td> <!-- Alignement à gauche et suppression de nowrap -->
                             <td>
-                                
-                                    <a href="{{ path('intervention_show', { id: intervention.id }) }}" class="btn btn-sm btn-info" title="Afficher la fiche intervention">
-                                        👁
-                                    </a>
-                               
+                                <a href="{{ path('intervention_show', { id: intervention.id }) }}" class="btn btn-sm btn-info" title="Afficher la fiche intervention">
+                                    👁
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
