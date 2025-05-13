@@ -48,7 +48,7 @@ class ProduitRepository extends ServiceEntityRepository
             ->orWhere('LOWER(p.marque) LIKE :kw') 
             ->orWhere('LOWER(p.modele) LIKE :kw')
             ->orWhere('LOWER(p.codeBarre) LIKE :kw')
-            ->orWhere('LOWER(p.statut) LIKE :kw')
+            ->orWhere('LOWER(p.status) LIKE :kw')
             ->setParameter('kw', '%' . strtolower($keyword) . '%') // Utilisation de strtolower pour ignorer la casse
             ->orderBy('p.idProduit', 'DESC')
             ->getQuery()

@@ -62,7 +62,7 @@ class InterventionController extends AbstractController
         $intervention->setNumeroSerie($produit->getNumeroSerie());
         $intervention->setCpu($produit->getCpu());
         $intervention->setFrequenceCpu($produit->getFrequenceCpu());
-        $intervention->setStatut($produit->getStatut());
+        $intervention->setstatus($produit->getstatus());
         $intervention->setRam($produit->getRam());
         $intervention->setTypeRam($produit->getTypeRam());
         $intervention->setStockage($produit->getStockage());
@@ -102,7 +102,7 @@ class InterventionController extends AbstractController
             $intervention->setPdfFilePath($pdfFilePath);
 
             // Mettre à jour les informations du produit
-            $produit->setStatut($intervention->getStatut());
+            $produit->setstatus($intervention->getstatus());
             $produit->setCodeEtagere($intervention->getCodeEtagere());
             $produit->setRam($intervention->getRam());
             $typeRamEntity = $typeRamRepo->findByNom($intervention->getTypeRam());
@@ -375,7 +375,7 @@ class InterventionController extends AbstractController
 
         return new Response( // Retourner le PDF
             $dompdf->output(), // Générer le PDF
-            200, // Code de statut HTTP 200
+            200, // Code de status HTTP 200
             [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="intervention_'.$intervention->getId().'.pdf"', //

@@ -378,51 +378,55 @@ main {
     transform: scale(1.05);
 }
 #save-button {
-    font-size: 1.1rem;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 10px;
-    background: linear-gradient(to right, #007bff, #00c6ff);
-    border: none;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-    color: white;
-    transition: all 0.3s ease-in-out;
-    }
+font-size: 1.1rem;
+font-weight: 600;
+padding: 10px 20px;
+border-radius: 10px;
+background: linear-gradient(to right, #007bff, #00c6ff);
+border: none;
+box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+color: white;
+transition: all 0.3s ease-in-out;
+}
 
-    #save-button:hover {
-        background: linear-gradient(to right, #0056b3, #0099cc);
-        transform: scale(1.03);
-    }
-
-
-
-    /* Animation pour le texte qui apparaît */
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        width: 100%;
-    }
-    
-    table {
-        width: 100%;
-        table-layout: auto;
-        border-collapse: collapse;
-    }
-    
-    th, td {
-        white-space: nowrap;
-        text-align: center;
-        vertical-align: middle;
-    }
-    
-    thead th {
-        position: sticky;
-        top: 0;
-        background-color: #fff; /* ou la couleur de ton entête */
-        z-index: 1;
-    }
+#save-button:hover {
+    background: linear-gradient(to right, #0056b3, #0099cc);
+    transform: scale(1.03);
+}
 
 
+
+/* Animation pour le texte qui apparaît */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* ou la couleur de ton entête */
+    z-index: 1;
+}
+
+.label-bold.required::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}
     /* Animation pour le texte qui apparaît */    
 
 @keyframes fadeText {

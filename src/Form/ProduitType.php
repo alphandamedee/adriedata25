@@ -98,7 +98,7 @@ class ProduitType extends AbstractType
                 'required' => false,
             ])
 
-            ->add('statut', ChoiceType::class, [
+            ->add('status', ChoiceType::class, [
                 'choices' => [
                     'à intervenir' => 'à intervenir',
                     'Disponible' => 'Disponible',
@@ -108,7 +108,7 @@ class ProduitType extends AbstractType
                     'Jetté' => 'Jetté',
                     'A détruire' => 'A détruire',
                 ],
-                'label' => 'Statut',
+                'label' => 'status',
             ])
            
             ->add('carteGraphique', TextType::class, [

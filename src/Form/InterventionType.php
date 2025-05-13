@@ -27,6 +27,7 @@ class InterventionType extends AbstractType
                 'label' => 'Intervenant',
                 'attr' => ['class' => 'form-control', 'readonly' => true],
                 'data' => $options['intervenant'] ?? null
+                
             ])
             ->add('codeBarre', TextType::class, [
                 'label' => 'Code Barre',
@@ -40,7 +41,7 @@ class InterventionType extends AbstractType
             ->add('marque', TextType::class, [
                 'label' => 'Marque',
                 'required' => false,
-                'attr' => ['readonly' => true]
+                'attr' => ['readonly' => true],
             ])
             ->add('taille', TextType::class, [
                 'label' => 'Taille',
@@ -144,7 +145,7 @@ class InterventionType extends AbstractType
                     'placeholder' => 'Entrez le code de l\'étagère',
                 ],
             ])
-            ->add('statut', ChoiceType::class, [
+            ->add('status', ChoiceType::class, [
                 'choices' => [
                     ' ' => ' ',
                     'Disponible' => 'Disponible',

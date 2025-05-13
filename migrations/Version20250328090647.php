@@ -21,7 +21,7 @@ final class Version20250328090647 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE intervention ADD code_etagere VARCHAR(255) DEFAULT NULL, ADD statut VARCHAR(255) DEFAULT NULL
+            ALTER TABLE intervention ADD code_etagere VARCHAR(255) DEFAULT NULL, ADD status VARCHAR(255) DEFAULT NULL
         SQL);
     }
 
@@ -29,7 +29,7 @@ final class Version20250328090647 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE intervention DROP code_etagere, DROP statut
+            ALTER TABLE intervention DROP code_etagere, DROP status
         SQL);
     }
 }

@@ -117,7 +117,7 @@ class DatabaseController extends AbstractController
                     carteGraphique VARCHAR(50),
                     memVideo VARCHAR(50),
                     dateAjout DATE DEFAULT CURRENT_DATE,
-                    statut VARCHAR(50) NOT NULL
+                    status VARCHAR(50) NOT NULL
                 )
             ");
         }

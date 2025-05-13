@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `intervention` (
   `pdf_file_path` varchar(255) DEFAULT NULL,
   `intervenant_nom` varchar(255) DEFAULT NULL,
   `code_etagere` varchar(255) DEFAULT NULL,
-  `statut` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `image_file_path` varchar(255) DEFAULT NULL,
   `taille` varchar(255) DEFAULT NULL,
   `type_ram_relation_id` int DEFAULT NULL,
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `intervention` (
 -- Dumping data for table `intervention`
 --
 
-INSERT INTO `intervention` (`id`, `produit_id`, `intervenant_id`, `code_barre`, `date_intervention`, `categorie`, `marque`, `modele`, `numero_serie`, `cpu`, `ram`, `type_ram`, `stockage`, `type_stockage`, `systeme_exploitation`, `version_se`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `mise_ajour_windows`, `mise_ajour_pilotes`, `autres_logiciels`, `commentaire`, `date_update`, `pdf_file_path`, `intervenant_nom`, `code_etagere`, `statut`, `image_file_path`, `taille`, `type_ram_relation_id`) VALUES
+INSERT INTO `intervention` (`id`, `produit_id`, `intervenant_id`, `code_barre`, `date_intervention`, `categorie`, `marque`, `modele`, `numero_serie`, `cpu`, `ram`, `type_ram`, `stockage`, `type_stockage`, `systeme_exploitation`, `version_se`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `mise_ajour_windows`, `mise_ajour_pilotes`, `autres_logiciels`, `commentaire`, `date_update`, `pdf_file_path`, `intervenant_nom`, `code_etagere`, `status`, `image_file_path`, `taille`, `type_ram_relation_id`) VALUES
 (29, 4543, 2, '2025011510134802504', '2025-03-26', 'MISE A NIVEAU DU MATERIEL RECUPERATION DE DON', 'MISE A NIVEAU DU MATERIEL RECUPERATION DE DON', 'MISE A NIVEAU DU MATERIEL RECUPERATION DE DON', 'W0QREPR', NULL, NULL, NULL, '320GB', 'HDD', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 'Disque dur 2\"5', NULL, '/uploads/interventions/20250326-2025011510134802504-2.pdf', NULL, NULL, NULL, NULL, NULL, NULL),
 (35, 231, 1, '2025010809371002504', '2025-04-08', 'Ecran', 'ACER', 'ECRAN ACER V223WL 4717276821098', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 'OK OK', NULL, '/uploads/interventions/20250408-2025010809371002504-1.pdf', NULL, 'S1E20', ' ', NULL, NULL, NULL),
 (39, 3026, 3, '2024082113051102504', '2025-04-15', 'Unité Centrale', 'ASUS', 'V-P8H61E', 'BCPBAW001876', 'Intel core i3', '4Go', 'DDR4', '320', 'HDD', 'Windows 10', 'famille', '2100', 'Intel HD Graphics', 'integrée', 1, 1, 1, 'Intervention par Zouhoura\r\nFonctionnel,', NULL, '/uploads/interventions/20250415-2024082113051102504-3.pdf', NULL, 'S1E1', 'Disponible', NULL, NULL, NULL),
@@ -323,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `produit` (
   `stockage` int DEFAULT NULL,
   `type_stockage` varchar(50) DEFAULT NULL,
   `ram` varchar(50) DEFAULT NULL,
-  `statut` varchar(50) DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
   `code_etagere` varchar(10) DEFAULT NULL,
   `cpu` varchar(50) DEFAULT NULL,
   `frequence_cpu` varchar(50) DEFAULT NULL,
@@ -345,7 +345,7 @@ CREATE TABLE IF NOT EXISTS `produit` (
 -- Dumping data for table `produit`
 --
 
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (105, '2023120813504202504', 'ICY BOX', 'ADAPTATEUR ICY BOX 6047719420413', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 5, NULL, NULL),
 (106, '2023120813530102504', 'ICY BOX', 'ADAPTATEUR ICY BOX 607719420401', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 5, NULL, NULL),
 (107, '2023120813540402504', 'ICY BOX', 'ADAPTATEUR ICTBOX 6047719420403', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 5, NULL, NULL),
@@ -649,7 +649,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (405, '2022121509245402504', 'FUJITSU', 'ECRAN FUJISTU 23P', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (406, '2022121509271402504', 'FUJITSU', 'ECRAN FUJUSTU 24P', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (407, '2023013110593102504', 'FUJITSU', 'ECRAN FUJITSU SIEMENS 19P', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (408, '2023013111153102504', 'FUJITSU', 'ECRAN FUJITSU 19P', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (409, '2023021413521102504', 'FUJITSU', 'ecran fujitsu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (410, '2023021610014502504', 'FUJITSU', 'ecran fujitsu 191', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
@@ -954,7 +954,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (709, '2021062409494902501', 'HYUNDAI', 'Eran ordinteur HYUNDAI', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (710, '2021092908462902504', 'HYUNDAI', 'HYUNDAI 17 P', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (711, '2022030110570502504', 'HYUNDAI', 'ECRAN HYUNDAI 211', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (712, '2022030811125002504', 'HYUNDAI', 'ECRAN HYUNDAY 1911', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (713, '2022041209453502505', 'HYUNDAI', 'ecran yundai', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (714, '2022060310501502504', 'HYUNDAI', 'ECRAN HYUNDAI 20p', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
@@ -1256,7 +1256,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (1010, '2021042308493002504', 'NEC', 'ECRAN NEC 19P', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (1011, '2021063008390002501', 'NEC', 'Ecran ordi NEC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (1012, '2023011011232002504', 'NEC', 'ECRAN NEC MULTISYNC 19 P', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (1013, '2023061409181102504', 'NEC', 'ECRAN NEC 17P MULTISYNCLCD', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (1014, '2025012013465702504', 'NEC', 'ECR NEC MULTISYNC E231W 28204270NB', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
 (1015, '2025012013510202504', 'NEC', 'ECR NEC MULTISYNC E231W 28201339NB', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL),
@@ -1548,7 +1548,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (1301, '2023062013555602504', 'EPSON', 'IMPRIMANTE EPSON ACULASER M2000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, NULL),
 (1302, '2023081710544602504', 'EPSON', 'IMPRIMANTE EPSON M4000 IXXX2646', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, NULL),
 (1303, '2023082114334502504', 'EPSON', 'IMPRIMANTE EPSON L631A Q7U2804205', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (1304, '2024012210471802504', 'EPSON', 'imp epson m253a tmuf133053', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, NULL),
 (1305, '2024012210483102504', 'EPSON', 'imp epson m253a x5gc006669', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, NULL),
 (1306, '2024012210500402504', 'EPSON', 'imp epson m253a ja7f002059', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, NULL),
@@ -1822,7 +1822,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (1574, '2024080211203002504', 'DELL', 'MINI PC DELL 4V4NCM2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 18, NULL, NULL),
 (1575, '2024080211211902504', 'DELL', 'MINI PC DELL 3D0JGQ2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 18, NULL, NULL),
 (1576, '2024080211220902504', 'DELL', 'MINI PC DELL 3D2KGQ2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 18, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (1577, '2024080211232602504', 'DELL', 'MINI PC DELL G6C07X2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 18, NULL, NULL),
 (1578, '2024080211422402504', 'DELL', 'MINI PC DELL 3D2LGQ2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 18, NULL, NULL),
 (1579, '2024080211481502504', 'DELL', 'MINI PC DELL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 18, NULL, NULL),
@@ -2117,7 +2117,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (1868, '2024062714125302504', 'DELL', 'PC PORTABLE DELL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
 (1869, '2024062714155102504', 'DELL', 'PC PORTABLE DELL LATITUDE E5530', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
 (1870, '2024080614061202504', 'DELL', 'PC PORTABLE DELL LATITUDE 2PGW5S1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (1871, '2024080710173702504', 'DELL', 'PC PORT DELL LATITUDE E5520 4Q355S1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
 (1872, '2024080713434202504', 'DELL', 'PC PORT DELL 2PJ66S1 LATITUDE E5520', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
 (1873, '2024080714274502504', 'DELL', 'PC PORT DELL 2PHV5S1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
@@ -2408,7 +2408,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (2158, '2021052708533802504', 'SAMSUNG', 'ORDINATEUR PORTABLE SAMSUNG I5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
 (2159, '2021091514122102501', 'SAMSUNG', 'Mini portable SAMSUNG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
 (2160, '2021111009211602501', 'SAMSUNG', 'Ordinateur portable SAMSUNG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (2161, '2022071512371602504', 'SAMSUNG', 'PC PORTABLE SAMSUNG I3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
 (2162, '2023010914030302504', 'SAMSUNG', 'ORDINATEUR PORTABLE SAMSUNG 161', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
 (2163, '2023011214104602504', 'SAMSUNG', 'ORDI PORTABLE SAMSUNG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL),
@@ -2680,7 +2680,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (2429, '2022041114381302504', 'ROUTEUR CISCO', 'ROUTEUR CISCO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 25, NULL, NULL),
 (2430, '2021072013405102504', 'ROUTEUR', 'ROUTEUR', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 25, NULL, NULL),
 (2431, '2021060208281302505', 'EPSON', 'Scanner epson', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 26, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (2432, '2023042611204002504', 'EPSON', 'scanner epson', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 26, NULL, NULL),
 (2433, '2023051111345602504', 'EPSON', 'SCANNER EPSON EXPRESSION10000XL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 26, NULL, NULL),
 (2434, '2023062108502602504', 'EPSON', 'SCANNER EPSON V300 KSBW113488', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 26, NULL, NULL),
@@ -2961,7 +2961,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (2709, '2024080113250502504', 'TAB SAMSUMG R52J10QVCJL', 'TAB SAMSUMG R52J10QVCJL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL),
 (2710, '2024080113240102504', 'TAB SAMSUMG R52H80RT2QB RE006822', 'TAB SAMSUMG R52H80RT2QB RE006822', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL),
 (2711, '2024080113223602504', 'TAB SAMSUMG RE007702 R52J10CD3LH', 'TAB SAMSUMG RE007702 R52J10CD3LH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (2712, '2024080113210602504', 'TAB SAMSUMG R52J10QV8XE TQREP0018008', 'TAB SAMSUMG R52J10QV8XE TQREP0018008', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL),
 (2713, '2024080113185602504', 'TAB SAMSUMG RE007435 R52J10QV9GZ', 'TAB SAMSUMG RE007435 R52J10QV9GZ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL),
 (2714, '2021111013255002504', 'TABLETTE ARCHOS', 'TABLETTE ARCHOS', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 31, NULL, NULL),
@@ -3244,7 +3244,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (2991, '2024120213511002504', 'ACER', 'UC ACER VERITON X2610G CO.7B201.001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (2992, '2024120213532002504', 'ACER', 'UC ACER VERITON X2610G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (2993, '2024120213541402504', 'ACER', 'UC ACER VERITON X4610G PSVCXE30561340198C1800', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (2994, '2024120214074002504', 'ACER', 'UC ACER VERITON S4610G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (2995, '2024120214112502504', 'ACER', 'UC ACER VERITON X2631G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (2996, '2024120214123402504', 'ACER', 'UC ACER VERITON X4630G DTVJGEF00135001A221800', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
@@ -3537,7 +3537,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (3283, '2024120213562602504', 'FUJITSU', 'UC FUJITSU USD-D2804 YKLT092824', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3284, '2024120214263902504', 'FUJITSU', 'UC FUJITSU ESPRIMO YKRGO39273', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3285, '2025011508251402504', 'FUJITSU', 'UC FUJITSU MI4W YLTH737513', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (3286, '2025012014212402504', 'FUJITSU', 'UC FUJITSU CELSIUS M15W YM5V002925', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3287, '2025020508273302504', 'FUJITSU', 'UC FUJITSU MI4W YLPV166239', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3288, '2025020508305002504', 'FUJITSU', 'UC FUJITSU MI4W YLCM063347', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
@@ -3840,7 +3840,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (3585, '2023082311031502504', 'HP', 'UC HP COMPAQ PRO6300 CZC25078FW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3586, '2023082311104302504', 'HP', 'UC HP COMPAQ ELITE CZC4103BNZ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3587, '2023082311242502504', 'HP', 'UC HP HSTNC059PSF CZC0032GG2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (3588, '2023082809073902504', 'HP', 'UC HP TPCM022SF CZC7129NHZ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3589, '2023082809092002504', 'HP', 'UC HP TPCPO64SF CZC8237K2D', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3590, '2023082809145302504', 'HP', 'UC HP Y5W43AV CZC73481DL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
@@ -4141,7 +4141,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (3885, '2023112013145002504', 'HP', 'uc hp compact czc118gk1q', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3886, '2023112013161202504', 'HP', 'uc hp compaq dx2420 czc9313npj', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3887, '2024010509183902504', 'HP', 'UC HP I3 CZC5122ZZW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (3888, '2024010509251802504', 'HP', 'UC HP280G1 CZC512302G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3889, '2024012409181002504', 'HP', 'UC HP TPC F056SF VZC8378S9G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (3890, '2024012409321302504', 'HP', 'UC HP TPCF056SF CZC8378S8V', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
@@ -4441,7 +4441,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (4184, '2023100211371602504', 'LENOVO', 'PC LENOVO E540 PF0372ZFL1407', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (4185, '2023100211384602504', 'LENOVO', 'UC LENOVO 0064FR PCOQKLWS', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (4186, '2023100211410002504', 'LENOVO', 'UC LENOVO B2G S4MTDC6', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (4187, '2023100211433602504', 'LENOVO', 'UC LENOVO 0064FR PCOQKLWG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (4188, '2023100211443302504', 'LENOVO', 'UC LENOVO 0064FR PCORXQT9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (4189, '2023100214435002504', 'LENOVO', 'UC LENOVO B2G S4MTCP2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
@@ -4738,7 +4738,7 @@ INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_seri
 (4480, '2024041909012102504', 'HP', 'TOUR HP ML110G7I CZ221204X8', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (4481, '2024070414271302504', 'HP', 'HP PRODESK CZC9158YR4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, NULL, NULL),
 (4482, '2021012708595502504', 'ACER', 'CLIENT LEGER ACER VERITON', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL);
-INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `statut`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
+INSERT INTO `produit` (`id_produit`, `code_barre`, `marque`, `modele`, `num_serie`, `stockage`, `type_stockage`, `ram`, `status`, `code_etagere`, `cpu`, `frequence_cpu`, `carte_graphique`, `memoire_video`, `date_ajout`, `mise_a_jour_windows`, `mise_a_jour_pilotes`, `autres_logiciels`, `categorie_id`, `type_ram_id`, `taille`) VALUES
 (4483, '2021072013331102504', 'ACER', 'ACER VERITO PENTIUM', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL),
 (4484, '2021072209370302504', 'ACER', 'ACER AL1717', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL),
 (4485, '2021102008523202504', 'ACER', 'ACER ASPIRE ONE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL),

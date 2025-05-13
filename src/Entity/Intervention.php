@@ -98,7 +98,7 @@ class Intervention
     private $codeEtagere;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $statut;
+    private $status;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $pdfFilePath = null;
@@ -198,8 +198,8 @@ class Intervention
     public function getCodeEtagere(): ?string { return $this->codeEtagere;}
     public function setCodeEtagere(?string $codeEtagere): self { $this->codeEtagere = $codeEtagere; return $this;}
 
-    public function getStatut(): ?string { return $this->statut;}
-    public function setStatut(?string $statut): self { $this->statut = $statut; return $this;}
+    public function getstatus(): ?string { return $this->status;}
+    public function setstatus(?string $status): self { $this->status = $status; return $this;}
 
     public function getImageFilePath(): ?string { return $this->imageFilePath; }
     public function setImageFilePath(?string $imageFilePath): self { $this->imageFilePath = $imageFilePath; return $this;}

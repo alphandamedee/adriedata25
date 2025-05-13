@@ -95,7 +95,7 @@
                     <th class="text-center">Stockage</th>
                     <th class="text-center">RAM</th>
                     <th class="text-center">CPU</th>
-                    <th class="text-center">Statut</th>
+                    <th class="text-center">status</th>
                     {% if  'ROLE_BENEVOLE' not in app.user.roles %}
                     <th class="text-center">Code Étagère</th>
                         <th class="text-center">Actions</th>
@@ -128,7 +128,7 @@
                         <td class="no-wrap">{{ produit.ram | default('N/A') }} {{ produit.typeRam | default('N/A') }}</td>
                         <td class="no-wrap">{{ produit.cpu | default('N/A') }}</td>
                         <td class="no-wrap">
-                            <span class="badge bg-{{ produit.statut == 'Disponible' ? 'success' : produit.statut == 'Réparé' ? 'info' : produit.statut == 'HS' ? 'danger' : produit.statut == 'Vendu' ? 'secondary' : 'warning' }}">{{ produit.statut | default('N/A') }}</span>
+                            <span class="badge bg-{{ produit.status == 'Disponible' ? 'success' : produit.status == 'Réparé' ? 'info' : produit.status == 'HS' ? 'danger' : produit.status == 'Vendu' ? 'secondary' : 'warning' }}">{{ produit.status | default('N/A') }}</span>
                         </td>
                         {% if  'ROLE_BENEVOLE' not in app.user.roles %}
                         <td class="no-wrap text-center">{{ produit.codeEtagere | default('N/A') }}</td>

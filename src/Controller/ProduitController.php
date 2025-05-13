@@ -202,7 +202,7 @@ class ProduitController extends AbstractController
     {
         $response = new StreamedResponse(function() use ($produits) {
             $handle = fopen('php://output', 'w+');
-            fputcsv($handle, ['ID', 'Code Barre', 'Catégorie', 'Marque', 'Modèle', 'Taille', 'Stockage', 'RAM', 'Statut', 'Code Étagère']);
+            fputcsv($handle, ['ID', 'Code Barre', 'Catégorie', 'Marque', 'Modèle', 'Taille', 'Stockage', 'RAM', 'status', 'Code Étagère']);
 
             foreach ($produits as $produit) {
                 fputcsv($handle, [
@@ -214,7 +214,7 @@ class ProduitController extends AbstractController
                     $produit->getTaille(),
                     $produit->getStockage() . ' ' . $produit->getTypeStockage(),
                     $produit->getRam() . ' ' . $produit->getTypeRam(),
-                    $produit->getStatut(),
+                    $produit->getstatus(),
                     $produit->getCodeEtagere()
                 ]);
             }
@@ -242,7 +242,7 @@ class ProduitController extends AbstractController
         $sheet->setCellValue('F1', 'Taille');
         $sheet->setCellValue('G1', 'Stockage');
         $sheet->setCellValue('H1', 'RAM');
-        $sheet->setCellValue('I1', 'Statut');
+        $sheet->setCellValue('I1', 'status');
         $sheet->setCellValue('J1', 'Code Étagère');
 
         // Populate the data rows
@@ -256,7 +256,7 @@ class ProduitController extends AbstractController
             $sheet->setCellValue('F' . $row, $produit->getTaille());
             $sheet->setCellValue('G' . $row, $produit->getStockage() . ' ' . $produit->getTypeStockage());
             $sheet->setCellValue('H' . $row, $produit->getRam() . ' ' . $produit->getTypeRam());
-            $sheet->setCellValue('I' . $row, $produit->getStatut());
+            $sheet->setCellValue('I' . $row, $produit->getstatus());
             $sheet->setCellValue('J' . $row, $produit->getCodeEtagere());
             $row++;
             

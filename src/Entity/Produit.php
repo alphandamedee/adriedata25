@@ -48,8 +48,8 @@ class Produit
     #[ORM\Column(name: "num_serie", type: "string", length: 50, nullable: true)]
     private ?string $numeroSerie = null;
 
-    #[ORM\Column(name: "statut", type: "string", length: 50, nullable: true)]
-    private ?string $statut = null;
+    #[ORM\Column(name: "status", type: "string", length: 50, nullable: true)]
+    private ?string $status = null;
 
     #[ORM\Column(name: "code_etagere" , type: 'string', length: 10, nullable: true)]
     private ?string $codeEtagere = null; // Nouvelle colonne pour code étagère
@@ -214,14 +214,14 @@ class Produit
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function getstatus(): ?string
     {
-        return $this->statut;
+        return $this->status;
     }
 
-    public function setStatut(?string $statut): self
+    public function setstatus(?string $status): self
     {
-        $this->statut = $statut;
+        $this->status = $status;
         return $this;
     }
 
