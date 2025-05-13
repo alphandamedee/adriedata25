@@ -421,6 +421,8 @@ main {
         background-color: #fff; /* ou la couleur de ton entête */
         z-index: 1;
     }
+
+
     /* Animation pour le texte qui apparaît */    
 
 @keyframes fadeText {

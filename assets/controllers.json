@@ -9,7 +9,7 @@
         "@symfony/ux-dropzone": {
             "dropzone": {
                 "enabled": true,
-                "fetch": "eager",
+                "fetch": "eager", 
                 "autoimport": {
                     "@symfony/ux-dropzone/dist/style.min.css": true
                 }
@@ -22,7 +22,7 @@
             },
             "mercure-turbo-stream": {
                 "enabled": false,
-                "fetch": "eager"
+                "fetch": "eager" 
             }
         }
     },

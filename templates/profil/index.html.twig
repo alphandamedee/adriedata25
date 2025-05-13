@@ -4,6 +4,8 @@
 
 
 {% block body %}
+
+
 <div class="container bg-light mt-4">
     <h2 class="text-center mb-4">Profil de {{ app.user.prenom }} {{ app.user.nomUser }}</h2>
 
@@ -182,13 +184,13 @@
                         {% if 'ROLE_ADMIN' in app.user.roles %}
                             <th><input type="checkbox" id="select-all"></th>
                         {% endif %}
-                        <th>ID</th> 
-                        <th>Intervenant</th>
-                        <th>Produit</th>
-                        <th>Code Barre</th>
-                        <th>Date</th>
-                        <th>Commentaire</th>
-                        <th>Fiche</th>
+                        <th class="text-center">ID</th> 
+                        <th class="text-center">Intervenant</th>
+                        <th class="text-center">Produit</th>
+                        <th class="text-center">Code Barre</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Commentaire</th>
+                        <th class="text-center">Fiche</th>
                     </tr>
                 </thead>
                 <tbody>

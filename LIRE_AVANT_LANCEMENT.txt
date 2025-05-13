@@ -1,0 +1,70 @@
+
+# DÉMARRAGE DU PROJET SYMFONY DEPUIS CLÉ USB
+
+📅 Fichier généré le : 12/05/2025 07:09
+
+---
+
+## 🔁 Étapes pour ouvrir le projet Symfony depuis la clé USB :
+
+### ✅ 1. Prérequis à vérifier
+Assure-toi que la machine possède :
+- [ ] PHP installé (commande : `php -v`)
+- [ ] Composer installé (commande : `composer -V`)
+- [ ] Un serveur MySQL si la base de données est requise
+- [ ] WampServer ou Xampp ou équivalent si besoin
+- [ ] Symfony CLI (facultatif mais recommandé)
+
+---
+
+### 📁 2. Ouvrir le projet dans VS Code
+- Lance **Visual Studio Code**
+- Clique sur `Fichier > Ouvrir Dossier...`
+- Sélectionne le dossier du projet depuis la **clé USB**
+
+---
+
+### 📦 3. Installer les dépendances Composer
+Dans le terminal de VS Code, tape :
+```bash
+composer install
+```
+➡️ Cela va recréer automatiquement le dossier `vendor`.
+
+---
+
+### ⚙️ 4. Lancer le serveur de développement
+Deux options :
+
+#### ➤ Avec Symfony CLI :
+```bash
+symfony server:start
+```
+
+#### ➤ Avec PHP natif :
+```bash
+php -S localhost:8000 -t public
+```
+
+---
+
+### 🌐 5. Ouvrir le projet dans le navigateur
+Va sur : [http://localhost:8000](http://localhost:8000)
+
+---
+
+### ⚠️ 6. Vérifier la configuration de la base de données
+Si un fichier `.env.local` est présent, ajuste la ligne :
+```
+DATABASE_URL="mysql://utilisateur:motdepasse@localhost:3306/nom_bdd"
+```
+⚠️ Adapte le nom d'utilisateur, mot de passe et nom de base selon l'environnement.
+
+---
+
+### ✅ 7. C’est tout !
+Ton projet Symfony est maintenant prêt à l’usage sur une nouvelle machine 🎉
+
+---
+
+Fichier généré automatiquement par Miss Dev 🪄

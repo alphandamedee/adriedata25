@@ -1,0 +1,3 @@
+@echo off
+start "" "C:\wamp64\wampmanager.exe"
+echo WAMP est en cours de lancement...

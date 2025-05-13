@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const formData = new FormData(form);
-
-    fetch('{{ path('produit_ajouter') }}', {
+    
+    fetch('{{ path('produit_ajouter') }}', { 
       method: 'POST',
       body: formData
     })

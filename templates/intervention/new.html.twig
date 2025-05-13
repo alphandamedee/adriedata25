@@ -496,7 +496,7 @@
 
             const formData = new FormData(form);
 
-            fetch(form.getAttribute('action'), {
+            fetch(form.getAttribute('action'), { // Envoi du formulaire
                 method: 'POST',
                 body: formData,
             })

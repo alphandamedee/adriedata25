@@ -27,6 +27,21 @@
     padding-left: 0.3rem;
     cursor: pointer;
 }
+#interventions-table td {
+    white-space: nowrap;
+}
+
+#interventions-table thead th {
+    text-align: center !important;
+}
+#interventions-table tbody td {
+    text-align: left;
+}
+#interventions-table td:nth-child(6) {  /* Colonne commentaire */
+    white-space: normal;
+    max-width: 250px;
+    word-wrap: break-word;
+}
 
 /* Styles d'impression */
 @media print {
