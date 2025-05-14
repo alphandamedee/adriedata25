@@ -63,10 +63,21 @@ class InterventionType extends AbstractType
                 'label' => 'Fréquence CPU',
                 'required' => false
             ])
-            ->add('ram', TextType::class, [
+            ->add('ram', ChoiceType::class, [
                 'label' => 'RAM',
+                'choices' => [
+                    ' ' => ' ',
+                    '2 Go' => '2 Go',
+                    '4 Go' => '4 Go',
+                    '8 Go' => '8 Go',
+                    '12 Go' => '12 Go',
+                    '16 Go' => '16 Go',
+                    '24 Go' => '24 Go',
+                    '32 Go' => '32 Go',   
+                ],
+                'placeholder' => 'Selectionner ...',
                 'required' => false,
-                'attr' => ['placeholder' => 'Ex: 8 Go']
+                'attr' => ['class' => 'form-control']
             ])
             ->add('typeRam', ChoiceType::class, [
                 'label' => 'Type de RAM',
