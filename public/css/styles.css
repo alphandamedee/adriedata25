@@ -422,12 +422,7 @@ thead th {
     z-index: 1;
 }
 
-.label-bold.required::after {
-    content: " *";
-    color: red;
-    font-weight: bold;
-}
-    /* Animation pour le texte qui apparaît */    
+  
 
 @keyframes fadeText {
     0% { opacity: 0; transform: scale(0.95); }

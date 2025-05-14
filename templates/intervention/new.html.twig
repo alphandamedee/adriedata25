@@ -3,6 +3,7 @@
 {% block title %}Nouvelle Intervention{% endblock %}
 {% block body %}
 <style>
+
 @media print {
     @page {
         size: A4 portrait;
@@ -141,10 +142,8 @@
     .card-body {
         padding: 0 !important;
     }
-    
 }
 </style>
-
 
 <div class="container mt-4">
     <div class="card shadow mb-4">
@@ -355,20 +354,6 @@
                     label.classList.remove('required');
                 });
 
-                // Ajouter les astérisques aux champs requis si catégorie informatique
-                if (isCategorieObligatoire) {
-                    const champsAsterix = [
-                        'modele', 'numeroSerie', 'cpu', 'frequenceCpu',
-                        'ram', 'typeRam', 'stockage', 'typeStockage',
-                        'carteGraphique', 'memoireVideo', 'systemeExploitation', 'versionSe'
-                    ];
-                    
-                    champsAsterix.forEach(field => {
-                        const label = document.querySelector(`[data-field="${field}"]`);
-                        if (label) label.classList.add('required');
-                    });
-                }
-
             let valid = true;
             let champsManquants = [];
 
@@ -514,7 +499,7 @@
 
             const formData = new FormData(form);
 
-            fetch(form.getAttribute('action'), { // Envoi du formulaire
+            fetch(form.getAttribute('action'), {
                 method: 'POST',
                 body: formData,
             })
