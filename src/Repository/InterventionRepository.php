@@ -301,4 +301,20 @@ class InterventionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+    /**
+ * Recherche les interventions par nom du type de RAM (partiel)
+ *
+ * @param string $val Le terme à rechercher (ex: 'DDR')
+ * @return Intervention[] Résultats des interventions correspondantes
+ */
+public function findByTypeRamName(string $val): array
+{
+    return $this->createQueryBuilder('i')
+        ->leftJoin('i.typeRam', 't')
+        ->andWhere('t.nom LIKE :val')
+        ->setParameter('val', '%' . $val . '%')
+        ->orderBy('i.dateIntervention', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
 }
