@@ -143,6 +143,13 @@
         padding: 0 !important;
     }
 }
+
+/* Style pour les astérisques des champs requis */
+.label-bold[data-field].required::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}
 </style>
 
 <div class="container mt-4">
@@ -347,12 +354,35 @@
             const categorie = document.querySelector('#intervention_categorie');
             const catValue = categorie?.value?.trim()?.toLowerCase();
 
-            const isCategorieObligatoire = categorie && 
-                CATEGORIES_OBLIGATOIRES.some(c => catValue.includes(c.toLowerCase()));
-            // Supprimer les anciens astérisques
-                document.querySelectorAll('.label-bold').forEach(label => {
-                    label.classList.remove('required');
+            // Nettoyer tous les astérisques existants
+            document.querySelectorAll('.label-bold').forEach(label => {
+                label.classList.remove('required');
+            });
+
+            // Pour les ordinateurs
+            if (CATEGORIES_OBLIGATOIRES.some(c => catValue?.includes(c))) {
+                const champsOrdinateur = [
+                    'modele', 'numeroSerie', 'cpu', 'frequenceCpu',
+                    'ram', 'typeRam', 'stockage', 'typeStockage',
+                    'carteGraphique', 'memoireVideo', 'systemeExploitation', 
+                    'versionSe', 'codeEtagere', 'status'
+                ];
+                champsOrdinateur.forEach(field => {
+                    const label = document.querySelector(`[data-field="${field}"]`);
+                    if (label) label.classList.add('required');
                 });
+            }
+            // Pour les écrans
+            else if (catValue?.includes('ecran')) {
+                const champsEcran = ['taille', 'codeEtagere', 'status', 'numeroSerie'];
+                champsEcran.forEach(field => {
+                    const label = document.querySelector(`[data-field="${field}"]`);
+                    if (label) label.classList.add('required');
+                });
+            }
+
+            const isCategorieObligatoire = categorie && 
+                CATEGORIES_OBLIGATOIRES.some(c => catValue?.includes(c.toLowerCase()));
 
             let valid = true;
             let champsManquants = [];

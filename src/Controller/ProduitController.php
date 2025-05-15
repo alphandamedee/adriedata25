@@ -37,6 +37,18 @@ class ProduitController extends AbstractController
             ->orWhere('c.nom LIKE :search')    // 👈 on recherche aussi dans le nom de la catégorie
             ->orWhere('p.marque LIKE :search')
             ->orWhere('p.modele LIKE :search')
+            ->orWhere('p.taille LIKE :search')
+            ->orWhere('p.numeroSerie LIKE :search')
+            ->orWhere('p.cpu LIKE :search')
+            ->orWhere('p.frequenceCpu LIKE :search')
+            ->orWhere('p.ram LIKE :search')
+            ->orWhere('p.typeRam LIKE :search')
+            ->orWhere('p.stockage LIKE :search')
+            ->orWhere('p.typeStockage LIKE :search')
+            ->orWhere('p.carteGraphique LIKE :search')
+            ->orWhere('p.memoireVideo LIKE :search')
+            ->orWhere('p.codeEtagere LIKE :search')
+            ->orWhere('p.status LIKE :search')
             ->setParameter('search', '%' . $search . '%');
         }
         // 🔍 On peut filtrer par catégorie si besoin

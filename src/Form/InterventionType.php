@@ -116,7 +116,7 @@ class InterventionType extends AbstractType
             ])
             ->add('memoireVideo', TextType::class, [
                 'label' => 'Mémoire Vidéo',
-                'required' => false
+                // 'required' => false
             ])
             ->add('systemeExploitation', TextType::class, [
                 'label' => 'Système d\'Exploitation',
@@ -124,7 +124,7 @@ class InterventionType extends AbstractType
             ])
             ->add('versionSe', TextType::class, [
                 'label' => 'Version SE',
-                'required' => false
+                'required' => true
             ])
             ->add('dateIntervention', DateType::class, [
                 'widget' => 'single_text',
@@ -134,7 +134,7 @@ class InterventionType extends AbstractType
             ])
             ->add('commentaire', TextareaType::class, [
                 'label' => 'Commentaire',
-                'required' => false
+                'required' => true
             ])
             ->add('miseAJourWindows', CheckboxType::class, [
                 'label' => 'Mise à Jour Windows',
@@ -150,7 +150,7 @@ class InterventionType extends AbstractType
             ])
             ->add('codeEtagere', TextType::class, [
                 'label' => 'Code Étagère',
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Entrez le code de l\'étagère',
