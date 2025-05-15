@@ -310,11 +310,11 @@ class InterventionRepository extends ServiceEntityRepository
 public function findByTypeRamName(string $val): array
 {
     return $this->createQueryBuilder('i')
-        ->leftJoin('i.typeRam', 't')
-        ->andWhere('t.nom LIKE :val')
+        ->andWhere('i.typeRam LIKE :val')
         ->setParameter('val', '%' . $val . '%')
         ->orderBy('i.dateIntervention', 'DESC')
         ->getQuery()
         ->getResult();
 }
+
 }
