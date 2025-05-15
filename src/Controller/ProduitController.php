@@ -42,9 +42,9 @@ class ProduitController extends AbstractController
             ->orWhere('p.cpu LIKE :search')
             ->orWhere('p.frequenceCpu LIKE :search')
             ->orWhere('p.ram LIKE :search')
-            ->orWhere('p.typeRam LIKE :search')
+           
             ->orWhere('p.stockage LIKE :search')
-            ->orWhere('p.typeStockage LIKE :search')
+            
             ->orWhere('p.carteGraphique LIKE :search')
             ->orWhere('p.memoireVideo LIKE :search')
             ->orWhere('p.codeEtagere LIKE :search')
