@@ -346,6 +346,14 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+            title: 'Salut {{ app.user.prenom|e }} !',
+            text: 'Remplissez tous les champs pour éviter l’erreur.',
+            icon: 'info',
+            confirmButtonText: 'OK',
+            timer: 7000,
+            timerProgressBar: true
+        });
         function isFormValid() {
             const CATEGORIES_OBLIGATOIRES = [
                 'ordinateur', 'pc', 'mini pc', 'portable', 'all in one', 'unité centrale', 'mac'

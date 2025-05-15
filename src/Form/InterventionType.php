@@ -66,7 +66,7 @@ class InterventionType extends AbstractType
             ->add('ram', ChoiceType::class, [
                 'label' => 'RAM',
                 'choices' => [
-                    ' ' => ' ',
+                    'N/A' => 'N/A',
                     '2 Go' => '2 Go',
                     '4 Go' => '4 Go',
                     '8 Go' => '8 Go',
@@ -75,14 +75,14 @@ class InterventionType extends AbstractType
                     '24 Go' => '24 Go',
                     '32 Go' => '32 Go',   
                 ],
-                'placeholder' => 'Selectionner ...',
-                'required' => false,
+                'placeholder' => 'Selectionner même vide',
+                'required' => true,
                 'attr' => ['class' => 'form-control']
             ])
             ->add('typeRam', ChoiceType::class, [
                 'label' => 'Type de RAM',
                 'choices' => [
-                    ' ' => ' ',
+                    'N/A' => 'N/A',
                     'DDR3' => 'DDR3',
                     'DDR4' => 'DDR4',
                     'DDR5' => 'DDR5',
@@ -91,7 +91,7 @@ class InterventionType extends AbstractType
                     'SDRAM' => 'SDRAM',
                 ],
                 'placeholder' => 'Sélectionner...',
-                'required' => false,
+                'required' => true,
                 'attr' => ['class' => 'form-control']
             ])
             ->add('stockage', TextType::class, [
