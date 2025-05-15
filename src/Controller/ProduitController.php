@@ -24,12 +24,15 @@ class ProduitController extends AbstractController
         // Récupération de la recherche et de la catégorie
         $search = $request->query->get('search', '');
         $categorieId = $request->query->get('categorie');
-        $limit = $request->query->getInt('limit', 100); // valeur par défaut
+        // $limit = $request->query->getInt('limit', 100); // valeur par défaut
         
         // On utilise le QueryBuilder pour construire la requête de manière dynamique
         $queryBuilder = $entityManager->getRepository(Produit::class)->createQueryBuilder('p')
         ->leftJoin('p.categorie', 'c')         // 🔗 JOINTURE pour charger les catégories
-        ->addSelect('c');                      // 🔍 Assure le SELECT complet de la relation
+        ->leftjoin('p.typeStockage', 'ts') // 🔗 JOINTURE pour charger le type de stockage
+        ->addSelect('c')                      // 🔍 Assure le SELECT complet de la relation
+        ->addselect('ts'); // 🔍 Assure le SELECT complet de la relation
+        
         
         // On ajoute la recherche si elle est présente
         if ($search) {
@@ -44,13 +47,21 @@ class ProduitController extends AbstractController
             ->orWhere('p.ram LIKE :search')
            
             ->orWhere('p.stockage LIKE :search')
-            
+            ->orWhere('ts.nom LIKE :search') // ✅ ici au lieu de p.typeStockage
             ->orWhere('p.carteGraphique LIKE :search')
             ->orWhere('p.memoireVideo LIKE :search')
             ->orWhere('p.codeEtagere LIKE :search')
             ->orWhere('p.status LIKE :search')
             ->setParameter('search', '%' . $search . '%');
         }
+
+        $limit = 100; // par défaut
+
+        if ($search) {
+            $totalResults = count($queryBuilder->getQuery()->getResult());
+            $limit = $totalResults > 0 ? $totalResults : 1;
+        }
+
         // 🔍 On peut filtrer par catégorie si besoin
         if ($categorieId) {
             $queryBuilder->andWhere('c.id = :catId')->setParameter('catId', $categorieId);
@@ -59,8 +70,8 @@ class ProduitController extends AbstractController
         // On ajoute l'ordre de tri par défaut
         $queryBuilder->orderBy('p.codeBarre', 'ASC');
         $pagination = $paginator->paginate(
-            $queryBuilder,
-            $request->query->getInt('page', 1),
+            $queryBuilder->getQuery(), // Requête construite
+            $request->query->getInt('page', 1), // Numéro de la page
             $limit
         );
         // On ajoute la pagination à la vue

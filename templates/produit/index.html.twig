@@ -43,7 +43,7 @@
 
                 <!-- Bouton Réinitialiser -->
                 <div class="col-auto">
-                    <a href="{{ path('app_produit') }}" class="btn btn-outline-secondary" title="Réinitialiser">
+                    <a href="{{ path('app_produit', {'limit': 5000, 'search': search}) }}" class="btn btn-outline-secondary" title="Réinitialiser">
                         ♻️ Afficher tout
                     </a>
                 </div>

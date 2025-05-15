@@ -14,9 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
         info: true,            // Masquer les infos "Showing X to Y of Z entries"
         ordering: true,
         searching: true,       // Désactiver la recherche DataTables (vous avez déjà votre propre recherche)
-        scrollY: 'calc(100vh - 300px)', // Hauteur de défilement, ajustez selon vos besoins
+        scrollY: 'calc(200vh - 600px)', // Hauteur de défilement, ajustez selon vos besoins
         scrollCollapse: true,   // Réduire la hauteur quand il y a peu de lignes
         fixedHeader: true,      // Activer l'en-tête fixe
+        pageLength: 50, // Nombre de lignes par page
+        lengthMenu: [ [25, 10, 50, 100, 200], [25, 10, 50, 100, 200] ], // Options de longueur de page
         language: {             // Traduction en français
             emptyTable: "Aucun produit trouvé",
             zeroRecords: "Aucun résultat correspondant"
