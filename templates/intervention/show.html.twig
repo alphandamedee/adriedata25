@@ -63,7 +63,6 @@
                 width: 100% !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
-                flex-wrap: nowrap !important;
             }
             
             .col-md-6, .col-md-4, .col-md-8 {
@@ -210,8 +209,8 @@
 
             <div class="row">
                 <div class="col-md-6 mb-2">
-                    {{ form_label(form.intervenant, null, {'label_attr': {'class': 'label-bold'}}) }}
-                    <input type="text" class="form-control" value="{{ intervention.intervenant.prenom }}" readonly>
+                    {{ form_label(form.intervenant) }}
+                    {{ form_widget(form.intervenant, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                 </div>
                 <div class="col-md-6 mb-2">
                     {{ form_label(form.dateIntervention) }}
@@ -228,8 +227,8 @@
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show">
                         <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col-md-4 mb-2">
+                            <div class="row">
+                                    <div class="col-md-6 mb-2">
                                         {{ form_label(form.categorie, null, {'label_attr': {'class': 'label-bold'}}) }}
                                         {{ form_widget(form.categorie, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
@@ -237,19 +236,19 @@
                                         {{ form_label(form.marque, null, {'label_attr': {'class': 'label-bold'}}) }}
                                         {{ form_widget(form.marque, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-md-2 mb-2">
                                         {{ form_label(form.taille, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.taille, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.taille, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.modele, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.modele, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.modele, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.numeroSerie, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.numeroSerie, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.numeroSerie, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -259,7 +258,7 @@
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.frequenceCpu, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.frequenceCpu, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.frequenceCpu, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -269,47 +268,47 @@
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.typeRam, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.typeRam, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.typeRam, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.stockage, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.stockage, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.stockage, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.typeStockage, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.typeStockage, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.typeStockage, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.carteGraphique, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.carteGraphique, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.carteGraphique, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.memoireVideo, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.memoireVideo, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.memoireVideo, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.systemeExploitation, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.systemeExploitation, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.systemeExploitation, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.versionSe, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.versionSe, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.versionSe, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         {{ form_label(form.codeEtagere, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.codeEtagere, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_widget(form.codeEtagere, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                     <div class="col-md-6 mb-2">
-                                        {{ form_label(form.status, null, {'label_attr': {'class': 'label-bold'}}) }}
-                                        {{ form_widget(form.status, {'attr': {'class': 'form-control','readonly': true}}) }}
+                                        {{ form_label(form.statut, null, {'label_attr': {'class': 'label-bold'}}) }}
+                                        {{ form_widget(form.statut, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                                     </div>
                                 </div>
                         </div>
@@ -328,6 +327,10 @@
                     {{ form_widget(form.commentaire, {'attr': {'class': 'form-control', 'readonly': true}}) }}
                 </div>
             </div>
+
+            {{ form_end(form) }}
+        </div>
+
         <div class="row justify-content-center mt-4">
             <div class="text-center col-md-3">
                 <a href="{{ path('app_profil') }}" class="btn btn-secondary no-print">
@@ -339,11 +342,12 @@
                     <i class="bi bi-printer"></i> Imprimer
                 </button>
             </div>
-        </div>
-            {{ form_end(form, { render_rest: false }) }}
-
-        </div>
-
+            <div class="text-center col-md-3">
+                <a href="{{ path('intervention_pdf', {'id': intervention.id}) }}" class="btn btn-primary">
+                    <i class="bi bi-file-pdf"></i> Générer PDF
+                </a>
+            </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
@@ -367,20 +371,32 @@
         document.getElementById('print-button').addEventListener('click', function () {
             document.querySelectorAll('.accordion-collapse').forEach(collapse => collapse.classList.add('show'));
 
-            let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            let codeProduit = "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
-            let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
+            const form = document.querySelector('#intervention-form');
+            const formData = new FormData(form);
 
-            codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
-            let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
+            fetch(form.getAttribute('action'), {
+                method: 'POST',
+                body: formData,
+            })
+            .then(() => {
+                let dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+                let codeProduit = "{{ produit ? produit.codeBarre|default('XXXXX') : 'XXXXX' }}";
+                let idIntervenant = "{{ app.user ? app.user.id : 'XXX' }}";
 
-            const originalTitle = document.title;
-            document.title = fileName;
+                codeProduit = codeProduit.replace(/[^a-zA-Z0-9]/g, '');
+                let fileName = `${dateStr}_${codeProduit}_${idIntervenant}`;
 
-            setTimeout(() => {
-                window.print();
-                document.title = originalTitle;
-            }, 300);
+                const originalTitle = document.title;
+                document.title = fileName;
+
+                setTimeout(() => {
+                    window.print();
+                    document.title = originalTitle;
+                }, 300);
+            })
+            .catch(() => {
+                alert("Erreur : l'enregistrement a échoué, impression annulée.");
+            });
         });
     });
 </script>

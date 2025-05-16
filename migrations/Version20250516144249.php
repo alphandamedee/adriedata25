@@ -14,39 +14,21 @@ final class Version20250516144249 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Update relationships for type_stockage';
     }
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
-            CREATE TABLE type_stockage (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, description VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE intervention DROP FOREIGN KEY FK_D11814ABC10ECD1B
-        SQL);
-        $this->addSql(<<<'SQL'
-            DROP INDEX IDX_D11814ABC10ECD1B ON intervention
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE intervention ADD status VARCHAR(255) DEFAULT NULL, DROP type_stockage, DROP statut, CHANGE type_ram_relation_id type_stockage_id INT DEFAULT NULL
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE intervention ADD CONSTRAINT FK_D11814AB91B1EAEE FOREIGN KEY (type_stockage_id) REFERENCES type_stockage (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE INDEX IDX_D11814AB91B1EAEE ON intervention (type_stockage_id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE produit ADD type_stockage_id INT DEFAULT NULL, ADD status VARCHAR(50) DEFAULT NULL, DROP type_stockage, DROP statut
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE produit ADD CONSTRAINT FK_29A5EC2791B1EAEE FOREIGN KEY (type_stockage_id) REFERENCES type_stockage (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE INDEX IDX_29A5EC2791B1EAEE ON produit (type_stockage_id)
-        SQL);
+        // Skip table creation as it already exists
+        $this->addSql('ALTER TABLE intervention DROP FOREIGN KEY FK_D11814ABC10ECD1B');
+        $this->addSql('DROP INDEX IDX_D11814ABC10ECD1B ON intervention');
+        $this->addSql('ALTER TABLE intervention ADD status VARCHAR(255) DEFAULT NULL, DROP type_stockage, DROP statut, CHANGE type_ram_relation_id type_stockage_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE intervention ADD CONSTRAINT FK_D11814AB91B1EAEE FOREIGN KEY (type_stockage_id) REFERENCES type_stockage (id)');
+        $this->addSql('CREATE INDEX IDX_D11814AB91B1EAEE ON intervention (type_stockage_id)');
+        
+        $this->addSql('ALTER TABLE produit ADD type_stockage_id INT DEFAULT NULL, ADD status VARCHAR(50) DEFAULT NULL, DROP type_stockage, DROP statut');
+        $this->addSql('ALTER TABLE produit ADD CONSTRAINT FK_29A5EC2791B1EAEE FOREIGN KEY (type_stockage_id) REFERENCES type_stockage (id)');
+        $this->addSql('CREATE INDEX IDX_29A5EC2791B1EAEE ON produit (type_stockage_id)');
     }
 
     public function down(Schema $schema): void
