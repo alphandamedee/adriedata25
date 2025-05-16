@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.{php,twig,yaml,yml,json,css,scss,js} text eol=lf
+migrations/* text eol=lf
+*.{png,jpg,jpeg,gif,ico,svg} binary
+*.{bat,cmd} text eol=crlf
