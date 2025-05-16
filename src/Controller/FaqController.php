@@ -26,7 +26,7 @@ class FaqController extends AbstractController
                 'questions' => [
                     [
                         'question' => 'Qu\'est-ce qu\'AdrieData ?',
-                        'reponse' => 'AdrieData est une application de gestion d\'inventaire et de suivi des interventions sur le matériel informatique.'
+                        'reponse' => 'AdrieData est une application (web) de gestion d\'inventaire et de suivi des interventions sur le matériel informatique.'
                     ],
                     [
                         'question' => 'Comment accéder à mon compte ?',
@@ -39,7 +39,15 @@ class FaqController extends AbstractController
                 'questions' => [
                     [
                         'question' => 'Comment créer une nouvelle intervention ?',
-                        'reponse' => 'Pour créer une nouvelle intervention, accédez à la page des produits, sélectionnez un produit puis cliquez sur "Nouvelle Intervention".'
+                        'reponse' => 'Pour créer une nouvelle intervention'
+                                    . '1. Allez dans la section "Remplir Fiche intervention"'
+                                    . '2. Entrez le code barre puis cliquez sur "Rechercher"'
+                                    . '3. Une fois le produit est trouvé'
+                                    . '4. Cliquez sur "Remplir Fiche... " '
+                                    . '5. Remplissez le formulaire avec les détails de l\'intervention'
+                                    . '6. Cliquez sur "Enregistrer" pour sauvegarder l\'intervention'
+                                    . '7. Vous pouvez également imprimer la fiche d\'intervention après l\'enregistrement.'
+                                    
                     ],
                     [
                         'question' => 'Comment modifier une intervention existante ?',
@@ -47,7 +55,7 @@ class FaqController extends AbstractController
                     ],
                     [
                         'question' => 'Comment imprimer une fiche d\'intervention ?',
-                        'reponse' => 'Après avoir enregistré une intervention, un bouton "Imprimer" apparaît vous permettant de générer un PDF de la fiche.'
+                        'reponse' => 'Après avoir enregistré une intervention, un bouton "Imprimer" apparaît vous permettant d\'imprimer vers un imprimante et/ou de générer un PDF de la fiche.'
                     ]
                 ]
             ],

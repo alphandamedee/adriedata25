@@ -6,33 +6,40 @@
 <div class="container mt-4">
     <h1 class="text-center mb-4"><i class="bi bi-search"></i> Rechercher un produit</h1>
 
-    <div class="card shadow">
-        <div class="card-body">
-            <form id="searchForm" class="mb-4">
-                <div class="input-group">
-                    <input type="text" 
-                           id="searchInput" 
-                           class="form-control" 
-                           placeholder="Saisir le code barre..."
-                           autofocus>
-                    <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-search"></i> Rechercher
-                    </button>
-                </div>
-            </form>
+    <div class="col-md-4 mx-auto mb-4">
+        <div class="card shadow">
+            <div class="card-body">
+                <form id="searchForm" class="mb-4">
+                    <div class="input-group mb-2">
+                        <input type="text" 
+                            id="searchInput" 
+                            class="form-control" 
+                            placeholder="Saisir le code barre..."
+                            autofocus>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i> Rechercher
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <a href="javascript:history.back()" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Annuler
+                        </a>
+                    </div>
+                </form>
 
-            <div id="resultArea" class="mt-4" style="display: none;">
-                <div class="alert alert-info">
-                    <h5>Produit trouvé :</h5>
-                    <div id="productInfo"></div>
-                    <a id="interventionLink" href="#" class="btn btn-success mt-3">
-                        <i class="bi bi-tools"></i> Remplir fiche d'intervention
-                    </a>
+                <div id="resultArea" class="mt-4" style="display: none;">
+                    <div class="alert alert-info">
+                        <h5>Produit trouvé :</h5>
+                        <div id="productInfo"></div>
+                        <a id="interventionLink" href="#" class="btn btn-success mt-3">
+                            <i class="bi bi-tools"></i> Remplir fiche d'intervention
+                        </a>
+                    </div>
                 </div>
-            </div>
 
-            <div id="errorArea" class="mt-4 alert alert-danger" style="display: none;">
-                Aucun produit trouvé avec ce code barre.
+                <div id="errorArea" class="mt-4 alert alert-danger" style="display: none;">
+                    Aucun produit trouvé avec ce code barre.
+                </div>
             </div>
         </div>
     </div>

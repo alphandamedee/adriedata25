@@ -4,7 +4,23 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h1 class="text-center mb-4">Foire Aux Questions</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ path('app_produit') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+        <h1 class="text-center m-0">Foire Aux Questions</h1>
+        <div style="width: 100px"></div>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" id="searchFAQ" class="form-control" placeholder="Rechercher une question...">
+            </div>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="accordion" id="faqAccordion">
@@ -53,17 +69,52 @@
 
 <style>
     .accordion-button:not(.collapsed) {
-        background-color: #f8f9fa;
+        background-color: #e7f1ff;
         color: #0d6efd;
+        font-weight: bold;
     }
     .accordion-button:focus {
-        box-shadow: none;
-        border-color: rgba(0,0,0,.125);
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+        border-color: #86b7fe;
+    }
+    .faq-item {
+        transition: background-color 0.3s;
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+    .faq-item:hover {
+        background-color: #f8f9fa;
     }
     .faq-item:last-child p {
         border-bottom: none !important;
         margin-bottom: 0 !important;
         padding-bottom: 0 !important;
     }
+    .highlight {
+        background-color: #fff3cd;
+        padding: 2px;
+        border-radius: 3px;
+    }
 </style>
+
+<script>
+document.getElementById('searchFAQ').addEventListener('input', function(e) {
+    const searchText = e.target.value.toLowerCase();
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('h4').textContent.toLowerCase();
+        const response = item.querySelector('p').textContent.toLowerCase();
+        
+        if (question.includes(searchText) || response.includes(searchText)) {
+            item.style.display = '';
+            if (searchText.length > 0) {
+                item.closest('.accordion-collapse').classList.add('show');
+            }
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}
