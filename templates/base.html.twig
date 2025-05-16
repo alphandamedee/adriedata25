@@ -97,6 +97,14 @@
                                 </a>
                             </li>
                         {% endif %}
+
+                        {% if is_granted('ROLE_USER') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('search_product') }}">
+                                    <i class="bi bi-search"></i> Remplir Fiche d'intervention
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
 
                     <ul class="navbar-nav ms-auto align-items-center">

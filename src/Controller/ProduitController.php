@@ -152,6 +152,7 @@ class ProduitController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'produit' => [
+                'codeBarre' => $produit->getCodeBarre(),
                 'categorie' => $produit->getCategorie() ? $produit->getCategorie()->getNom() : null,
                 'marque' => $produit->getMarque(),
                 'modele' => $produit->getModele(),
@@ -281,5 +282,6 @@ class ProduitController extends AbstractController
 
         return $this->json($results);
     }
+
 }
 ?>

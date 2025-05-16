@@ -3,7 +3,9 @@
 {% block title %}Modifier un Produit{% endblock %}
     
 {% block body %}
-    <div class="container mt-4">
+  
+<div class="card shadow mb-4">
+    <div class="card-body card-body-custom" id="printable-area">
         <h2 class="text-center mb-4">Modifier un Produit</h2>
 
         <div class="fw-bold">
@@ -34,7 +36,7 @@
                 <div class="col-md-3 mb-3">
                     {{ form_label(form.taille, null, {'label_attr': {'class': 'label-blue-bold'}}) }}
                     {{ form_widget(form.taille, {'attr': {'class': 'form-control'}}) }}
-                    <small class="text-muted">Écrans/Portables: en pouces (15.6"). UC: Tour/SFF/Mini PC</small>
+                    {# <small class="text-muted">Écrans/Portables: en pouces (15.6"). UC: Tour/SFF/Mini PC</small> #}
                 </div>
                 
             </div>
@@ -110,4 +112,5 @@
         {{ form_end(form) }}
         </div>
     </div>
+</div>   
 {% endblock %}
