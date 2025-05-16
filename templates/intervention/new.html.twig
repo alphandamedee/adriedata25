@@ -158,7 +158,7 @@
             <h2 class="text-center mb-4"><i class="bi bi-tools" alt="Icône outils"></i> FICHE D'INTERVENTION</h2>
            
             {{ form_start(form, {
-                'action' : path('intervention_new', {id: produit.idProduit }), 'attr': {'id': 'intervention-form', 'class': 'needs-validation', 'novalidate': true}}) }}
+                'action': path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')), 'attr': {'id': 'intervention-form', 'class': 'needs-validation', 'novalidate': true}}) }}
                 <div class="row">
                     <div class="col-md-4 mb-2">
                         {{ form_label(form.codeBarre, null, {'label_attr': {'class': 'label-bold'}}) }}

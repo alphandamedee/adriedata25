@@ -510,4 +510,124 @@ class InterventionController extends AbstractController
 
         return new JsonResponse(['success' => true, 'filePath' => '/uploads/' . $fileName]);
     }
+
+    #[Route('/search/product', name: 'search_product')]
+    public function search(Request $request): Response
+    {
+        return $this->render('intervention/search.html.twig', [
+            'search' => $request->query->get('q'),
+        ]);
+    }
+
+#[Route('/intervention/news', name: 'intervention_news')]
+public function news(
+    Request $request,
+    EntityManagerInterface $entityManager,
+    ProduitRepository $produitRepository,
+    Security $security
+): Response {
+    // 🔐 Récupération de l'utilisateur connecté
+    $user = $security->getUser();
+
+    if (!$user) {
+        throw $this->createAccessDeniedException('Connexion requise');
+    }
+
+    // 🆕 Création de l'intervention
+    $intervention = new Intervention();
+    $intervention->setIntervenant($user);
+    
+    $produit = null;
+    // 🔍 Préremplissage depuis le code-barre passé dans l'URL
+    $codeBarre = $request->query->get('codeBarre');
+    $intervention->setCodeBarre($codeBarre); // même si le produit est null
+
+    if ($codeBarre) {
+        $produit = $produitRepository->findOneBy(['codeBarre' => $codeBarre]);
+
+        if ($produit) {
+            $intervention->setProduit($produit);
+            // $intervention->setCodeBarre($produit->getCodeBarre());
+            $intervention->setCategorie($produit->getCategorie()?->getNom());
+            $intervention->setMarque($produit->getMarque());
+            $intervention->setModele($produit->getModele());
+            $intervention->setTaille($produit->getTaille());
+            $intervention->setNumeroSerie($produit->getNumeroSerie());
+            $intervention->setCpu($produit->getCpu());
+            $intervention->setFrequenceCpu($produit->getFrequenceCpu());
+            $intervention->setStatut($produit->getStatut());
+            $intervention->setRam($produit->getRam());
+            $intervention->setTypeRam($produit->getTypeRam());
+            $intervention->setStockage($produit->getStockage());
+            $intervention->setTypeStockage($produit->getTypeStockage());
+            $intervention->setCarteGraphique($produit->getCarteGraphique());
+            $intervention->setMemoireVideo($produit->getMemoireVideo());
+            // $intervention->setSystemeExploitation($produit->getSystemeExploitation());
+        } else {
+            $this->addFlash('danger', 'Produit introuvable pour ce code-barre.');
+        }
+    }
+
+    $form = $this->createForm(InterventionType::class, $intervention, [
+        'intervenant' => $user,
+    ]);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Traitement des booléens
+        $intervention->setMiseAJourWindows($intervention->getMiseAJourWindows() ?: false);
+        $intervention->setMiseAJourPilotes($intervention->getMiseAJourPilotes() ?: false);
+        $intervention->setAutresLogiciels($intervention->getAutresLogiciels() ?: false);
+
+        $produit = $intervention->getProduit();
+        if ($produit) {
+            if ($intervention->getMiseAJourWindows()) {
+                $produit->setMiseAJourWindows(new \DateTime());
+            }
+            if ($intervention->getMiseAJourPilotes()) {
+                $produit->setMiseAJourPilotes(new \DateTime());
+            }
+            if ($intervention->getAutresLogiciels()) {
+                $produit->setAutresLogiciels(new \DateTime());
+            }
+
+            $produit->setStatut($intervention->getStatut());
+            $produit->setCodeEtagere($intervention->getCodeEtagere());
+            $produit->setRam($intervention->getRam());
+            $typeRamEntity = $entityManager->getRepository(\App\Entity\TypeRam::class)->findOneBy([
+                'nom' => $intervention->getTypeRam()
+            ]);
+            $produit->setTypeRam($typeRamEntity);
+            $produit->setModele($intervention->getModele());
+            $produit->setMarque($intervention->getMarque());
+            $produit->setTaille($intervention->getTaille());
+            $produit->setStockage($intervention->getStockage());
+            $produit->setTypeStockage($intervention->getTypeStockage());
+            $produit->setNumeroSerie($intervention->getNumeroSerie());
+            $produit->setCarteGraphique($intervention->getCarteGraphique());
+            $produit->setMemoireVideo($intervention->getMemoireVideo());
+            $produit->setCpu($intervention->getCpu());
+            $produit->setFrequenceCpu($intervention->getFrequenceCpu());
+
+            $entityManager->persist($produit);
+        }
+
+        $entityManager->persist($intervention);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Intervention enregistrée avec succès.');
+        return $this->redirectToRoute('intervention_show', ['id' => $intervention->getId()]);
+    }
+
+    return $this->render('intervention/new.html.twig', [
+        'form' => $form->createView(),
+        'intervention' => $intervention,
+        'intervenant' => $user->getPrenom() . ' ' . $user->getNomUser(),
+        'intervent' => $user,
+        'dateIntervention' => $intervention->getDateIntervention(),
+        'produit' => $produit ?? null // ✅ requis pour new.html.twig
+    ]);
+}
+
+
 }

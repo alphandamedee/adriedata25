@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rechercher un produit{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4"><i class="bi bi-search"></i> Rechercher un produit</h1>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form id="searchForm" class="mb-4">
+                <div class="input-group">
+                    <input type="text" 
+                           id="searchInput" 
+                           class="form-control" 
+                           placeholder="Saisir le code barre..."
+                           autofocus>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i> Rechercher
+                    </button>
+                </div>
+            </form>
+
+            <div id="resultArea" class="mt-4" style="display: none;">
+                <div class="alert alert-info">
+                    <h5>Produit trouvé :</h5>
+                    <div id="productInfo"></div>
+                    <a id="interventionLink" href="#" class="btn btn-success mt-3">
+                        <i class="bi bi-tools"></i> Remplir fiche d'intervention
+                    </a>
+                </div>
+            </div>
+
+            <div id="errorArea" class="mt-4 alert alert-danger" style="display: none;">
+                Aucun produit trouvé avec ce code barre.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const codeBarre = document.getElementById('searchInput').value;
+    
+    if (!codeBarre) {
+        document.getElementById('errorArea').style.display = 'block';
+        document.getElementById('errorArea').textContent = 'Veuillez saisir un code barre';
+        document.getElementById('resultArea').style.display = 'none';
+        return;
+    }
+
+    fetch(`/produit/codebarre?codeBarre=${codeBarre}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur réseau');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.produit) {
+                const productInfo = document.getElementById('productInfo');
+                const resultArea = document.getElementById('resultArea');
+                const errorArea = document.getElementById('errorArea');
+                const interventionLink = document.getElementById('interventionLink');
+
+                productInfo.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6 class="mb-3">Informations générales</h6>
+                        <p><strong>Code Barre:</strong> ${data.produit.codeBarre ?? codeBarre}</p>
+                        <p><strong>Marque:</strong> ${data.produit.marque || 'N/A'}</p>
+                        <p><strong>Modèle:</strong> ${data.produit.modele || 'N/A'}</p>
+                        <p><strong>Catégorie:</strong> ${data.produit.categorie || 'N/A'}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-3">Informations complémentaires</h6>
+                        <p><strong>Numéro de série:</strong> ${data.produit.numeroSerie || 'N/A'}</p>
+                        <p><strong>Date d'entrée:</strong> ${data.produit.dateAjout ? new Date(data.produit.dateAjout).toLocaleDateString('fr-FR') : 'N/A'}</p>
+                        <p><strong>État:</strong> ${data.produit.status || 'N/A'}</p>
+                        <p><strong>Commentaires:</strong> ${data.produit.commentaires || 'Aucun commentaire'}</p>
+                    </div>
+                </div>`;
+
+                interventionLink.href = `/intervention/news?codeBarre=${data.produit.codeBarre}`;
+                resultArea.style.display = 'block';
+                errorArea.style.display = 'none';
+            } else {
+                document.getElementById('resultArea').style.display = 'none';
+                document.getElementById('errorArea').style.display = 'block';
+                document.getElementById('errorArea').textContent = 'Aucun produit trouvé avec ce code barre.';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            document.getElementById('resultArea').style.display = 'none';
+            document.getElementById('errorArea').style.display = 'block';
+            document.getElementById('errorArea').textContent = 'Une erreur est survenue lors de la recherche.';
+        });
+});
+</script>
+{% endblock %}
