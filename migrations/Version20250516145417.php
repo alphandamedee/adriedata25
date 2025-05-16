@@ -24,7 +24,7 @@ final class Version20250516145417 extends AbstractMigration
             DROP TABLE type_stockage
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE intervention ADD statut VARCHAR(255) DEFAULT NULL, CHANGE type_stockage_id type_ram_relation_id INT DEFAULT NULL, CHANGE status type_stockage VARCHAR(255) DEFAULT NULL
+            ALTER TABLE intervention ADD status VARCHAR(255) DEFAULT NULL, CHANGE type_stockage_id type_ram_relation_id INT DEFAULT NULL, CHANGE status type_stockage VARCHAR(255) DEFAULT NULL
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE intervention ADD CONSTRAINT FK_D11814ABC10ECD1B FOREIGN KEY (type_ram_relation_id) REFERENCES type_ram (id)
@@ -47,7 +47,7 @@ final class Version20250516145417 extends AbstractMigration
             DROP INDEX IDX_D11814ABC10ECD1B ON intervention
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE intervention ADD status VARCHAR(255) DEFAULT NULL, DROP type_stockage, DROP statut, CHANGE type_ram_relation_id type_stockage_id INT DEFAULT NULL
+            ALTER TABLE intervention ADD status VARCHAR(255) DEFAULT NULL, DROP type_stockage, DROP status, CHANGE type_ram_relation_id type_stockage_id INT DEFAULT NULL
         SQL);
     }
 }

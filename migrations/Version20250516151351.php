@@ -27,7 +27,7 @@ final class Version20250516151351 extends AbstractMigration
             CREATE INDEX IDX_D11814AB91B1EAEE ON intervention (type_stockage_id)
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE produit ADD type_stockage_id INT DEFAULT NULL, ADD status VARCHAR(50) DEFAULT NULL, DROP type_stockage, DROP statut
+            ALTER TABLE produit ADD type_stockage_id INT DEFAULT NULL, ADD status VARCHAR(50) DEFAULT NULL, DROP type_stockage, DROP status
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE produit ADD CONSTRAINT FK_29A5EC2791B1EAEE FOREIGN KEY (type_stockage_id) REFERENCES type_stockage (id)
@@ -53,7 +53,7 @@ final class Version20250516151351 extends AbstractMigration
             DROP INDEX IDX_29A5EC2791B1EAEE ON produit
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE produit ADD statut VARCHAR(50) DEFAULT NULL, DROP type_stockage_id, CHANGE status type_stockage VARCHAR(50) DEFAULT NULL
+            ALTER TABLE produit ADD status VARCHAR(50) DEFAULT NULL, DROP type_stockage_id, CHANGE status type_stockage VARCHAR(50) DEFAULT NULL
         SQL);
     }
 }

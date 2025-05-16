@@ -555,7 +555,7 @@ public function news(
             $intervention->setNumeroSerie($produit->getNumeroSerie());
             $intervention->setCpu($produit->getCpu());
             $intervention->setFrequenceCpu($produit->getFrequenceCpu());
-            $intervention->setStatut($produit->getStatut());
+            $intervention->setstatus($produit->getstatus());
             $intervention->setRam($produit->getRam());
             $intervention->setTypeRam($produit->getTypeRam());
             $intervention->setStockage($produit->getStockage());
@@ -591,7 +591,7 @@ public function news(
                 $produit->setAutresLogiciels(new \DateTime());
             }
 
-            $produit->setStatut($intervention->getStatut());
+            $produit->setstatus($intervention->getstatus());
             $produit->setCodeEtagere($intervention->getCodeEtagere());
             $produit->setRam($intervention->getRam());
             $typeRamEntity = $entityManager->getRepository(\App\Entity\TypeRam::class)->findOneBy([
