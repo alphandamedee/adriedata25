@@ -73,14 +73,14 @@ document.getElementById('searchForm').addEventListener('submit', function(e) {
 
                 productInfo.innerHTML = `
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <h6 class="mb-3">Informations générales</h6>
                         <p><strong>Code Barre:</strong> ${data.produit.codeBarre ?? codeBarre}</p>
                         <p><strong>Marque:</strong> ${data.produit.marque || 'N/A'}</p>
                         <p><strong>Modèle:</strong> ${data.produit.modele || 'N/A'}</p>
                         <p><strong>Catégorie:</strong> ${data.produit.categorie || 'N/A'}</p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <h6 class="mb-3">Informations complémentaires</h6>
                         <p><strong>Numéro de série:</strong> ${data.produit.numeroSerie || 'N/A'}</p>
                         <p><strong>Date d'entrée:</strong> ${data.produit.dateAjout ? new Date(data.produit.dateAjout).toLocaleDateString('fr-FR') : 'N/A'}</p>
