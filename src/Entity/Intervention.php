@@ -20,7 +20,7 @@ class Intervention
     private ?Produit $produit = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: "intervenant_id", referencedColumnName: "id_User", nullable: false)]
+    #[ORM\JoinColumn(name: "intervenant_id", referencedColumnName: "id_user", nullable: false)]
     private User $intervenant;
 
     #[ORM\Column(type: "string", length: 50, nullable: true)]
