@@ -5,6 +5,7 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
         driver: 'pdo_pgsql'
+        
 
     orm:
         auto_generate_proxy_classes: true

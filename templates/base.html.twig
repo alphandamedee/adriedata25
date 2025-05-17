@@ -143,6 +143,18 @@
                     </ul>
 
                     <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item me-3">
+                            <a href="{{ path('chat', { id: app.user.id }) }}" class="position-relative me-3">
+                                <i class="bi bi-bell" style="font-size: 1.5rem;"></i>
+                                {% set unread = unreadCount() %}
+                                {% if unread > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ unread }}
+                                    </span>
+                                {% endif %}
+                            </a>
+                        </li>
+
                         <li class="nav-item me-2">
                             {% if app.user.photo %}
                                 <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" alt="photo" class="rounded-circle" width="50" height="50">
@@ -235,6 +247,7 @@
             document.getElementById("loader").style.display = "none";
         }, 500); // Cache le loader après 500ms
     });
+
 </script>
 
 </body>

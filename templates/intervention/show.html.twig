@@ -215,7 +215,7 @@
                 </div>
                 <div class="col-md-6 mb-2">
                     {{ form_label(form.dateIntervention) }}
-                    {{ form_widget(form.dateIntervention, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+                    <input type="date" class="form-control" value="{{ intervention.intervenant.dateIntervention }}" readonly>
                 </div>
             </div>
 

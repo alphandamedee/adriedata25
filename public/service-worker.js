@@ -15,6 +15,7 @@ const filesToCache = [
   '/templates/produit/index.html.twig',
   '/templates/intervention/new.html.twig',
   '/templates/profil/index.html.twig',
+  '/templates/login/index.html.twig',
 ];
 
 self.addEventListener('install', function (event) {

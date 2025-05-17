@@ -16,4 +16,14 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+    public function someLayoutSharedAction(MessageRepository $repo, Security $security)
+    {
+        $user = $security->getUser();
+        $unreadCount = $repo->countUnreadMessagesForUser($user);
+
+        return $this->render('base.html.twig', [
+            'unreadCount' => $unreadCount
+        ]);
+    }
+
 }
