@@ -210,7 +210,8 @@
             <div class="row">
                 <div class="col-md-6 mb-2">
                     {{ form_label(form.intervenant) }}
-                    <input type="text" class="form-control" value="{{ app.user.prenom }}}" readonly>
+                    <input type="text" class="form-control" value="{{ intervention.intervenant.prenom }}" readonly>
+
                 </div>
                 <div class="col-md-6 mb-2">
                     {{ form_label(form.dateIntervention) }}

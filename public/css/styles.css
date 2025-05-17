@@ -407,6 +407,7 @@ table {
     width: 100%;
     table-layout: auto;
     border-collapse: collapse;
+    
 }
 
 th, td {
@@ -416,7 +417,7 @@ th, td {
 }
 
 thead th {
-    position: sticky;
+    /* position: sticky; */
     top: 0;
     background-color: #fff; /* ou la couleur de ton entête */
     z-index: 1;
