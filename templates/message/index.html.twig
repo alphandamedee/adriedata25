@@ -1,81 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Messagerie avec {{ interlocuteur.prenom }}{% endblock %}
+{% block title %}Messagerie{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="{{ path('chat', { id: app.user.id }) }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Retour
-        </a>
-        <h2 class="mb-0">Conversation avec {{ interlocuteur.prenom }}</h2>
-        <div style="width: 40px"></div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-body chat-container" style="max-height: 400px; overflow-y: auto;">
-            {% for message in messages %}
-                <div class="message-bubble mb-3 {{ message.expediteur == app.user ? 'sent' : 'received' }}">
-                    <div class="message-content {{ message.expediteur == app.user ? 'bg-primary text-white' : 'bg-light' }}">
-                        {{ message.contenu }}
-                    </div>
-                    <small class="text-muted d-block mt-1">
-                        {{ message.dateEnvoi|date('d/m/Y H:i') }}
-                        {% if not message.lu and message.expediteur != app.user %}
-                            <span class="text-primary">• Non lu</span>
-                        {% endif %}
-                    </small>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Conversations</h5>
                 </div>
-            {% else %}
-                <p class="text-muted text-center">Démarrez la conversation...</p>
-            {% endfor %}
-        </div>
-    </div>
-
-    {{ form_start(form, {'attr': {'class': 'card'}}) }}
-        <div class="card-body">
-            <div class="input-group">
-                {{ form_widget(form.contenu, {
-                    'attr': {
-                        'class': 'form-control',
-                        'placeholder': 'Votre message...',
-                        'autocomplete': 'off'
-                    }
-                }) }}
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-send"></i> Envoyer
-                </button>
+                <div class="list-group list-group-flush">
+                    <a href="{{ path('messages_index') }}" 
+                       class="list-group-item list-group-item-action {% if app.request.get('type') == 'public' %}active{% endif %}">
+                        <i class="bi bi-megaphone"></i> Messages publics
+                    </a>
+                    {% for user in users %}
+                        <a href="{{ path('messages_user', {'id': user.id}) }}" 
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="bi bi-person-circle"></i> 
+                                {{ user.prenom }} {{ user.nomUser }}
+                            </span>
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    {{ form_end(form) }}
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>Sélectionnez une conversation</h5>
+                    <p class="text-muted">ou commencez une nouvelle discussion</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<style>
-.chat-container {
-    padding: 1rem;
-}
-.message-bubble {
-    max-width: 75%;
-}
-.message-bubble.sent {
-    margin-left: auto;
-}
-.message-bubble.received {
-    margin-right: auto;
-}
-.message-content {
-    padding: 0.75rem;
-    border-radius: 1rem;
-}
-</style>
-
-{% block javascripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const chatContainer = document.querySelector('.chat-container');
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    });
-</script>
-{% endblock %}
-
 {% endblock %}

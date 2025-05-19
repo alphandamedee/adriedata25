@@ -8,6 +8,7 @@ parameters:
     photo_directory: '%kernel.project_dir%/public/uploads/photos'
     photos_directory: '%kernel.project_dir%/public/uploads/photos'
     profile_pictures_directory: '%kernel.project_dir%/public/uploads/photos'
+    timezone: 'Europe/Paris'
 
 
 

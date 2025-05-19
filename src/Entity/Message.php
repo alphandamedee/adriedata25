@@ -20,33 +20,29 @@ class Message
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $dateEnvoi;
 
-    // Expéditeur
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'expediteur_id', referencedColumnName: 'id_user', nullable: false)]
     private ?User $expediteur = null;
 
-    // Destinataire
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'destinataire_id', referencedColumnName: 'id_user', nullable: false)]
+    #[ORM\JoinColumn(name: 'destinataire_id', referencedColumnName: 'id_user', nullable: true)] // nullable=true pour message public
     private ?User $destinataire = null;
 
-    // Lu
     #[ORM\Column(type: 'boolean')]
     private bool $lu = false;
 
-    public function isLu(): bool
+    #[ORM\Column(type: 'boolean')]
+    private bool $isPublic = false;
+
+    public function __construct()
     {
-        return $this->lu;
+        $this->dateEnvoi = new \DateTimeImmutable();
+        $this->lu = false;
+        $this->isPublic = false;
     }
 
-    public function setLu(bool $lu): self
-    {
-        $this->lu = $lu;
-        return $this;
-    }
-
-
-    // Getters / setters
+    // --- Getters / Setters ---
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +89,28 @@ class Message
     public function setDestinataire(?User $destinataire): self
     {
         $this->destinataire = $destinataire;
+        return $this;
+    }
+
+    public function isLu(): bool
+    {
+        return $this->lu;
+    }
+
+    public function setLu(bool $lu): self
+    {
+        $this->lu = $lu;
+        return $this;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setPublic(bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
         return $this;
     }
 }

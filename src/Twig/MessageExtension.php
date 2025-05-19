@@ -33,4 +33,16 @@ class MessageExtension extends AbstractExtension
 
         return $this->repo->countUnreadMessagesForUser($user);
     }
+
+
+
+    public function someRoute(): Response
+    {
+        $unreadCount = $this->repo->countUnreadMessages($this->getUser());
+        
+        return $this->render('xxx.html.twig', [
+            'unreadCount' => $unreadCount,
+        ]);
+    }
+
 }

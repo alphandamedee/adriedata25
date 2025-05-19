@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Salon Public{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Messages publics</h2>
+
+    <div class="card mb-4">
+        <div class="card-body chat-container" style="max-height: 400px; overflow-y: auto;">
+            {% for message in messages %}
+                <div class="message-bubble mb-3 {{ message.expediteur == app.user ? 'sent' : 'received' }}">
+                    <div class="message-content {{ message.expediteur == app.user ? 'bg-primary text-white' : 'bg-light' }}">
+                        <strong>{{ message.expediteur.prenom }} :</strong> {{ message.contenu }}
+                    </div>
+                    <small class="text-muted d-block mt-1">
+                        {{ message.dateEnvoi|date('d/m/Y H:i') }}
+                    </small>
+                </div>
+            {% else %}
+                <p class="text-muted text-center">Aucun message public.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    {{ form_start(form, {'attr': {'class': 'card'}}) }}
+    <div class="card-body">
+        <div class="input-group">
+            {{ form_widget(form.contenu, {'attr': {'class': 'form-control', 'placeholder': 'Votre message...'}}) }}
+            <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i></button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
