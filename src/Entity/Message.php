@@ -108,7 +108,7 @@ class Message
         return $this->isPublic;
     }
 
-    public function setPublic(bool $isPublic): self
+    public function setIsPublic(bool $isPublic): self
     {
         $this->isPublic = $isPublic;
         return $this;

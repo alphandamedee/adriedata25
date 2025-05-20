@@ -44,7 +44,7 @@ class MessageType extends AbstractType
             ->add('isPublic', CheckboxType::class, [
                 'label' => 'Message public',
                 'required' => false,
-                'mapped' => true,
+                'mapped' => true
             ])
             ->add('envoyer', SubmitType::class, [
                 'label' => 'Envoyer',

@@ -52,7 +52,7 @@
                             </div>
                             <div class="message-time">
                                 {{ message.dateEnvoi|date('d/m/Y H:i', 'Indian/Reunion') }}
-                                {% if message.isPublic %}
+                                {% if message.isPublic() %}
                                     <span class="badge bg-info">Public</span>
                                 {% endif %}
                             </div>
