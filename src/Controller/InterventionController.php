@@ -75,7 +75,8 @@ class InterventionController extends AbstractController
             'intervenant' => $user, // Passer l'utilisateur à la vue du formulaire
         ]);
         $form->handleRequest($request); // Gérer la soumission du formulaire
-    
+       
+
         if ($form->isSubmitted() && $form->isValid()) { // Vérifier si le formulaire est soumis et valide
 
             // Ces champs sont déjà des booléens, donc pas besoin de les convertir
@@ -105,7 +106,11 @@ class InterventionController extends AbstractController
             $produit->setstatus($intervention->getstatus());
             $produit->setCodeEtagere($intervention->getCodeEtagere());
             $produit->setRam($intervention->getRam());
-            $typeRamEntity = $typeRamRepo->findByNom($intervention->getTypeRam());
+            $typeRamEntity = $typeRamRepo->findOneBy(['nom' => $intervention->getTypeRam()]);
+            if (!$typeRamEntity) {
+                $this->addFlash('danger', 'Le type de RAM est invalide ou non trouvé.');
+                return $this->redirectToRoute('intervention_nouvelle');
+            }
             $produit->setTypeRam($typeRamEntity);
             $produit->setModele($intervention->getModele());
             $produit->setMarque($intervention->getMarque());

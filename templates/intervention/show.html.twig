@@ -215,7 +215,11 @@
                 </div>
                 <div class="col-md-6 mb-2">
                     {{ form_label(form.dateIntervention) }}
-                    <input type="date" class="form-control" value="{{ intervention.intervenant.dateIntervention }}" readonly>
+                    {% if intervention.dateIntervention is defined and intervention.dateIntervention %}
+                        <input type="date" class="form-control" value="{{ intervention.dateIntervention|date('Y-m-d') }}">
+                    {% else %}
+                        <input type="date" class="form-control" value="">
+                    {% endif %}
                 </div>
             </div>
 

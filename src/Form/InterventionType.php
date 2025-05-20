@@ -76,7 +76,7 @@ class InterventionType extends AbstractType
                     '32 Go' => '32 Go',   
                 ],
                 'placeholder' => 'Selectionner même vide',
-                'required' => true,
+                // 'required' => true,
                 'attr' => ['class' => 'form-control']
             ])
             ->add('typeRam', ChoiceType::class, [
@@ -91,7 +91,7 @@ class InterventionType extends AbstractType
                     'SDRAM' => 'SDRAM',
                 ],
                 'placeholder' => 'Sélectionner...',
-                'required' => true,
+                'required' => false,
                 'attr' => ['class' => 'form-control']
             ])
             ->add('stockage', TextType::class, [
@@ -128,13 +128,17 @@ class InterventionType extends AbstractType
             ])
             ->add('dateIntervention', DateType::class, [
                 'widget' => 'single_text',
+                'html5' => true,
                 'attr' => ['class' => 'form-control'],
                 'data' => new \DateTime(),
-                'label' => 'Date d\'Intervention'
+                'label' => 'Date d\'Intervention',
+                'required' => true,
+                'mapped' => true,
+                'input' => 'datetime'
             ])
             ->add('commentaire', TextareaType::class, [
                 'label' => 'Commentaire',
-                'required' => true
+                // 'required' => true
             ])
             ->add('miseAJourWindows', CheckboxType::class, [
                 'label' => 'Mise à Jour Windows',
@@ -150,7 +154,7 @@ class InterventionType extends AbstractType
             ])
             ->add('codeEtagere', TextType::class, [
                 'label' => 'Code Étagère',
-                'required' => true,
+                // 'required' => true,
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Entrez le code de l\'étagère',
@@ -167,7 +171,7 @@ class InterventionType extends AbstractType
                     'Autre' => 'Autre',
                 ],
                 'label' => 'Status',
-                'required' => true,
+                // 'required' => true,
                 'attr' => [
                     'class' => 'form-control',
                 ],    
