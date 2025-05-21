@@ -103,4 +103,26 @@ class MessageController extends AbstractController
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    #[Route('/delete/{id}', name: 'message_delete', methods: ['POST'])]
+    public function delete(Message $message, Request $request, EntityManagerInterface $em): Response
+    {
+        if (!$this->isCsrfTokenValid('delete'.$message->getId(), $request->request->get('_token'))) {
+            return $this->json(['error' => 'Token CSRF invalide'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Vérifier que l'utilisateur est l'expéditeur ou le destinataire
+        $currentUser = $this->getUser();
+        if ($message->getExpediteur() !== $currentUser && $message->getDestinataire() !== $currentUser) {
+            return $this->json(['error' => 'Non autorisé'], Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $em->remove($message);
+            $em->flush();
+            return $this->json(['success' => true]);
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Erreur lors de la suppression'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

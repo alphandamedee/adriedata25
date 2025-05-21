@@ -12,6 +12,17 @@
     .message-content {
         padding: 0.75rem;
         border-radius: 1rem;
+        position: relative;
+    }
+    .delete-message {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.7;
+    }
+    .delete-message:hover {
+        opacity: 1;
     }
     .sent .message-content {
         background-color: #007bff;
@@ -47,8 +58,15 @@
                 <div class="card-body chat-container" id="chat-container">
                     {% for message in messages %}
                         <div class="message {{ message.expediteur == app.user ? 'sent' : 'received' }}">
-                            <div class="message-content">
+                            <div class="message-content position-relative">
                                 {{ message.contenu }}
+                                {% if message.expediteur == app.user %}
+                                    <button class="btn btn-sm btn-danger delete-message" 
+                                            data-id="{{ message.id }}" 
+                                            data-token="{{ csrf_token('delete' ~ message.id) }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                {% endif %}
                             </div>
                             <div class="message-time">
                                 {{ message.dateEnvoi|date('d/m/Y H:i', 'Indian/Reunion') }}
@@ -90,6 +108,36 @@
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('chat-container');
     container.scrollTop = container.scrollHeight;
+});
+
+document.querySelectorAll('.delete-message').forEach(button => {
+    button.addEventListener('click', async (e) => {
+        if (!confirm('Voulez-vous vraiment supprimer ce message ?')) {
+            return;
+        }
+
+        const messageId = button.dataset.id;
+        const token = button.dataset.token;
+
+        try {
+            const response = await fetch(`/messages/delete/${messageId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `_token=${token}`
+            });
+
+            if (response.ok) {
+                button.closest('.message').remove();
+            } else {
+                alert('Erreur lors de la suppression');
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Erreur lors de la suppression');
+        }
+    });
 });
 </script>
 {% endblock %}
