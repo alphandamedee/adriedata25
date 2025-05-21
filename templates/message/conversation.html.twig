@@ -104,6 +104,7 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('chat-container');
@@ -112,9 +113,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.querySelectorAll('.delete-message').forEach(button => {
     button.addEventListener('click', async (e) => {
-        if (!confirm('Voulez-vous vraiment supprimer ce message ?')) {
-            return;
-        }
+        const result = await Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Cette action est irréversible !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler'
+        });
+
+        if (!result.isConfirmed) return;
 
         const messageId = button.dataset.id;
         const token = button.dataset.token;
@@ -130,12 +140,24 @@ document.querySelectorAll('.delete-message').forEach(button => {
 
             if (response.ok) {
                 button.closest('.message').remove();
+                Swal.fire({
+                    title: 'Supprimé !',
+                    text: 'Le message a été supprimé.',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             } else {
-                alert('Erreur lors de la suppression');
+                throw new Error('Erreur serveur');
             }
         } catch (error) {
             console.error('Erreur:', error);
-            alert('Erreur lors de la suppression');
+            Swal.fire({
+                title: 'Erreur !',
+                text: 'La suppression a échoué.',
+                icon: 'error',
+                confirmButtonColor: '#dc3545'
+            });
         }
     });
 });
