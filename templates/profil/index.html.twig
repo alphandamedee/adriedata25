@@ -202,10 +202,13 @@
                             <td>{{ intervention.id }}</td>
                             <td class="text-start">{{ intervention.intervenant.prenom }} {{ intervention.intervenant.nomUser }}</td> <!-- Alignement à gauche -->
                             <td class="text-start">
-                                {% if intervention.produit %}
-                                    {{ intervention.produit.categorie.nom ?? 'N/A' }} - {{ intervention.produit.marque ?? 'N/A' }} - {{ intervention.produit.modele ?? 'N/A' }}
+                                {% if intervention.produit is not null %}
+                                    {% set categorie = intervention.produit.categorie ? intervention.produit.categorie.nom : intervention.categorie %}
+                                    {% set marque = intervention.produit.marque ?? intervention.marque %}
+                                    {% set modele = intervention.produit.modele ?? intervention.modele %}
+                                    {{ categorie|default('N/A') }} - {{ marque|default('N/A') }} - {{ modele|default('N/A') }}
                                 {% else %}
-                                    <span class="text-muted">Produit non trouvé</span>
+                                    {{ intervention.categorie|default('N/A') }} - {{ intervention.marque|default('N/A') }} - {{ intervention.modele|default('N/A') }}
                                 {% endif %}
                             </td>
                             <td>{{ intervention.codeBarre }}</td> 

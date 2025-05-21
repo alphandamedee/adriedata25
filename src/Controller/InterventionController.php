@@ -214,7 +214,7 @@ class InterventionController extends AbstractController
     public function generatePdf(Intervention $intervention): string
     {
         $options = new Options();
-        $options->set('defaultFont', 'Arial');
+        $options->set('defaultFont', 'Verdana');
         $dompdf = new Dompdf($options);
 
         // Générer le code-barres
@@ -291,16 +291,27 @@ class InterventionController extends AbstractController
 
     #[Route('/{id}', name: 'intervention_show', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function show(Intervention $intervention): Response
+    public function show(Intervention $intervention, Request $request): Response
     {
-        $form = $this->createForm(InterventionType::class, $intervention);
+        try {
+            $form = $this->createForm(InterventionType::class, $intervention, [
+                'intervenant' => $intervention->getIntervenant()
+            ]);
 
-        return $this->render('intervention/show.html.twig', [
-            'intervention' => $intervention,
-            'form' => $form->createView(),
-            'produit' => $intervention->getProduit(),
-        ]);
-        
+            return $this->render('intervention/show.html.twig', [
+                'intervention' => $intervention,
+                'form' => $form->createView(),
+                'produit' => $intervention->getProduit(),
+                'error' => null
+            ]);
+        } catch (\Exception $e) {
+            return $this->render('intervention/show.html.twig', [
+                'intervention' => $intervention,
+                'form' => null,
+                'produit' => null,
+                'error' => 'Une erreur est survenue lors de l\'affichage'
+            ]);
+        }
     }
 
     #[Route('/list', name: 'intervention_list')]
