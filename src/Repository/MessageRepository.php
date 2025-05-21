@@ -25,20 +25,18 @@ class MessageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    // MessageRepository.php
+    // message compte
     public function countUnreadMessages(User $user): int
     {
         return $this->createQueryBuilder('m')
             ->select('COUNT(m.id)')
             ->where('m.destinataire = :user')
-            ->andWhere('m.lu = :false')
-            ->setParameters([
-                'user' => $user,
-                'false' => false
-            ])
+            ->andWhere('m.lu = false')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getSingleScalarResult();
     }
+
     public function findBySenderAndReceiver(User $sender, User $receiver)
     {
         return $this->createQueryBuilder('m')
@@ -82,4 +80,45 @@ class MessageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+    
+    public function getUnreadCountBySender(User $destinataire): array
+    {
+        try {
+            $qb = $this->createQueryBuilder('m')
+                ->select('IDENTITY(m.expediteur) AS sender_id, 
+                         SUM(CASE WHEN m.lu = false THEN 1 ELSE 0 END) AS unread_count')
+                ->where('m.destinataire = :dest')
+                ->groupBy('m.expediteur')
+                ->setParameter('dest', $destinataire);
+
+            $results = $qb->getQuery()->getResult();
+
+            $counts = [];
+            foreach ($results as $row) {
+                if ($row['unread_count'] > 0) {
+                    $counts[$row['sender_id']] = $row['unread_count'];
+                }
+            }
+
+            return $counts;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    public function markMessagesAsRead(User $expediteur, User $destinataire): void
+    {
+        $this->createQueryBuilder('m')
+            ->update()
+            ->set('m.lu', true)
+            ->where('m.expediteur = :exp')
+            ->andWhere('m.destinataire = :dest')
+            ->andWhere('m.lu = false')
+            ->setParameter('exp', $expediteur)
+            ->setParameter('dest', $destinataire)
+            ->getQuery()
+            ->execute();
+    }
+
 }

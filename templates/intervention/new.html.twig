@@ -602,6 +602,21 @@
             setTimeout(() => {
                 window.print();
                 document.title = originalTitle;
+                
+                // Afficher le message de succès
+                Swal.fire({
+                    title: 'Impression réussie !',
+                    text: 'Le document a été envoyé à l\'imprimante',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                // Masquer le bouton d'impression
+                const printButton = document.getElementById('print-button-container');
+                if (printButton) {
+                    printButton.style.display = 'none';
+                }
             }, 300);
         });
 

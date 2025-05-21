@@ -24,8 +24,12 @@ class MessageController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        $users = $messageRepo->findOtherUsers($currentUser);
+        $unreadCountsByUserId = $messageRepo->getUnreadCountBySender($currentUser);
+
         return $this->render('message/index.html.twig', [
-            'users' => $messageRepo->findOtherUsers($currentUser)
+            'users' => $users,
+            'unreadCounts' => $unreadCountsByUserId
         ]);
     }
 
@@ -65,6 +69,8 @@ class MessageController extends AbstractController
         }
 
         $messages = $messageRepo->findConversation($currentUser, $destinataire);
+        // Marquer les messages comme lus
+        $messageRepo->markMessagesAsRead($destinataire, $currentUser);
 
         return $this->render('message/conversation.html.twig', [
             'messages' => $messages,
@@ -76,7 +82,25 @@ class MessageController extends AbstractController
     #[Route('/api/unread', name: 'api_unread_count', methods: ['GET'])]
     public function getUnreadCount(MessageRepository $messageRepo): JsonResponse
     {
-        $count = $messageRepo->countUnreadMessages($this->getUser());
-        return $this->json(['unread' => $count]);
+        try {
+            $user = $this->getUser();
+            if (!$user instanceof User) {
+                return $this->json([
+                    'error' => 'Utilisateur non authentifié'
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            $count = $messageRepo->countUnreadMessages($user);
+            return $this->json([
+                'success' => true,
+                'unread' => $count
+            ], Response::HTTP_OK);
+
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => 'Une erreur est survenue lors de la récupération des messages',
+                'details' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -17,13 +17,16 @@
                     </a>
                     {% for user in users %}
                         <a href="{{ path('messages_user', {'id': user.id}) }}" 
-                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                             <span>
-                                <i class="bi bi-person-circle"></i> 
-                                {{ user.prenom }} {{ user.nomUser }}
+                                <i class="bi bi-person-circle"></i> {{ user.prenom }} {{ user.nomUser }}
                             </span>
+                            {% if unreadCounts[user.id] is defined and unreadCounts[user.id] > 0 %}
+                                <span class="badge bg-danger rounded-pill">{{ unreadCounts[user.id] }}</span>
+                            {% endif %}
                         </a>
                     {% endfor %}
+
                 </div>
             </div>
         </div>
