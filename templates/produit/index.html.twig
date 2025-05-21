@@ -149,8 +149,22 @@
         </table>
 
         <!-- Pagination -->
-        <div class="pagination justify-content-center">
-            {{ knp_pagination_render(pagination) }}
+        <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
+            <div class="text-muted">
+                Affichage {{ pagination.getCurrentPageNumber }} sur {{ pagination.getPageCount }} pages
+            </div>
+            <div class="pagination pagination-sm">
+                {{ knp_pagination_render(pagination, null, {
+                    'prev_label': '<i class="bi bi-arrow-left"></i>',
+                    'next_label': '<i class="bi bi-arrow-right"></i>',
+                    'first_label': '<i class="bi bi-chevron-double-left"></i>',
+                    'last_label': '<i class="bi bi-chevron-double-right"></i>',
+                    'style': 'twitter-bootstrap-v4'
+                }) }}
+            </div>
+            <div class="text-muted">
+                Total: {{ pagination.getTotalItemCount }} produits
+            </div>
         </div>
     </div>
 </div>
@@ -190,6 +204,24 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () { // Attendre que le DOM soit chargé
+    try {
+        const table = $('#produit-table').DataTable({
+            destroy: true, // Permet de réinitialiser la table
+            searching: false, // Désactive la recherche DataTable (on utilise déjà notre propre recherche)
+            paging: false, // Désactive la pagination DataTable (on utilise KnpPaginator)
+            info: false, // Désactive l'affichage d'informations
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json"
+            },
+            order: [[0, "desc"]], // Tri par ID décroissant
+            columnDefs: [
+                { orderable: false, targets: -1 } // Désactive le tri sur la dernière colonne (actions)
+            ]
+        });
+    } catch (error) {
+        console.error('Erreur DataTable:', error);
+    }
+
     const input = document.getElementById('search-input');  // Champ de recherche
     const resultBox = document.getElementById('autocomplete-list'); // Liste des résultats
 
@@ -235,7 +267,5 @@ document.addEventListener('DOMContentLoaded', function () { // Attendre que le D
     });
 });
 </script>
-
-
 
 {% endblock %}

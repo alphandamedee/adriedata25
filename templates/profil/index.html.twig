@@ -256,10 +256,28 @@
 <script>
     $(document).ready(function () {
         $('#interventions-table').DataTable({
-            
+            destroy: true,
+            searching: false,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tout"]],
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                 '<"row"<"col-sm-12"tr>>' +
+                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
             language: {
-                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json" // Traduction en français
-            }
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json",
+                lengthMenu: "Afficher _MENU_ interventions par page",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ interventions",
+                paginate: {
+                    first: '<i class="bi bi-chevron-double-left"></i>',
+                    previous: '<i class="bi bi-chevron-left"></i>',
+                    next: '<i class="bi bi-chevron-right"></i>',
+                    last: '<i class="bi bi-chevron-double-right"></i>'
+                }
+            },
+            order: [[1, "desc"]],
+            columnDefs: [
+                { orderable: false, targets: [0, -1] }
+            ]
         });
     });
 </script>
