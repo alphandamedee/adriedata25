@@ -150,6 +150,15 @@
             <input type="date" name="end" value="{{ end }}" class="form-control" title="📅 Fin">
         </div>
 
+        <div class="col-md-2">
+            <select name="limit" class="form-select" onchange="this.form.submit()">
+                <option value="10" {{ app.request.query.get('limit') == 10 ? 'selected' : '' }}>10 par page</option>
+                <option value="25" {{ app.request.query.get('limit') == 25 ? 'selected' : '' }}>25 par page</option>
+                <option value="50" {{ app.request.query.get('limit') == 50 ? 'selected' : '' }}>50 par page</option>
+                <option value="100" {{ app.request.query.get('limit') == 100 ? 'selected' : '' }}>100 par page</option>
+            </select>
+        </div>
+
         <div class="col-md-1 mt-3">
             <button class="btn btn-primary" type="submit" title="Filtrer">🔎</button>
         </div>
@@ -223,6 +232,25 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
+                <div class="text-muted">
+                    Affichage {{ pagination.getCurrentPageNumber }} sur {{ pagination.getPageCount }} pages
+                </div>
+                <div class="pagination pagination-sm">
+                    {{ knp_pagination_render(pagination, null, {
+                        'prev_label': '<i class="bi bi-arrow-left"></i>',
+                        'next_label': '<i class="bi bi-arrow-right"></i>',
+                        'first_label': '<i class="bi bi-chevron-double-left"></i>',
+                        'last_label': '<i class="bi bi-chevron-double-right"></i>',
+                        'style': 'twitter-bootstrap-v4'
+                    }) }}
+                </div>
+                <div class="text-muted">
+                    Total: {{ pagination.getTotalItemCount }} interventions
+                </div>
+            </div>
 
             {% if 'ROLE_ADMIN' in app.user.roles %}
                 <div class="text-end mt-3">

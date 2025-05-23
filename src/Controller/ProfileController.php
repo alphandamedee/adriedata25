@@ -22,7 +22,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Repository\UserRepository;
-
+use Knp\Component\Pager\PaginatorInterface;
 
 class ProfileController extends AbstractController
 {
@@ -31,10 +31,11 @@ class ProfileController extends AbstractController
     #[Route('/profil', name: 'app_profil')]
     #[IsGranted('ROLE_USER')]
     public function index(
-        UserInterface $user,
+        Request $request, 
         InterventionRepository $interventionRepository,
+        PaginatorInterface $paginator,
         UserRepository $userRepository,
-        Request $request
+        UserInterface $user
     ): Response {
         $view = $request->query->get('view', 'mine');
         $intervenant = $request->query->get('intervenant', '');
@@ -47,31 +48,55 @@ class ProfileController extends AbstractController
         
         $allIntervenants = $userRepository->findAll(); // ou tous les users
 
-        if (in_array('ROLE_ADMIN', $user->getRoles()) && $view === 'all') {
-            $interventions = $interventionRepository->findByFilters($view === 'mine' ? $user : null,
-            $search,
-            $start,
-            $end,
-            $intervenant);
-        } else {
-            $interventions = $interventionRepository->findByFilters($view === 'mine' ? $user : null,
-            $search,
-            $start,
-            $end,
-            $intervenant);
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+
+        // Récupérer les interventions selon le rôle et les filtres
+        $queryBuilder = $interventionRepository->createQueryBuilder('i')
+            ->orderBy('i.dateIntervention', 'DESC');
+
+        // Ajouter les conditions de filtrage existantes
+        if ($view !== 'all' || !$isAdmin) {
+            $queryBuilder->andWhere('i.intervenant = :user')
+                ->setParameter('user', $user);
         }
 
+        if ($search) {
+            $queryBuilder->andWhere('i.categorie LIKE :search OR i.marque LIKE :search OR i.modele LIKE :search')
+                ->setParameter('search', '%'.$search.'%');
+        }
+
+        if ($intervenant) {
+            $queryBuilder->andWhere('CONCAT(i.intervenant.prenom, \' \', i.intervenant.nomUser) = :intervenant')
+                ->setParameter('intervenant', $intervenant);
+        }
+
+        if ($start) {
+            $queryBuilder->andWhere('i.dateIntervention >= :start')
+                ->setParameter('start', new \DateTime($start));
+        }
+
+        if ($end) {
+            $queryBuilder->andWhere('i.dateIntervention <= :end')
+                ->setParameter('end', new \DateTime($end));
+        }
+
+        // Paginer les résultats
+        $pagination = $paginator->paginate(
+            $queryBuilder->getQuery(),
+            $request->query->getInt('page', 1),
+            50  // Modifié de 10 à 50 éléments par page
+        );
 
         return $this->render('profil/index.html.twig', [
-            'user' => $user,
-            'interventions' => $interventions,
+            'interventions' => $pagination, // On passe l'objet pagination comme interventions
+            'pagination' => $pagination,    // On ajoute aussi l'objet pagination pour les fonctions spécifiques
+            'totalInterventions' => $totalInterventions,
+            'allIntervenants' => $allIntervenants,
             'view' => $view,
             'search' => $search,
+            'intervenant' => $intervenant,
             'start' => $start,
             'end' => $end,
-            'intervenant' => $intervenant,
-            'allIntervenants' => $allIntervenants,
-            'totalInterventions' => $totalInterventions,
         ]);
     }
 
@@ -99,31 +124,6 @@ class ProfileController extends AbstractController
 
         $form->handleRequest($request);
 
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     $photoFile = $form->get('photo')->getData();
-
-        //     if ($photoFile) {
-        //         $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-        //         $safeFilename = $slugger->slug($originalFilename);
-        //         $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
-
-        //         try {
-        //             $photoFile->move(
-        //                 $this->getParameter('photo_directory'),
-        //                 $newFilename
-        //             );
-
-        //             $user->setPhoto($newFilename);
-        //             $entityManager->persist($user);
-        //             $entityManager->flush();
-
-        //             $this->addFlash('success', 'Photo de profil mise à jour avec succès !');
-        //             return $this->redirectToRoute('app_profil');
-        //         } catch (\Exception $e) {
-        //             $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
-        //         }
-        //     }
-        // }
         if ($form->isSubmitted() && $form->isValid()) {
         
             // Gérer upload photo

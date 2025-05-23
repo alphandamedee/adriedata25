@@ -6,6 +6,7 @@ use App\Entity\Intervention;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Repository pour gérer les requêtes de l'entité Intervention
@@ -301,20 +302,66 @@ class InterventionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
-    /**
- * Recherche les interventions par nom du type de RAM (partiel)
- *
- * @param string $val Le terme à rechercher (ex: 'DDR')
- * @return Intervention[] Résultats des interventions correspondantes
- */
-public function findByTypeRamName(string $val): array
-{
-    return $this->createQueryBuilder('i')
-        ->andWhere('i.typeRam LIKE :val')
-        ->setParameter('val', '%' . $val . '%')
-        ->orderBy('i.dateIntervention', 'DESC')
-        ->getQuery()
-        ->getResult();
-}
 
+    /**
+     * Recherche les interventions par nom du type de RAM (partiel)
+     *
+     * @param string $val Le terme à rechercher (ex: 'DDR')
+     * @return Intervention[] Résultats des interventions correspondantes
+     */
+    public function findByTypeRamName(string $val): array
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.typeRam LIKE :val')
+            ->setParameter('val', '%' . $val . '%')
+            ->orderBy('i.dateIntervention', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Crée un QueryBuilder avec des filtres
+     * 
+     * @param User|null $user L'utilisateur (intervenant) à filtrer
+     * @param string|null $search Le terme de recherche
+     * @param string|null $start La date de début
+     * @param string|null $end La date de fin
+     * @param string|null $intervenant Le nom de l'intervenant
+     * @return QueryBuilder Le QueryBuilder configuré avec les filtres
+     */
+    public function createQueryBuilderWithFilters($user = null, $search = null, $start = null, $end = null, $intervenant = null): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->leftJoin('i.intervenant', 'u')
+            ->leftJoin('i.produit', 'p')
+            ->addSelect('u')
+            ->addSelect('p');
+
+        if ($user) {
+            $qb->andWhere('i.intervenant = :user')
+               ->setParameter('user', $user);
+        }
+
+        if ($search) {
+            $qb->andWhere('p.modele LIKE :search OR p.categorie LIKE :search OR i.modele LIKE :search OR i.categorie LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($start) {
+            $qb->andWhere('i.dateIntervention >= :start')
+               ->setParameter('start', new \DateTime($start));
+        }
+
+        if ($end) {
+            $qb->andWhere('i.dateIntervention <= :end')
+               ->setParameter('end', new \DateTime($end));
+        }
+
+        if ($intervenant) {
+            $qb->andWhere('CONCAT(u.prenom, \' \', u.nomUser) = :intervenant')
+               ->setParameter('intervenant', $intervenant);
+        }
+
+        return $qb->orderBy('i.dateIntervention', 'DESC');
+    }
 }

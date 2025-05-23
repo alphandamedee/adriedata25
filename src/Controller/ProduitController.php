@@ -24,7 +24,7 @@ class ProduitController extends AbstractController
         // Récupération de la recherche et de la catégorie
         $search = $request->query->get('search', '');
         $categorieId = $request->query->get('categorie');
-        // $limit = $request->query->getInt('limit', 100); // valeur par défaut
+      
         
         // On utilise le QueryBuilder pour construire la requête de manière dynamique
         $queryBuilder = $entityManager->getRepository(Produit::class)->createQueryBuilder('p')
@@ -55,7 +55,7 @@ class ProduitController extends AbstractController
             ->setParameter('search', '%' . $search . '%');
         }
 
-        $limit = 100; // par défaut
+        $limit = 50; // par défaut
 
         if ($search) {
             $totalResults = count($queryBuilder->getQuery()->getResult());
