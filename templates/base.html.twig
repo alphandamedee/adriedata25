@@ -48,17 +48,17 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_profil') }}">
-                            <i class="bi bi-person-badge"></i> Mon Profil
+                            <i class="bi bi-person-badge"></i> <span class="d-none d-lg-inline">Mon Profil</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_produit') }}">
-                            <i class="bi bi-list-ul"></i> Liste des Produits
+                            <i class="bi bi-list-ul"></i> <span class="d-none d-lg-inline">Liste des Produits</span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdownCategories" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-folder2-open me-1"></i> <span class="fw-medium">Catégories</span>
+                            <i class="bi bi-folder2-open me-1"></i> <span class="fw-medium d-none d-lg-inline">Catégories</span>
                         </a>
                         <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarDropdownCategories" style="max-height: 450px; overflow-y: auto; min-width: 280px; font-size: 1.1rem;">
                             <li>
@@ -80,7 +80,7 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('admin_user_list') }}">
-                                <i class="bi bi-people"></i> Utilisateurs
+                                <i class="bi bi-people"></i> <span class="d-none d-lg-inline">Utilisateurs</span>
                             </a>
                         </li>
                     {% endif %}
@@ -88,7 +88,7 @@
                     {% if is_granted('ROLE_USER') %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('search_product') }}">
-                                <i class="bi bi-search"></i> Remplir Fiche d'intervention
+                                <i class="bi bi-search"></i> <span class="d-none d-lg-inline">Remplir Fiche d'intervention</span>
                             </a>
                         </li>
                     {% endif %}
@@ -115,7 +115,7 @@
                     </li>
                     <li class="nav-item me-3 fw-bold">
                         <a class="nav-link" href="{{ path('app_faq') }}" title="Foire aux questions">
-                            <i class="bi bi-question-circle"></i> FAQ
+                            <i class="bi bi-question-circle"></i> <span class="d-none d-lg-inline">FAQ</span>
                         </a>
                     </li>
                     <li class="nav-item">
