@@ -55,7 +55,7 @@ class ProfileController extends AbstractController
             ->orderBy('i.dateIntervention', 'DESC');
 
         // Ajouter les conditions de filtrage existantes
-        if ($view !== 'all' || !$isAdmin) {
+        if (!$isAdmin && $view !== 'all') {
             $queryBuilder->andWhere('i.intervenant = :user')
                 ->setParameter('user', $user);
         }
